@@ -10,7 +10,7 @@ const SUPABASE_CONFIG_KEY = 'ligue_supabase_config';
 const PUBLIC_SUPABASE_URL = "https://auidasirnsigninmrsdu.supabase.co";
 const PUBLIC_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1aWRhc2lybnNpZ25pbm1yc2R1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk3ODkyNjUsImV4cCI6MjA4NTM2NTI2NX0.eFdqr5zqn-3ncVBV4YgTzgDnsjKCgwBV7zowtKm51Bw";
 
-let supabase = null;
+let supabaseClient = null;
 
 function initSupabase() {
     console.log("--- Supabase Init Started ---");
@@ -19,16 +19,22 @@ function initSupabase() {
     const url = (config && config.url) ? config.url.trim() : PUBLIC_SUPABASE_URL;
     const key = (config && config.key) ? config.key.trim() : PUBLIC_SUPABASE_KEY;
 
-    console.log("Config URL:", url);
-
     if (url && key) {
         try {
-            if (window.supabase) {
-                supabase = window.supabase.createClient(url, key);
-                console.log("Client created successfully");
-                return supabase;
+            // Check for the library in various global locations
+            const lib = window.supabase || (window.supabaseJS ? window.supabaseJS : null);
+
+            if (lib && lib.createClient) {
+                supabaseClient = lib.createClient(url, key);
+                console.log("Supabase client created successfully");
+                return supabaseClient;
+            } else if (typeof lib === 'function') {
+                // In some builds, the window.supabase might be the createClient function itself
+                supabaseClient = lib(url, key);
+                console.log("Supabase client created (lib was function)");
+                return supabaseClient;
             } else {
-                console.error("Supabase script NOT LOADED from CDN");
+                console.error("Supabase library NOT FOUND or invalid. Global 'supabase' is:", typeof lib, lib);
             }
         } catch (e) {
             console.error("Creation error:", e);
@@ -86,9 +92,9 @@ async function initData() {
     initPromise = (async () => {
         initSupabase();
 
-        if (supabase) {
+        if (supabaseClient) {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('app_state')
                     .select('config_data')
                     .eq('id', 'global_state')
@@ -131,9 +137,9 @@ async function saveData(data) {
     localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(data));
 
     // Sync to Supabase if configured
-    if (supabase) {
+    if (supabaseClient) {
         try {
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('app_state')
                 .upsert({ id: 'global_state', config_data: data });
 

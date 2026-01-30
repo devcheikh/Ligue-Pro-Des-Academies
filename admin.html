@@ -450,7 +450,7 @@
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    currentLogoBase66 = e.target.result;
+                    currentLogoBase64 = e.target.result;
                     preview.innerHTML = `<img src="${currentLogoBase64}" style="width: 100%; height: 100%; object-fit: contain;">`;
                 }
                 reader.readAsDataURL(input.files[0]);
@@ -513,13 +513,23 @@
                 const displayTime = m.time ? m.time : '';
                 const isPlayed = m.status === 'played';
 
+                const teams = m.teams.split(' vs ');
+                const t1 = data.teams.find(t => t.name === teams[0]);
+                const t2 = data.teams.find(t => t.name === teams[1]);
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${displayDate} ${displayTime}</td>
                     <td>${cat ? cat.name : 'Inconnu'}</td>
                     <td>
                         <div style="display: flex; flex-direction: column; gap: 5px;">
-                            <strong>${m.teams}</strong>
+                            <div style="display: flex; align-items: center; gap: 10px; font-weight: bold;">
+                                <img src="${t1 ? t1.logo : 'images/logo_ligue.png'}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: contain;">
+                                <span>${teams[0] || 'TBD'}</span>
+                                <span style="opacity: 0.5;">vs</span>
+                                <span>${teams[1] || 'TBD'}</span>
+                                <img src="${t2 ? t2.logo : 'images/logo_ligue.png'}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: contain;">
+                            </div>
                             <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
                                 <input type="number" value="${m.score1}" onchange="handleScoreUpdate(${m.id}, 'score1', this.value)" 
                                     style="width: 40px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--vert-principal); text-align: center; border-radius: 4px;">

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Championnat U19 | Ligue Pro Des Académies</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <script src="data.js"></script>
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <nav id="navbar" class="scrolled">
+        <a href="index.html" class="nav_logo">
+            <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+        </a>
+
+        <div class="nav_menu" id="nav-menu">
+            <i class='bx bx-x menu_close' id="menu-close"></i>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="u17.html">U17</a></li>
+                <li><a href="u19.html" class="active">U19</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </div>
+
+        <div class="menu_toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <section class="hero page_hero u19" id="accueil">
+        <div class="hero_content">
+            <div class="hero_text">
+                <div class="hero_label">Élite Académique</div>
+                <h1 class="hero_title">
+                    <span class="line1">CHAMPIONNAT</span>
+                    <span class="line2">U19</span>
+                </h1>
+                <p class="hero_description">
+                    L'antichambre du professionnalisme. Un duel de titans entre les
+                    <strong>académies les plus prestigieuses</strong>. Plongez au cœur de l'action
+                    là où les espoirs deviennent des légendes.
+                </p>
+                <div class="hero_cta">
+                    <a href="#classement" class="btn-primary">
+                        <i class='bx bx-list-ol'></i> Classement
+                    </a>
+                </div>
+            </div>
+            <div class="hero_visual">
+                <div class="hero_logo_container small">
+                    <div class="hero_circle" style="border-color: var(--jaune-or);"></div>
+                    <img src="images/logo_ligue.png" alt="Logo">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLASSEMENT -->
+    <section class="about poule_portfolio" id="classement">
+        <span class="section_number">19</span>
+        <div class="section_header">
+            <div class="section_label">Classement Dynamique</div>
+            <h2 class="section_title">Poule <span class="highlight">Unique</span></h2>
+        </div>
+        <div id="pouleU19_Grid" class="teams_portfolio_grid"></div>
+    </section>
+
+    <!-- CALENDRIER -->
+    <section class="portfolio matches_portfolio alt_bg" id="calendrier">
+        <div class="section_header">
+            <div class="section_label">Calendrier</div>
+            <h2 class="section_title">Matchs <span class="highlight">U19</span></h2>
+        </div>
+        <div id="matchGridU19" class="portfolio_grid"
+            style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer_content">
+            <div class="footer_brand">
+                <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+                <p>L'antichambre du professionnalisme. Donnez à vos espoirs la scène qu'ils méritent.</p>
+            </div>
+            <div class="footer_column">
+                <h4>Championnats</h4>
+                <ul>
+                    <li><a href="u17.html">U17 Elite</a></li>
+                    <li><a href="u19.html">U19 Elite</a></li>
+                </ul>
+            </div>
+            <div class="footer_column">
+                <h4>Administration</h4>
+                <ul>
+                    <li><a href="admin.html">Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const toggle = document.getElementById('menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const close = document.getElementById('menu-close');
+
+        if (toggle && navMenu) {
+            toggle.addEventListener('click', () => {
+                navMenu.classList.add('active');
+            });
+        }
+
+        if (close && navMenu) {
+            close.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        function renderU19() {
+            const data = getData();
+            const container = document.getElementById('pouleU19_Grid');
+            const teams = data.teams.filter(t => t.categoryId === 'u19').sort((a, b) => b.points - a.points);
+
+            container.innerHTML = '';
+            teams.forEach((t, index) => {
+                const rank = index + 1;
+                let badgeClass = rank <= 2 ? 'semi' : (rank <= 6 ? 'quarter' : '');
+                let badgeText = rank <= 2 ? 'DEMI' : (rank <= 6 ? 'QUART' : '');
+
+                const div = document.createElement('div');
+                div.className = `team_portfolio_card ${badgeClass ? 'qualified-' + badgeClass : ''}`;
+                div.innerHTML = `
+                    <div class="team_rank">${rank}</div>
+                    <div class="team_logo_display">
+                        <img src="${t.logo || 'images/logo_ligue.png'}" alt="${t.name}">
+                    </div>
+                    <div class="team_info">
+                        <h3>${t.name}</h3>
+                        <div class="team_stats">
+                            <span><strong>${t.points}</strong> pts</span>
+                            <span>${t.v}V ${t.n}N ${t.d}D</span>
+                        </div>
+                    </div>
+                    ${badgeClass ? `<div class="team_badge ${badgeClass}">${badgeText}</div>` : ''}
+                `;
+                container.appendChild(div);
+            });
+
+            const matchContainer = document.getElementById('matchGridU19');
+            const matches = data.matches.filter(m => m.categoryId === 'u19');
+            matchContainer.innerHTML = '';
+
+            if (matches.length === 0) {
+                matchContainer.innerHTML = '<p style="text-align: center; grid-column: 1/-1; opacity: 0.5;">Aucun match programmé pour le moment.</p>';
+            } else {
+                matches.sort((a, b) => new Date(a.date) - new Date(b.date)).forEach(m => {
+                    const displayDate = m.date ? new Date(m.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) : 'À définir';
+                    const displayTime = m.time ? m.time : '';
+                    const teams = m.teams.split(' vs ');
+                    const t1Name = teams[0] || 'TBD';
+                    const t2Name = teams[1] || 'TBD';
+
+                    const t1 = data.teams.find(t => t.name === t1Name);
+                    const t2 = data.teams.find(t => t.name === t2Name);
+
+                    const div = document.createElement('div');
+                    div.className = 'portfolio_item';
+                    div.style.aspectRatio = 'auto'; div.style.padding = '30px';
+                    div.innerHTML = `
+                        <div class="match_card_content">
+                            <span class="portfolio_category">${displayDate} ${displayTime}</span>
+                            <div class="match_teams_wrapper">
+                                <div class="match_team_logo"><img src="${t1 ? t1.logo : 'images/logo_ligue.png'}" alt=""></div>
+                                <span class="match_team_name">${t1Name}</span>
+                                <div class="match_vs_divider">${m.status === 'played' ? m.score1 + ' - ' + m.score2 : 'VS'}</div>
+                                <span class="match_team_name">${t2Name}</span>
+                                <div class="match_team_logo"><img src="${t2 ? t2.logo : 'images/logo_ligue.png'}" alt=""></div>
+                            </div>
+                            <p class="portfolio_description"><i class='bx bx-map'></i> ${m.venue}</p>
+                        </div>
+                    `;
+                    matchContainer.appendChild(div);
+                });
+            }
+        }
+
+        renderU19();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Ligue Pro Des Académies</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <script src="data.js"></script>
+</head>
+
+<body class="admin_dashboard">
+    <!-- NAVIGATION -->
+    <nav id="navbar" class="scrolled">
+        <a href="index.html" class="nav_logo">
+            <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+        </a>
+
+        <div class="nav_menu" id="nav-menu">
+            <i class='bx bx-x menu_close' id="menu-close"></i>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="u17.html">U17</a></li>
+                <li><a href="u19.html">U19</a></li>
+                <li><a href="admin.html" class="active">Admin</a></li>
+            </ul>
+        </div>
+
+        <div class="menu_toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="admin_container">
+        <div class="admin_header">
+            <div>
+                <h1>Dashboard <span class="highlight-yellow">Admin</span></h1>
+                <p>Gestion avancée des Catégories et Tirages</p>
+            </div>
+            <div class="admin_user">
+                <button onclick="resetAllData()" title="Réinitialiser"
+                    style="background: none; border: none; cursor: pointer; color: var(--jaune-or);">
+                    <i class='bx bx-refresh' style="font-size: 30px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="admin_nav">
+            <button class="nav_btn admin_nav_btn active" onclick="showTab(event, 'categories')">Catégories</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'teams')">Équipes</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'matches')">Matchs</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'draw')">Tirages</button>
+        </div>
+
+        <!-- CATEGORIES TAB -->
+        <div id="categories" class="admin_tab_content">
+            <div class="admin_content_card">
+                <h2>Créer une <span class="highlight">Catégorie</span></h2>
+                <form class="admin_form" id="catForm">
+                    <div class="form_group">
+                        <label>Nom de la Catégorie</label>
+                        <input type="text" id="catName" placeholder="Ex: U17 Poule A" required>
+                    </div>
+                    <div class="form_group">
+                        <label>Type de Championnat</label>
+                        <select id="catType">
+                            <option value="poule">Poule (dans un championnat à plusieurs groupes)</option>
+                            <option value="unique">Poule Unique / Championnat Direct</option>
+                        </select>
+                    </div>
+                    <div class="form_group" style="justify-content: flex-end;">
+                        <button type="submit" class="btn-primary">Créer Catégorie</button>
+                    </div>
+                </form>
+
+                <div class="classement_table admin_table">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="catTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TEAMS TAB -->
+        <div id="teams" class="admin_tab_content" style="display: none;">
+            <div class="admin_content_card">
+                <h2>Ajouter une <span class="highlight">Équipe</span></h2>
+                <form class="admin_form" id="teamForm">
+                    <div class="form_group">
+                        <label>Nom de l'Équipe</label>
+                        <input type="text" id="teamName" required>
+                    </div>
+                    <div class="form_group">
+                        <label>Logo de l'Équipe</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <input type="file" id="teamLogoFile" accept="image/*" onchange="previewLogo(this)"
+                                style="display: none;">
+                            <label for="teamLogoFile" class="btn-outline"
+                                style="cursor: pointer; margin: 0; padding: 10px 20px;">
+                                <i class='bx bx-upload'></i> Choisir Image
+                            </label>
+                            <div id="logoPreview"
+                                style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--vert-principal);">
+                                <i class='bx bx-image' style="opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form_group">
+                        <label>Assigner au Championnat</label>
+                        <select id="teamCat"></select>
+                    </div>
+                    <div class="form_group" style="justify-content: flex-end;">
+                        <button type="submit" class="btn-primary">Ajouter Équipe</button>
+                    </div>
+                </form>
+
+                <div class="classement_table admin_table">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Logo</th>
+                                    <th>Nom</th>
+                                    <th>Championnat</th>
+                                    <th>Points</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teamTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MATCHS TAB -->
+        <div id="matches" class="admin_tab_content" style="display: none;">
+            <div class="admin_content_card">
+                <h2>Programmer un <span class="highlight">Match</span></h2>
+                <form class="admin_form" id="matchForm">
+                    <div class="form_group">
+                        <label>Catégorie</label>
+                        <select id="matchCatSelect" onchange="updateMatchTeams()"></select>
+                    </div>
+                    <div class="form_group">
+                        <label>Date</label>
+                        <input type="date" id="matchDate">
+                    </div>
+                    <div class="form_group">
+                        <label>Heure</label>
+                        <input type="time" id="matchTime">
+                    </div>
+                    <div class="form_group">
+                        <label>Affiche (Équipe 1 vs Équipe 2)</label>
+                        <div style="display: flex; gap: 10px; align-items: center; width: 100%;">
+                            <select id="matchTeam1" required style="flex: 1;"></select>
+                            <span style="font-weight: bold; opacity: 0.5;">VS</span>
+                            <select id="matchTeam2" required style="flex: 1;"></select>
+                        </div>
+                    </div>
+                    <div class="form_group">
+                        <label>Lieu</label>
+                        <input type="text" id="matchVenue" required>
+                    </div>
+                    <div class="form_group" style="justify-content: flex-end;">
+                        <button type="submit" class="btn-primary">Programmer</button>
+                    </div>
+                </form>
+                <div class="classement_table admin_table">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Catégorie</th>
+                                    <th>Match</th>
+                                    <th>Lieu</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matchTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DRAW TAB -->
+        <div id="draw" class="admin_tab_content" style="display: none;">
+            <div class="admin_content_card">
+                <h2>Tirages au Sort <span class="highlight">Indépendants</span></h2>
+                <p>Gérez le tirage aléatoire du calendrier ou des compositions par catégorie.</p>
+                <div id="drawGrid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;">
+                    <!-- Dynamically populated draw boxes -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab management
+        function showTab(e, tabId) {
+            document.querySelectorAll('.admin_tab_content').forEach(tab => tab.style.display = 'none');
+            document.querySelectorAll('.nav_btn').forEach(btn => btn.classList.remove('active'));
+
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) targetTab.style.display = 'block';
+
+            if (e && e.currentTarget) {
+                e.currentTarget.classList.add('active');
+            }
+
+            if (tabId === 'categories') renderCategories();
+            if (tabId === 'teams') renderTeams();
+            if (tabId === 'matches') renderMatches();
+            if (tabId === 'draw') renderDraws();
+        }
+
+        // --- CATEGORIES ---
+        function renderCategories() {
+            const data = getData();
+            const tbody = document.getElementById('catTableBody');
+            tbody.innerHTML = '';
+            data.categories.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${c.id}</td>
+                    <td><strong>${c.name}</strong></td>
+                    <td>${c.type}</td>
+                    <td>
+                        <button class="btn_action btn_edit" onclick="handleEditCat('${c.id}', '${c.name}', '${c.type}')"><i class='bx bx-edit'></i></button>
+                        <button class="btn_action btn_delete" onclick="handleDeleteCat('${c.id}')"><i class='bx bx-trash'></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        let editingCatId = null;
+
+        function handleEditCat(id, name, type) {
+            editingCatId = id;
+            document.getElementById('catName').value = name;
+            document.getElementById('catType').value = type;
+            document.querySelector('#catForm .btn-primary').innerText = "Mettre à jour";
+            // Scroll to form
+            document.getElementById('catForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('catForm').onsubmit = function (e) {
+            e.preventDefault();
+            const name = document.getElementById('catName').value;
+            const type = document.getElementById('catType').value;
+
+            if (editingCatId) {
+                updateCategory(editingCatId, { name, type });
+                editingCatId = null;
+                document.querySelector('#catForm .btn-primary').innerText = "Créer Catégorie";
+            } else {
+                addCategory(name, type);
+            }
+            this.reset();
+            renderCategories();
+        };
+
+        function handleDeleteCat(id) {
+            if (confirm('Supprimer cette catégorie et TOUTES ses équipes ?')) {
+                deleteCategory(id);
+                renderCategories();
+            }
+        }
+
+        // --- TEAMS ---
+        function renderTeams() {
+            const data = getData();
+            const select = document.getElementById('teamCat');
+            select.innerHTML = '';
+            data.categories.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.name;
+                select.appendChild(opt);
+            });
+
+            const tbody = document.getElementById('teamTableBody');
+            tbody.innerHTML = '';
+            data.teams.forEach(t => {
+                const cat = data.categories.find(c => c.id === t.categoryId);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${t.logo || 'images/logo_ligue.png'}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: contain;"></td>
+                    <td><strong>${t.name}</strong></td>
+                    <td>${cat ? cat.name : 'Inconnu'}</td>
+                    <td><input type="number" value="${t.points}" onchange="handleUpdatePoints(${t.id}, this.value)" style="width: 50px; background: transparent; color: white; border: 1px solid var(--vert-principal); text-align: center;"></td>
+                    <td>
+                        <button class="btn_action btn_edit" onclick="handleEditTeam(${t.id})"><i class='bx bx-edit'></i></button>
+                        <button class="btn_action btn_delete" onclick="handleDeleteTeam(${t.id})"><i class='bx bx-trash'></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        let editingTeamId = null;
+
+        function handleEditTeam(id) {
+            const data = getData();
+            const team = data.teams.find(t => t.id === id);
+            if (!team) return;
+
+            editingTeamId = id;
+            document.getElementById('teamName').value = team.name;
+            document.getElementById('teamCat').value = team.categoryId;
+            currentLogoBase64 = team.logo || 'images/logo_ligue.png';
+            document.getElementById('logoPreview').innerHTML = `<img src="${currentLogoBase64}" style="width: 100%; height: 100%; object-fit: contain;">`;
+            document.querySelector('#teamForm .btn-primary').innerText = "Mettre à jour";
+            document.getElementById('teamForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        let currentLogoBase64 = 'images/logo_ligue.png';
+
+        function previewLogo(input) {
+            const preview = document.getElementById('logoPreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    currentLogoBase64 = e.target.result;
+                    preview.innerHTML = `<img src="${currentLogoBase64}" style="width: 100%; height: 100%; object-fit: contain;">`;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById('teamForm').onsubmit = function (e) {
+            e.preventDefault();
+            const name = document.getElementById('teamName').value;
+            const catId = document.getElementById('teamCat').value;
+            const logo = currentLogoBase64;
+
+            if (editingTeamId) {
+                updateTeam(editingTeamId, { name, categoryId: catId, logo });
+                editingTeamId = null;
+                document.querySelector('#teamForm .btn-primary').innerText = "Ajouter Équipe";
+            } else {
+                addTeam(name, catId, logo);
+            }
+
+            // Reset
+            this.reset();
+            currentLogoBase64 = 'images/logo_ligue.png';
+            document.getElementById('logoPreview').innerHTML = `<i class='bx bx-image' style="opacity: 0.3;"></i>`;
+            renderTeams();
+        };
+
+        function handleUpdatePoints(id, val) {
+            updateTeam(id, { points: parseInt(val) });
+        }
+
+        function handleDeleteTeam(id) {
+            if (confirm('Supprimer cette équipe ?')) {
+                deleteTeam(id);
+                renderTeams();
+            }
+        }
+
+        // --- MATCHES ---
+        function renderMatches() {
+            const data = getData();
+            const select = document.getElementById('matchCatSelect');
+            select.innerHTML = '';
+            data.categories.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.name;
+                select.appendChild(opt);
+            });
+
+            const tbody = document.getElementById('matchTableBody');
+            tbody.innerHTML = '';
+            data.matches.sort((a, b) => {
+                if (!a.date) return 1;
+                if (!b.date) return -1;
+                return new Date(a.date) - new Date(b.date);
+            }).forEach(m => {
+                const cat = data.categories.find(c => c.id === m.categoryId);
+                const displayDate = m.date ? m.date : 'À définir';
+                const displayTime = m.time ? m.time : '';
+                const isPlayed = m.status === 'played';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${displayDate} ${displayTime}</td>
+                    <td>${cat ? cat.name : 'Inconnu'}</td>
+                    <td>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <strong>${m.teams}</strong>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                                <input type="number" value="${m.score1}" onchange="handleScoreUpdate(${m.id}, 'score1', this.value)" 
+                                    style="width: 40px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--vert-principal); text-align: center; border-radius: 4px;">
+                                <span style="opacity: 0.5;">-</span>
+                                <input type="number" value="${m.score2}" onchange="handleScoreUpdate(${m.id}, 'score2', this.value)" 
+                                    style="width: 40px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--vert-principal); text-align: center; border-radius: 4px;">
+                                <button class="btn_action ${isPlayed ? 'btn_edit' : 'btn_outline'}" 
+                                    onclick="handleToggleStatus(${m.id}, '${isPlayed ? 'upcoming' : 'played'}')"
+                                    title="${isPlayed ? 'Remettre en à venir' : 'Valider le score'}"
+                                    style="padding: 2px 8px; font-size: 10px; height: auto; width: auto; border: 1px solid ${isPlayed ? 'var(--jaune-or)' : 'var(--vert-principal)'};">
+                                    ${isPlayed ? 'TERMINE' : 'VALIDER'}
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${m.venue}</td>
+                    <td>
+                        <button class="btn_action btn_edit" onclick="handleEditMatch(${m.id})"><i class='bx bx-edit'></i></button>
+                        <button class="btn_action btn_delete" onclick="handleDeleteMatch(${m.id})"><i class='bx bx-trash'></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        let editingMatchId = null;
+
+        function handleEditMatch(id) {
+            const data = getData();
+            const m = data.matches.find(match => match.id === id);
+            if (!m) return;
+
+            editingMatchId = id;
+            document.getElementById('matchCatSelect').value = m.categoryId;
+            updateMatchTeams(); // Important to fill the team selects
+
+            const teams = m.teams.split(' vs ');
+            document.getElementById('matchTeam1').value = teams[0] || '';
+            document.getElementById('matchTeam2').value = teams[1] || '';
+            document.getElementById('matchDate').value = m.date || '';
+            document.getElementById('matchTime').value = m.time || '';
+            document.getElementById('matchVenue').value = m.venue || '';
+
+            document.querySelector('#matchForm .btn-primary').innerText = "Mettre à jour";
+            document.getElementById('matchForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function handleScoreUpdate(id, field, val) {
+            const updates = {};
+            updates[field] = parseInt(val) || 0;
+            updateMatch(id, updates);
+        }
+
+        function handleToggleStatus(id, newStatus) {
+            updateMatch(id, { status: newStatus });
+            renderMatches();
+            if (newStatus === 'played') {
+                alert("Score validé ! Le classement a été mis à jour automatiquement.");
+            }
+        }
+
+        function updateMatchTeams() {
+            const data = getData();
+            const catId = document.getElementById('matchCatSelect').value;
+            const teams = data.teams.filter(t => t.categoryId === catId);
+
+            const sel1 = document.getElementById('matchTeam1');
+            const sel2 = document.getElementById('matchTeam2');
+
+            sel1.innerHTML = '<option value="">Choisir Équipe 1</option>';
+            sel2.innerHTML = '<option value="">Choisir Équipe 2</option>';
+
+            teams.forEach(t => {
+                sel1.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+                sel2.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+            });
+        }
+
+        document.getElementById('matchForm').onsubmit = function (e) {
+            e.preventDefault();
+            const t1 = document.getElementById('matchTeam1').value;
+            const t2 = document.getElementById('matchTeam2').value;
+
+            if (t1 === t2) {
+                alert("Veuillez choisir deux équipes différentes.");
+                return;
+            }
+
+            const matchData = {
+                categoryId: document.getElementById('matchCatSelect').value,
+                date: document.getElementById('matchDate').value,
+                time: document.getElementById('matchTime').value,
+                teams: `${t1} vs ${t2}`,
+                venue: document.getElementById('matchVenue').value
+            };
+
+            if (editingMatchId) {
+                updateMatch(editingMatchId, matchData);
+                editingMatchId = null;
+                document.querySelector('#matchForm .btn-primary').innerText = "Programmer";
+            } else {
+                addMatch(matchData);
+            }
+
+            this.reset();
+            renderMatches();
+            updateMatchTeams(); // Refresh dropdowns
+        };
+
+        function handleDeleteMatch(id) {
+            if (confirm('Supprimer ce match ?')) {
+                deleteMatch(id);
+                renderMatches();
+            }
+        }
+
+        // --- DRAWS ---
+        function renderDraws() {
+            const data = getData();
+            const grid = document.getElementById('drawGrid');
+            grid.innerHTML = '';
+
+            data.categories.forEach(c => {
+                const box = document.createElement('div');
+                box.className = 'draw_box';
+                box.style.marginTop = '0';
+                box.innerHTML = `
+                    <div class="trophy_icon"><i class='bx bxs-dice-6'></i></div>
+                    <h3>Tirage ${c.name}</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 20px;">
+                        Générer un calendrier aléatoire pour les équipes de cette catégorie.
+                    </p>
+                    <button class="draw_btn" onclick="runCategoryDraw('${c.id}')">LANCER</button>
+                    <div id="status-${c.id}" style="margin-top: 15px; font-size: 0.8rem; color: var(--jaune-or);"></div>
+                `;
+                grid.appendChild(box);
+            });
+        }
+
+        function runCategoryDraw(catId) {
+            const status = document.getElementById(`status-${catId}`);
+            status.innerText = 'Shuffle en cours...';
+
+            setTimeout(() => {
+                const data = getData();
+                const teams = data.teams.filter(t => t.categoryId === catId);
+
+                if (teams.length < 2) {
+                    status.innerText = 'Erreur: Trop peu d\'équipes.';
+                    return;
+                }
+
+                // Just a mock of drawing (shuffle teams) - in real use, maybe reset points?
+                teams.forEach(t => updateTeam(t.id, { points: 0, v: 0, n: 0, d: 0, bp: 0, bc: 0, diff: 0 }));
+
+                status.innerText = `Tirage terminé pour ${teams.length} équipes !`;
+            }, 800);
+        }
+
+        function resetAllData() {
+            if (confirm('Réinitialiser toutes les données ?')) {
+                localStorage.removeItem('ligue_pro_academies_data');
+                location.reload();
+            }
+        }
+
+        // INIT
+        renderCategories();
+    </script>
+</body>
+
+</html>

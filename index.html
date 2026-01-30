@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Ligue Pro Des Académies - La vitrine d'élite du football. Championnats U17 et U19.">
+    <meta name="keywords" content="football, académies, ligue, championnats, U17, U19, Sénégal">
+    <title>Ligue Pro Des Académies | La Vitrine d'Élite du Football</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <script src="data.js"></script>
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <nav id="navbar">
+        <a href="index.html" class="nav_logo">
+            <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+        </a>
+
+        <div class="nav_menu" id="nav-menu">
+            <i class='bx bx-x menu_close' id="menu-close"></i>
+            <ul>
+                <li><a href="index.html" class="active">Accueil</a></li>
+                <li><a href="u17.html">U17</a></li>
+                <li><a href="u19.html">U19</a></li>
+                <li><a href="membres.html">Membres</a></li>
+            </ul>
+        </div>
+
+        <div class="menu_toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="accueil">
+        <div class="hero_content">
+            <div class="hero_text">
+                <div class="hero_label">Plateforme Officielle</div>
+                <h1 class="hero_title">
+                    <span class="line1">LIGUE</span>
+                    <span class="line2">PRO DES</span>
+                    <span class="line3">ACADÉMIES</span>
+                </h1>
+                <p class="hero_description">
+                    Accélérez votre ascension vers les sommets. La Ligue Pro Des Académies transcende
+                    la simple plateforme pour devenir le <strong>catalyseur ultime de l'élite</strong>.
+                    Nous propulsons les futurs cracks du football sur une scène internationale où chaque
+                    match et chaque statistique sculptent une <strong>visibilité professionnelle sans
+                        précédent</strong>.
+                </p>
+                <div class="hero_cta">
+                    <button class="btn-primary" onclick="location.href='u17.html'">
+                        <i class='bx bx-trophy'></i> Championnat U17
+                    </button>
+                    <button class="btn-outline" onclick="location.href='u19.html'">
+                        <i class='bx bx-football'></i> Championnat U19
+                    </button>
+                </div>
+            </div>
+            <div class="hero_visual">
+                <div class="hero_logo_container">
+                    <div class="hero_circle"></div>
+                    <div class="hero_circle"></div>
+                    <div class="hero_circle"></div>
+                    <img src="images/logo_ligue.png" alt="Logo Ligue Pro Des Académies">
+                    <div class="hero_floating_element"></div>
+                    <div class="hero_floating_element"></div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll_indicator">
+            Scroll
+            <span></span>
+        </div>
+    </section>
+
+    <!-- MATCHES SECTION -->
+    <section class="portfolio" id="matches">
+        <div class="section_header">
+            <div class="section_label">Calendrier</div>
+            <h2 class="section_title">
+                Matchs <span class="highlight">à Venir</span>
+            </h2>
+        </div>
+
+        <div id="homeMatchGrid" class="portfolio_grid"
+            style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <!-- Matches will be injected here -->
+        </div>
+
+        <div class="hero_cta" style="justify-content: center; margin-top: 50px;">
+            <button class="btn-outline" onclick="location.href='u17.html'">
+                Voir tout le calendrier
+            </button>
+        </div>
+    </section>
+
+    <!-- CHAMPIONNATS SECTION -->
+    <section class="portfolio" id="championnats">
+        <div class="section_header">
+            <div class="section_label">Nos Compétitions</div>
+            <h2 class="section_title">
+                Championnats <span class="highlight">Officiels</span>
+            </h2>
+        </div>
+
+        <div class="portfolio_grid">
+            <!-- U17 -->
+            <div class="portfolio_item large card-u17" onclick="location.href='u17.html'" style="cursor:pointer;">
+                <div class="portfolio_item_content">
+                    <span class="portfolio_category">Championnat Elite</span>
+                    <h3 class="portfolio_title">Championnat U17</h3>
+                    <p class="portfolio_description">
+                        2 poules de 6 équipes • Phase de playoffs •
+                        Les meilleurs talents U17 en compétition.
+                    </p>
+                </div>
+            </div>
+
+            <!-- U19 -->
+            <div class="portfolio_item card-u19" onclick="location.href='u19.html'" style="cursor:pointer;">
+                <div class="portfolio_item_content">
+                    <span class="portfolio_category">Championnat</span>
+                    <h3 class="portfolio_title">Championnat U19</h3>
+                    <p class="portfolio_description">
+                        1 poule unique • Playoffs • L'élite U19.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Membres -->
+            <div class="portfolio_item card-team" onclick="location.href='membres.html'" style="cursor:pointer;">
+                <div class="portfolio_item_content">
+                    <span class="portfolio_category">Organisation</span>
+                    <h3 class="portfolio_title">Notre Équipe</h3>
+                    <p class="portfolio_description">
+                        Découvrez les membres qui font vivre la ligue.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="about" id="about">
+        <span class="section_number">01</span>
+        <div class="section_header">
+            <div class="section_label">À Propos</div>
+            <h2 class="section_title">
+                La <span class="highlight">Vitrine d'Élite</span>
+            </h2>
+        </div>
+
+        <div class="about_content">
+            <div class="about_text">
+                <p>
+                    La <strong>Ligue Pro Des Académies</strong> s'impose comme l'épicentre de l'excellence
+                    et la référence absolue pour le football de demain. Plus qu'une plateforme, nous sommes le
+                    pont digital entre les talents bruts et le monde professionnel.
+                </p>
+                <p>
+                    Nous métamorphosons les compétitions traditionnelles en <strong>vitrines de classe
+                        mondiale</strong>.
+                    En combinant technologie de précision, statistiques détaillées et une présence en ligne percutante,
+                    nous offrons à chaque espoir l'opportunité de briller sous les projecteurs de l'élite.
+                </p>
+
+                <div id="dynamicStats" class="about_stats">
+                    <div class="about_stat">
+                        <div class="about_stat_number" id="statComps">2</div>
+                        <div class="about_stat_label">Compétitions</div>
+                    </div>
+                    <div class="about_stat">
+                        <div class="about_stat_number" id="statTeams">18</div>
+                        <div class="about_stat_label">Équipes</div>
+                    </div>
+                    <div class="about_stat">
+                        <div class="about_stat_number" id="statMatches">0</div>
+                        <div class="about_stat_label">Matchs Prévus</div>
+                    </div>
+                    <div class="about_stat">
+                        <div class="about_stat_number">U17+</div>
+                        <div class="about_stat_label">Catégories</div>
+                    </div>
+                </div>
+            </div>
+            <div class="about_image">
+                <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta_section" id="contact">
+        <div class="cta_content">
+            <h2 class="cta_title">
+                Suivez-nous sur les réseaux !
+            </h2>
+            <p class="cta_description">
+                Restez informé des résultats, classements et actualités
+                de tous nos championnats en nous suivant sur les réseaux sociaux.
+            </p>
+            <div class="social_large">
+                <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_btn facebook">
+                    <i class='bx bxl-facebook'></i> Facebook
+                </a>
+                <a href="https://www.instagram.com/ligueproacademies" target="_blank" class="social_btn instagram">
+                    <i class='bx bxl-instagram'></i> Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer_content">
+            <div class="footer_brand">
+                <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+                <p>
+                    La Ligue Pro Des Académies : votre partenaire pour une visibilité
+                    professionnelle de vos compétitions de football.
+                </p>
+                <div class="social_links">
+                    <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_link">
+                        <i class='bx bxl-facebook'></i>
+                    </a>
+                    <a href="https://www.instagram.com/ligueproacademies" target="_blank" class="social_link">
+                        <i class='bx bxl-instagram'></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer_column">
+                <h4>Championnats</h4>
+                <ul>
+                    <li><a href="u17.html"><i class='bx bx-chevron-right'></i> Championnat U17</a></li>
+                    <li><a href="u19.html"><i class='bx bx-chevron-right'></i> Championnat U19</a></li>
+                </ul>
+            </div>
+
+            <div class="footer_column">
+                <h4>Organisation</h4>
+                <ul>
+                    <li><a href="membres.html"><i class='bx bx-chevron-right'></i> Nos Membres</a></li>
+                    <li><a href="membres.html#contact"><i class='bx bx-chevron-right'></i> Contact</a></li>
+                    <li><a href="admin.html"><i class='bx bx-cog'></i> Administration</a></li>
+                </ul>
+            </div>
+
+            <div class="footer_column">
+                <h4>Réseaux Sociaux</h4>
+                <ul>
+                    <li><a href="https://www.facebook.com/LigueProAcademies" target="_blank"><i
+                                class='bx bxl-facebook'></i> Facebook</a></li>
+                    <li><a href="https://www.instagram.com/ligueproacademies" target="_blank"><i
+                                class='bx bxl-instagram'></i> Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer_bottom">
+            <p>&copy; 2026 Ligue Pro Des Académies. Tous droits réservés.</p>
+            <p>Développé avec <i class='bx bx-heart' style="color: #E53935;"></i> au Sénégal</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        const toggle = document.getElementById('menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const close = document.getElementById('menu-close');
+
+        if (toggle && navMenu) {
+            toggle.addEventListener('click', () => {
+                navMenu.classList.add('active');
+            });
+        }
+
+        if (close && navMenu) {
+            close.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        }
+
+        // Close menu when clicking on a link
+        const navLinks = document.querySelectorAll('.nav_menu ul li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Update Stats Dynamically
+        function updateStats() {
+            const data = getData();
+            document.getElementById('statTeams').innerText = data.teams.length;
+            document.getElementById('statMatches').innerText = data.matches.length;
+        }
+
+        // Render Upcoming Matches
+        function renderHomeMatches() {
+            const data = getData();
+            const matches = getUpcomingMatches(3);
+            const container = document.getElementById('homeMatchGrid');
+            container.innerHTML = '';
+
+            if (matches.length === 0) {
+                container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; opacity: 0.5;">Aucun match programmé pour le moment.</p>';
+            } else {
+                matches.forEach(m => {
+                    const displayDate = m.date ? new Date(m.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) : 'À définir';
+                    const displayTime = m.time ? m.time : '';
+                    const teams = m.teams.split(' vs ');
+                    const t1Name = teams[0] || 'TBD';
+                    const t2Name = teams[1] || 'TBD';
+
+                    const t1 = data.teams.find(t => t.name === t1Name);
+                    const t2 = data.teams.find(t => t.name === t2Name);
+
+                    const div = document.createElement('div');
+                    div.className = 'portfolio_item';
+                    div.style.aspectRatio = 'auto';
+                    div.style.padding = '35px';
+                    div.innerHTML = `
+                        <div class="match_card_content">
+                            <span class="portfolio_category">${displayDate} ${displayTime}</span>
+                            <div class="match_teams_wrapper">
+                                <div class="match_team_logo"><img src="${t1 ? t1.logo : 'images/logo_ligue.png'}" alt=""></div>
+                                <span class="match_team_name">${t1Name}</span>
+                                <div class="match_vs_divider">${m.status === 'played' ? m.score1 + ' - ' + m.score2 : 'VS'}</div>
+                                <span class="match_team_name">${t2Name}</span>
+                                <div class="match_team_logo"><img src="${t2 ? t2.logo : 'images/logo_ligue.png'}" alt=""></div>
+                            </div>
+                            <p class="portfolio_description"><i class='bx bx-map'></i> ${m.venue}</p>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+        }
+
+        updateStats();
+        renderHomeMatches();
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const fadeInObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.about_content, .portfolio_item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            fadeInObserver.observe(el);
+        });
+    </script>
+</body>
+
+</html>

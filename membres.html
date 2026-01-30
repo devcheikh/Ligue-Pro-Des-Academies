@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membres | Ligue Pro Des Académies</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <nav id="navbar" class="scrolled">
+        <a href="index.html" class="nav_logo">
+            <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+        </a>
+
+        <div class="nav_menu" id="navMenu">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="u17.html">U17</a></li>
+                <li><a href="u19.html">U19</a></li>
+                <li><a href="membres.html" class="active">Membres</a></li>
+            </ul>
+        </div>
+
+        <div class="menu_toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <section class="page_header membres">
+        <div class="page_header_content">
+            <span class="page_badge">Notre Équipe</span>
+            <h1>Les <span class="highlight-yellow">Membres</span></h1>
+            <p>L'équipe qui fait vivre la Ligue Pro Des Académies</p>
+        </div>
+    </section>
+
+    <!-- DIRECTION -->
+    <section class="membres_section">
+        <div class="container">
+            <div class="section_header">
+                <div class="section_label">Direction</div>
+                <h2 class="section_title">Bureau <span class="highlight">Exécutif</span></h2>
+            </div>
+
+            <div class="membres_grid direction">
+                <div class="membre_card president">
+                    <div class="membre_photo">
+                        <i class='bx bx-user'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Président</h3>
+                        <p class="membre_name">M. Mame Dieng SARR</p>
+                        <p class="membre_role">Président De la LPA</p>
+                    </div>
+                </div>
+
+                <div class="membre_card">
+                    <div class="membre_photo">
+                        <i class='bx bx-user'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Vice-Président</h3>
+                        <p class="membre_name">M. Amadou SENE</p>
+                        <p class="membre_role">Relations Exterieurs & Communication</p>
+                    </div>
+                </div>
+
+                <div class="membre_card">
+                    <div class="membre_photo">
+                        <i class='bx bx-user'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Secrétaire Général</h3>
+                        <p class="membre_name">M. Cheikh T Diop</p>
+                        <p class="membre_role">Administration & Organisation</p>
+                    </div>
+                </div>
+
+                <div class="membre_card">
+                    <div class="membre_photo">
+                        <i class='bx bx-user'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Trésorier</h3>
+                        <p class="membre_name">M. Cheikh T DIOP</p>
+                        <p class="membre_role">Dierction Technique et Base de données </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMMISSION TECHNIQUE -->
+    <section class="membres_section alt">
+        <div class="container">
+            <div class="section_header">
+                <div class="section_label">Technique</div>
+                <h2 class="section_title">Commission <span class="highlight">Technique</span></h2>
+            </div>
+
+            <div class="membres_grid">
+                <div class="membre_card">
+                    <div class="membre_photo">
+                        <i class='bx bx-football'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Directeur Technique</h3>
+                        <p class="membre_name">M. Mouhamed LY</p>
+                        <p class="membre_role">Coordination sportive</p>
+                    </div>
+                </div>
+
+                <div class="membre_card">
+                    <div class="membre_photo">
+                        <i class='bx bx-shield'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Responsable Arbitrage</h3>
+                        <p class="membre_name">M.Alioune SECK</p>
+                        <p class="membre_role">Corps arbitral</p>
+                    </div>
+                </div>
+
+                <div class="membre_card">
+                    <div class="membre_photo">
+                        <i class='bx bx-bar-chart'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Statisticien</h3>
+                        <p class="membre_name">M. Mouhamed LY</p>
+                        <p class="membre_role">Stats & Analyses</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMMUNICATION -->
+    <section class="membres_section">
+        <div class="container">
+            <div class="section_header">
+                <div class="section_label">Communication</div>
+                <h2 class="section_title">Équipe <span class="highlight">Médias</span></h2>
+            </div>
+
+            <div class="membres_grid">
+                <div class="membre_card">
+                    <div class="membre_photo">
+                        <i class='bx bx-camera'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Community Manager</h3>
+                        <p class="membre_name">M Adama </p>
+                        <p class="membre_role">Réseaux sociaux</p>
+                    </div>
+                </div>
+
+                <div class="membre_card">
+                    <div class="membre_photo">
+                        <i class='bx bx-video'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Vidéaste</h3>
+                        <p class="membre_name">M. Adama</p>
+                        <p class="membre_role">Production vidéo</p>
+                    </div>
+                </div>
+
+                <div class="membre_card">
+                    <div class="membre_photo">
+                        <i class='bx bx-edit'></i>
+                    </div>
+                    <div class="membre_info">
+                        <h3>Rédacteur</h3>
+                        <p class="membre_name">M. Massiré</p>
+                        <p class="membre_role">Contenus & Articles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact_section">
+        <div class="container">
+            <div class="contact_content">
+                <div class="contact_info">
+                    <h2>Nous <span class="highlight">Contacter</span></h2>
+                    <p>Pour toute information ou demande de partenariat</p>
+
+                    <div class="contact_items">
+                        <div class="contact_item">
+                            <i class='bx bx-envelope'></i>
+                            <span>contact@ligueproacademies.com</span>
+                        </div>
+                        <div class="contact_item">
+                            <i class='bx bx-phone'></i>
+                            <span>+221 77 XXX XX XX</span>
+                        </div>
+                        <div class="contact_item">
+                            <i class='bx bx-map'></i>
+                            <span>Dakar, Sénégal</span>
+                        </div>
+                    </div>
+
+                    <div class="social_large">
+                        <a href="https://www.facebook.com/LigueProAcademies" target="_blank"
+                            class="social_btn facebook">
+                            <i class='bx bxl-facebook'></i> Facebook
+                        </a>
+                        <a href="https://www.instagram.com/ligueproacademies" target="_blank"
+                            class="social_btn instagram">
+                            <i class='bx bxl-instagram'></i> Instagram
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer_content">
+            <div class="footer_brand">
+                <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+                <p>La vitrine d'élite du football des académies.</p>
+                <div class="social_links">
+                    <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_link">
+                        <i class='bx bxl-facebook'></i>
+                    </a>
+                    <a href="https://www.instagram.com/ligueproacademies" target="_blank" class="social_link">
+                        <i class='bx bxl-instagram'></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer_column">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html"><i class='bx bx-chevron-right'></i> Accueil</a></li>
+                    <li><a href="u17.html"><i class='bx bx-chevron-right'></i> U17</a></li>
+                    <li><a href="u19.html"><i class='bx bx-chevron-right'></i> U19</a></li>
+                    <li><a href="membres.html"><i class='bx bx-chevron-right'></i> Membres</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer_bottom">
+            <p>&copy; 2026 Ligue Pro Des Académies. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
+        }
+    </script>
+</body>
+
+</html>

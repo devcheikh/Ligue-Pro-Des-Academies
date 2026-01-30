@@ -81,7 +81,8 @@ const defaultData = {
         { id: 23, name: "Teungueth FC U19", categoryId: "u19", logo: "images/logo_ligue.png", points: 0, v: 0, n: 0, d: 0, bp: 0, bc: 0, diff: 0 },
         { id: 24, name: "US Gorée U19", categoryId: "u19", logo: "images/logo_ligue.png", points: 0, v: 0, n: 0, d: 0, bp: 0, bc: 0, diff: 0 }
     ],
-    matches: []
+    matches: [],
+    news: []
 };
 
 let initPromise = null;
@@ -331,6 +332,39 @@ function getRecentResults(limit = 4) {
             return new Date(b.date) - new Date(a.date);
         })
         .slice(0, limit);
+}
+
+// News Management
+function addNews(title, summary, content, image = 'images/hero_bg.jpg') {
+    const data = getData();
+    const newPost = {
+        id: Date.now(),
+        title,
+        summary,
+        content,
+        image,
+        date: new Date().toISOString()
+    };
+    data.news.push(newPost);
+    saveData(data);
+    return newPost;
+}
+
+function updateNews(id, updates) {
+    const data = getData();
+    const index = data.news.findIndex(n => n.id === parseInt(id));
+    if (index !== -1) {
+        data.news[index] = { ...data.news[index], ...updates };
+        saveData(data);
+        return true;
+    }
+    return false;
+}
+
+function deleteNews(id) {
+    const data = getData();
+    data.news = data.news.filter(n => n.id !== parseInt(id));
+    saveData(data);
 }
 
 // Initial sync

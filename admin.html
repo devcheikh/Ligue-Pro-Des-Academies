@@ -96,7 +96,8 @@
             <button class="nav_btn admin_nav_btn active" onclick="showTab(event, 'categories')">Catégories</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'teams')">Équipes</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'matches')">Matchs</button>
-            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'draw')">Tirages</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'news')">Actualités</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'draw')">Tirage</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'data_mgmt')">Données</button>
         </div>
 
@@ -243,6 +244,52 @@
             </div>
         </div>
 
+        <!-- NEWS TAB -->
+        <div id="news" class="admin_tab_content" style="display: none;">
+            <div class="admin_content_card">
+                <h2>Gérer les <span class="highlight">Actualités</span></h2>
+                <form class="admin_form" id="newsForm">
+                    <div class="form_group">
+                        <label>Titre de l'article</label>
+                        <input type="text" id="newsTitle" required placeholder="Ex: Grande finale ce weekend">
+                    </div>
+                    <div class="form_group">
+                        <label>Résumé court</label>
+                        <textarea id="newsSummary" required
+                            style="width: 100%; min-height: 80px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--vert-principal); border-radius: 10px; padding: 15px;"></textarea>
+                    </div>
+                    <div class="form_group">
+                        <label>Contenu complet</label>
+                        <textarea id="newsContent" required
+                            style="width: 100%; min-height: 150px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--vert-principal); border-radius: 10px; padding: 15px;"></textarea>
+                    </div>
+                    <div class="form_group">
+                        <label>URL de l'image (optionnel)</label>
+                        <input type="text" id="newsImage" placeholder="Ex: images/news1.jpg">
+                    </div>
+                    <div class="form_group" style="justify-content: flex-end;">
+                        <button type="submit" class="btn-primary">Publier l'article</button>
+                    </div>
+                </form>
+
+                <div class="classement_table admin_table">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Titre</th>
+                                    <th>Résumé</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="newsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- DRAW TAB -->
         <div id="draw" class="admin_tab_content" style="display: none;">
             <div class="admin_content_card">
@@ -338,6 +385,7 @@
             if (tabId === 'categories') renderCategories();
             if (tabId === 'teams') renderTeams();
             if (tabId === 'matches') renderMatches();
+            if (tabId === 'news') renderNews();
             if (tabId === 'draw') renderDraws();
             if (tabId === 'data_mgmt') { /* No specific render needed for now */ }
         }
@@ -643,6 +691,73 @@
             if (confirm('Supprimer ce match ?')) {
                 deleteMatch(id);
                 renderMatches();
+            }
+        }
+
+        // --- NEWS ---
+        function renderNews() {
+            const data = getData();
+            const tbody = document.getElementById('newsTableBody');
+            tbody.innerHTML = '';
+
+            if (!data.news) data.news = [];
+
+            data.news.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(n => {
+                const date = new Date(n.date).toLocaleDateString();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${date}</td>
+                    <td><strong>${n.title}</strong></td>
+                    <td style="font-size: 0.8rem; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${n.summary}</td>
+                    <td>
+                        <button class="btn_action btn_edit" onclick="handleEditNews(${n.id})"><i class='bx bx-edit'></i></button>
+                        <button class="btn_action btn_delete" onclick="handleDeleteNews(${n.id})"><i class='bx bx-trash'></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        let editingNewsId = null;
+
+        function handleEditNews(id) {
+            const data = getData();
+            const n = data.news.find(item => item.id === id);
+            if (!n) return;
+
+            editingNewsId = id;
+            document.getElementById('newsTitle').value = n.title;
+            document.getElementById('newsSummary').value = n.summary;
+            document.getElementById('newsContent').value = n.content;
+            document.getElementById('newsImage').value = n.image || '';
+
+            document.querySelector('#newsForm .btn-primary').innerText = "Mettre à jour";
+            document.getElementById('newsForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('newsForm').onsubmit = function (e) {
+            e.preventDefault();
+            const title = document.getElementById('newsTitle').value;
+            const summary = document.getElementById('newsSummary').value;
+            const content = document.getElementById('newsContent').value;
+            const image = document.getElementById('newsImage').value || 'images/hero_bg.jpg';
+
+            if (editingNewsId) {
+                updateNews(editingNewsId, { title, summary, content, image });
+                editingNewsId = null;
+                document.querySelector('#newsForm .btn-primary').innerText = "Publier l'article";
+            } else {
+                addNews(title, summary, content, image);
+            }
+
+            this.reset();
+            renderNews();
+        };
+
+        function handleDeleteNews(id) {
+            if (confirm('Supprimer cet article ?')) {
+                deleteNews(id);
+                renderNews();
             }
         }
 

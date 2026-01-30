@@ -9,6 +9,33 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="data.js"></script>
+    <script>
+        async function testSupabaseDirect() {
+            const status = document.getElementById('supabaseStatus');
+            status.innerHTML = "Test en cours...";
+
+            try {
+                const url = "https://auidasirnsigninmrsdu.supabase.co";
+                const key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1aWRhc2lybnNpZ25pbm1yc2R1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk3ODkyNjUsImV4cCI6MjA4NTM2NTI2NX0.eFdqr5zqn-3ncVBV4YgTzgDnsjKCgwBV7zowtKm51Bw";
+
+                if (!window.supabase) {
+                    alert("ERREUR : La bibliothèque Supabase n'est pas chargée. Vérifiez votre connexion internet.");
+                    return;
+                }
+
+                const testClient = window.supabase.createClient(url, key);
+                const { data, error } = await testClient.from('app_state').select('id').limit(1);
+
+                if (error) throw error;
+
+                alert("SUCCÈS : Connexion établie ! Supabase répond correctement.");
+                status.innerHTML = "<b style='color: #10b981;'>✓ Connexion Directe Réussie</b>";
+            } catch (e) {
+                alert("ERREUR DIRECTE : " + e.message);
+                status.innerHTML = "<b style='color: #ef4444;'>❌ Echec : " + e.message + "</b>";
+            }
+        }
+    </script>
 </head>
 
 <body class="admin_dashboard">
@@ -252,6 +279,10 @@
                         style="width: fit-content; margin-top: 5px;">
                         Activer la Sync Cloud
                     </button>
+                    <button class="btn-outline" onclick="testSupabaseDirect()"
+                        style="width: fit-content; margin-top: 5px; border-color: #6366f1; color: #6366f1;">
+                        <i class='bx bx-bug'></i> Tester la Connexion Directe
+                    </button>
                     <p id="supabaseStatus" style="font-size: 0.75rem; color: var(--jaune-or); margin-top: 5px;"></p>
                 </div>
             </div>
@@ -267,7 +298,8 @@
                     <li>Copiez le <strong>Project URL</strong> et la <strong>anon public Key</strong> ci-dessus.</li>
                     <li><strong>IMPORTANT:</strong> Dans l'onglet "SQL Editor" de Supabase, créez une table nommée
                         <code>app_state</code> avec deux colonnes : <code>id</code> (text, primary key) et
-                        <code>config_data</code> (jsonb).</li>
+                        <code>config_data</code> (jsonb).
+                    </li>
                 </ol>
             </div>
         </div>
@@ -688,29 +720,62 @@
         }
 
         async function saveSupabaseConfig() {
-            const url = document.getElementById('supabaseUrl').value.trim();
-            const key = document.getElementById('supabaseKey').value.trim();
+            const urlInput = document.getElementById('supabaseUrl');
+            const keyInput = document.getElementById('supabaseKey');
+            const status = document.getElementById('supabaseStatus');
+
+            const url = urlInput.value.trim();
+            const key = keyInput.value.trim();
 
             if (!url || !key) {
                 alert("Veuillez remplir l'URL et la clé.");
                 return;
             }
 
-            const config = { url, key };
-            localStorage.setItem('ligue_supabase_config', JSON.stringify(config));
+            status.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Tentative de connexion...";
 
-            // Re-init data with new config
-            document.getElementById('supabaseStatus').innerText = "Initialisation...";
             try {
-                await initData();
-                // Test sync
+                // 1. Sauvegarde locale immédiate
+                const config = { url, key };
+                localStorage.setItem('ligue_supabase_config', JSON.stringify(config));
+
+                // 2. Test de connexion direct (Bypass initData pour isoler l'erreur)
+                if (!window.supabase) {
+                    throw new Error("La bibliothèque Supabase n'est pas chargée. Vérifiez votre connexion internet.");
+                }
+
+                const testClient = window.supabase.createClient(url, key);
+
+                // On tente de lire la table
+                const { data, error } = await testClient.from('app_state').select('id').eq('id', 'global_state').single();
+
+                if (error && error.code !== 'PGRST116') { // PGRST116 = ligne non trouvée, ce qui est acceptable si table vide
+                    throw error;
+                }
+
+                // 3. Si on arrive ici, le client fonctionne. On initialise le global.
+                supabase = testClient;
+
+                // 4. Test d'écriture
                 await saveData(getData());
-                document.getElementById('supabaseStatus').innerText = "✓ Connecté et synchronisé !";
-                alert("Supabase est maintenant configuré. Vos données seront synchronisées automatiquement.");
+
+                status.innerHTML = "<b style='color: #10b981;'>✓ [V3] Connecté et synchronisé !</b>";
+                alert("SUCCÈS : Supabase est bien configuré et vos données sont synchronisées !");
                 location.reload();
+
             } catch (e) {
-                document.getElementById('supabaseStatus').innerText = "❌ Erreur de connexion.";
-                console.error(e);
+                console.error("DEBUG SYNC ERROR:", e);
+                const errorMsg = e.message || "Erreur inconnue";
+                status.innerHTML = "<b style='color: #ef4444;'>❌ Erreur : " + errorMsg + "</b>";
+
+                let details = "DÉTAIL DE L'ERREUR :\n\n" + errorMsg;
+                if (errorMsg.includes("Failed to fetch")) {
+                    details += "\n\nConseil : Vérifiez votre connexion internet ou si un bloqueur désactive l'accès à Supabase.";
+                } else if (errorMsg.includes("relation \"public.app_state\" does not exist")) {
+                    details += "\n\nConseil : Vous n'avez pas créé la table 'app_state' dans le SQL Editor de Supabase.";
+                }
+
+                alert(details);
             }
         }
 

@@ -72,33 +72,48 @@ const defaultData = {
     matches: []
 };
 
+let initPromise = null;
+
 async function initData() {
-    initSupabase();
+    if (initPromise) return initPromise;
 
-    // First, try to load from Supabase if configured
-    if (supabase) {
-        try {
-            const { data, error } = await supabase
-                .from('app_state')
-                .select('config_data')
-                .eq('id', 'global_state')
-                .single();
+    initPromise = (async () => {
+        initSupabase();
 
-            if (data && data.config_data) {
-                localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(data.config_data));
-                console.log("Data loaded from Supabase");
-                return;
+        if (supabase) {
+            try {
+                const { data, error } = await supabase
+                    .from('app_state')
+                    .select('config_data')
+                    .eq('id', 'global_state')
+                    .single();
+
+                if (error) {
+                    if (error.code === 'PGRST116') {
+                        console.log("Supabase table exists but is empty.");
+                    } else {
+                        console.warn("Supabase check error (might be missing table):", error);
+                    }
+                }
+
+                if (data && data.config_data) {
+                    localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(data.config_data));
+                    console.log("Data loaded from Supabase");
+                    return;
+                }
+            } catch (e) {
+                console.error("Failed to load from Supabase:", e);
             }
-        } catch (e) {
-            console.error("Failed to load from Supabase:", e);
         }
-    }
 
-    // Fallback to local storage or default
-    const storedData = localStorage.getItem(LIGUE_DATA_KEY);
-    if (!storedData) {
-        localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(defaultData));
-    }
+        // Fallback to local storage or default
+        const storedData = localStorage.getItem(LIGUE_DATA_KEY);
+        if (!storedData) {
+            localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(defaultData));
+        }
+    })();
+
+    return initPromise;
 }
 
 function getData() {
@@ -116,7 +131,15 @@ async function saveData(data) {
                 .from('app_state')
                 .upsert({ id: 'global_state', config_data: data });
 
-            if (error) throw error;
+            if (error) {
+                console.error("Supabase Sync Error:", error);
+                if (error.message.includes("relation \"public.app_state\" does not exist")) {
+                    alert("ERREUR : La table 'app_state' n'existe pas sur Supabase. Allez sur Supabase et créez la table avec le script SQL fourni.");
+                } else {
+                    alert("Erreur de synchronisation Cloud : " + error.message);
+                }
+                throw error;
+            }
             console.log("Data synced to Supabase");
         } catch (e) {
             console.error("Failed to sync to Supabase:", e);

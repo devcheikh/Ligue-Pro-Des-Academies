@@ -13,22 +13,28 @@ const PUBLIC_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdX
 let supabase = null;
 
 function initSupabase() {
+    console.log("--- Supabase Init Started ---");
     let config = JSON.parse(localStorage.getItem(SUPABASE_CONFIG_KEY));
 
-    // Use local storage config if available, otherwise use hardcoded public keys
-    const url = (config && config.url) ? config.url : PUBLIC_SUPABASE_URL;
-    const key = (config && config.key) ? config.key : PUBLIC_SUPABASE_KEY;
+    const url = (config && config.url) ? config.url.trim() : PUBLIC_SUPABASE_URL;
+    const key = (config && config.key) ? config.key.trim() : PUBLIC_SUPABASE_KEY;
+
+    console.log("Config URL:", url);
 
     if (url && key) {
         try {
             if (window.supabase) {
                 supabase = window.supabase.createClient(url, key);
-                console.log("Supabase initialized with " + (config ? "Local Storage" : "Hardcoded") + " config");
+                console.log("Client created successfully");
+                return supabase;
+            } else {
+                console.error("Supabase script NOT LOADED from CDN");
             }
         } catch (e) {
-            console.error("Error initializing Supabase:", e);
+            console.error("Creation error:", e);
         }
     }
+    return null;
 }
 
 // Default initial data

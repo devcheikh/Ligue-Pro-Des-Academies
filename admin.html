@@ -264,8 +264,19 @@
                             style="width: 100%; min-height: 150px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--vert-principal); border-radius: 10px; padding: 15px;"></textarea>
                     </div>
                     <div class="form_group">
-                        <label>URL de l'image (optionnel)</label>
-                        <input type="text" id="newsImage" placeholder="Ex: images/news1.jpg">
+                        <label>Photo de l'Actualité</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <input type="file" id="newsLogoFile" accept="image/*" onchange="previewNewsLogo(this)"
+                                style="display: none;">
+                            <label for="newsLogoFile" class="btn-outline"
+                                style="cursor: pointer; margin: 0; padding: 10px 20px;">
+                                <i class='bx bx-upload'></i> Choisir Image
+                            </label>
+                            <div id="newsLogoPreview"
+                                style="width: 80px; height: 80px; border-radius: 10px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--vert-principal);">
+                                <i class='bx bx-image' style="opacity: 0.3;"></i>
+                            </div>
+                        </div>
                     </div>
                     <div class="form_group" style="justify-content: flex-end;">
                         <button type="submit" class="btn-primary">Publier l'article</button>
@@ -718,7 +729,19 @@
             });
         }
 
-        let editingNewsId = null;
+        let currentNewsLogoBase64 = 'images/hero_bg.jpg';
+
+        function previewNewsLogo(input) {
+            const preview = document.getElementById('newsLogoPreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    currentNewsLogoBase64 = e.target.result;
+                    preview.innerHTML = `<img src="${currentNewsLogoBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
         function handleEditNews(id) {
             const data = getData();
@@ -729,7 +752,9 @@
             document.getElementById('newsTitle').value = n.title;
             document.getElementById('newsSummary').value = n.summary;
             document.getElementById('newsContent').value = n.content;
-            document.getElementById('newsImage').value = n.image || '';
+
+            currentNewsLogoBase64 = n.image || 'images/hero_bg.jpg';
+            document.getElementById('newsLogoPreview').innerHTML = `<img src="${currentNewsLogoBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
 
             document.querySelector('#newsForm .btn-primary').innerText = "Mettre à jour";
             document.getElementById('newsForm').scrollIntoView({ behavior: 'smooth' });
@@ -740,7 +765,7 @@
             const title = document.getElementById('newsTitle').value;
             const summary = document.getElementById('newsSummary').value;
             const content = document.getElementById('newsContent').value;
-            const image = document.getElementById('newsImage').value || 'images/hero_bg.jpg';
+            const image = currentNewsLogoBase64;
 
             if (editingNewsId) {
                 updateNews(editingNewsId, { title, summary, content, image });
@@ -751,6 +776,8 @@
             }
 
             this.reset();
+            currentNewsLogoBase64 = 'images/hero_bg.jpg';
+            document.getElementById('newsLogoPreview').innerHTML = `<i class='bx bx-image' style="opacity: 0.3;"></i>`;
             renderNews();
         };
 

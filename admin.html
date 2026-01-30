@@ -10,45 +10,51 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="data.js"></script>
     <script>
-        async function testSupabaseDirect() {
-            const status = document.getElementById('supabaseStatus');
-            status.innerHTML = "Test en cours...";
+        // AUTHENTICATION LOGIC
+        const ADMIN_PWD_HASH = "LiguePro2026"; // Simple string for now
 
-            try {
-                const url = "https://auidasirnsigninmrsdu.supabase.co";
-                const key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1aWRhc2lybnNpZ25pbm1yc2R1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk3ODkyNjUsImV4cCI6MjA4NTM2NTI2NX0.eFdqr5zqn-3ncVBV4YgTzgDnsjKCgwBV7zowtKm51Bw";
-
-                const lib = window.supabase || (window.supabaseJS ? window.supabaseJS : null);
-
-                if (!lib) {
-                    alert("ERREUR : La bibliothèque Supabase n'est pas chargée. Vérifiez votre connexion internet.");
-                    return;
-                }
-
-                let testClient;
-                if (lib.createClient) {
-                    testClient = lib.createClient(url, key);
-                } else if (typeof lib === 'function') {
-                    testClient = lib(url, key);
-                } else {
-                    throw new Error("Format de bibliothèque Supabase inconnu (type: " + typeof lib + ")");
-                }
-
-                const { data, error } = await testClient.from('app_state').select('id').limit(1);
-
-                if (error) throw error;
-
-                alert("SUCCÈS : Connexion établie ! Supabase répond correctement.");
-                status.innerHTML = "<b style='color: #10b981;'>✓ Connexion Directe Réussie</b>";
-            } catch (e) {
-                alert("ERREUR DIRECTE : " + e.message);
-                status.innerHTML = "<b style='color: #ef4444;'>❌ Echec : " + e.message + "</b>";
+        function checkAuth() {
+            if (sessionStorage.getItem('lpa_authenticated') === 'true') {
+                document.body.classList.add('authenticated');
+                const overlay = document.getElementById('admin-login-overlay');
+                if (overlay) overlay.style.display = 'none';
             }
         }
+
+        function login() {
+            const pwd = document.getElementById('admin-pwd').value;
+            if (pwd === ADMIN_PWD_HASH) {
+                sessionStorage.setItem('lpa_authenticated', 'true');
+                location.reload();
+            } else {
+                alert("Mot de passe incorrect.");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkAuth);
     </script>
 </head>
 
 <body class="admin_dashboard">
+    <!-- ADMIN LOGIN OVERLAY -->
+    <div id="admin-login-overlay">
+        <div class="login-box">
+            <img src="images/logo_ligue.png" alt="Logo" class="login-logo">
+            <h2>Accès Restreint</h2>
+            <p>Veuillez entrer le mot de passe administrateur.</p>
+
+            <div class="login-input-group">
+                <label>Mot de passe</label>
+                <input type="password" id="admin-pwd" placeholder="••••••••"
+                    onkeypress="if(event.key==='Enter') login()">
+            </div>
+
+            <button class="btn-primary" onclick="login()">
+                <i class='bx bx-lock-open-alt'></i> Se connecter
+            </button>
+        </div>
+    </div>
+
     <!-- NAVIGATION -->
     <nav id="navbar" class="scrolled">
         <a href="index.html" class="nav_logo">
@@ -802,6 +808,41 @@
             renderCategories();
             loadSupabaseConfig();
         });
+
+        // RE-ADD testSupabaseDirect (moved from head for cleaner auth check)
+        async function testSupabaseDirect() {
+            const status = document.getElementById('supabaseStatus');
+            status.innerHTML = "Test en cours...";
+
+            try {
+                const url = "https://auidasirnsigninmrsdu.supabase.co";
+                const key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1aWRhc2lybnNpZ25pbm1yc2R1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk3ODkyNjUsImV4cCI6MjA4NTM2NTI2NX0.eFdqr5zqn-3ncVBV4YgTzgDnsjKCgwBV7zowtKm51Bw";
+
+                const lib = window.supabase || (window.supabaseJS ? window.supabaseJS : null);
+
+                if (!lib) {
+                    alert("ERREUR : La bibliothèque Supabase n'est pas chargée.");
+                    return;
+                }
+
+                let testClient;
+                if (lib.createClient) {
+                    testClient = lib.createClient(url, key);
+                } else if (typeof lib === 'function') {
+                    testClient = lib(url, key);
+                } else {
+                    throw new Error("Format de bibliothèque Supabase inconnu");
+                }
+
+                const { data, error } = await testClient.from('app_state').select('id').limit(1);
+                if (error) throw error;
+                alert("SUCCÈS : Connexion établie !");
+                status.innerHTML = "<b style='color: #10b981;'>✓ Connexion Directe Réussie</b>";
+            } catch (e) {
+                alert("ERREUR DIRECTE : " + e.message);
+                status.innerHTML = "<b style='color: #ef4444;'>❌ Echec</b>";
+            }
+        }
     </script>
 </body>
 

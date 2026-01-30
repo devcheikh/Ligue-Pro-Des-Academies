@@ -7,6 +7,7 @@
     <title>Admin Dashboard | Ligue Pro Des Académies</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="data.js"></script>
 </head>
 
@@ -53,6 +54,7 @@
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'teams')">Équipes</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'matches')">Matchs</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'draw')">Tirages</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'data_mgmt')">Données</button>
         </div>
 
         <!-- CATEGORIES TAB -->
@@ -203,12 +205,73 @@
             <div class="admin_content_card">
                 <h2>Tirages au Sort <span class="highlight">Indépendants</span></h2>
                 <p>Gérez le tirage aléatoire du calendrier ou des compositions par catégorie.</p>
-                <div id="drawGrid"
-                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;">
-                    <!-- Dynamically populated draw boxes -->
-                </div>
             </div>
         </div>
+    </div>
+
+    <!-- DATA MANAGEMENT TAB -->
+    <div id="data_mgmt" class="admin_tab_content" style="display: none;">
+        <div class="admin_content_card">
+            <h2>Gestion des <span class="highlight">Données</span></h2>
+            <p>Exportez vos données locales pour les sauvegarder ou les synchroniser avec Vercel.</p>
+
+            <div style="display: flex; gap: 20px; margin-top: 30px; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="exportData()">
+                    <i class='bx bx-download'></i> Exporter les données (.json)
+                </button>
+
+                <div style="position: relative;">
+                    <input type="file" id="importFile" accept=".json" onchange="importData(this)"
+                        style="display: none;">
+                    <label for="importFile" class="btn-outline"
+                        style="cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 10px;">
+                        <i class='bx bx-upload'></i> Importer un fichier (.json)
+                    </label>
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 40px; padding: 20px; background: rgba(5, 150, 105, 0.1); border-left: 4px solid var(--vert-principal); border-radius: 4px;">
+                <h4 style="color: var(--vert-principal); margin-bottom: 10px;"><i class='bx bx-cloud'></i> Configuration
+                    Supabase (Auto-Sync)</h4>
+                <p style="font-size: 0.85rem; margin-bottom: 15px; opacity: 0.8;">Connectez votre base de données pour
+                    que Vercel se mette à jour automatiquement sans modification de code.</p>
+
+                <div class="admin_form" style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;">
+                    <div class="form_group">
+                        <label style="font-size: 0.8rem;">Supabase URL</label>
+                        <input type="text" id="supabaseUrl" placeholder="https://xyz.supabase.co"
+                            style="font-size: 0.9rem;">
+                    </div>
+                    <div class="form_group">
+                        <label style="font-size: 0.8rem;">Supabase Anon Key</label>
+                        <input type="password" id="supabaseKey" placeholder="votre-cle-api-anon"
+                            style="font-size: 0.9rem;">
+                    </div>
+                    <button class="btn-primary" onclick="saveSupabaseConfig()"
+                        style="width: fit-content; margin-top: 5px;">
+                        Activer la Sync Cloud
+                    </button>
+                    <p id="supabaseStatus" style="font-size: 0.75rem; color: var(--jaune-or); margin-top: 5px;"></p>
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 20px; padding: 20px; background: rgba(255,193,7,0.1); border-left: 4px solid var(--jaune-or); border-radius: 4px;">
+                <h4 style="color: var(--jaune-or); margin-bottom: 10px;"><i class='bx bx-info-circle'></i> Aide à la
+                    configuration</h4>
+                <ol style="margin-left: 20px; line-height: 1.6; font-size: 0.9rem;">
+                    <li>Créez un projet sur <a href="https://supabase.com" target="_blank"
+                            style="color: var(--jaune-or);">Supabase</a>.</li>
+                    <li>Dans votre dashboard Supabase, allez dans <strong>Project Settings > API</strong>.</li>
+                    <li>Copiez le <strong>Project URL</strong> et la <strong>anon public Key</strong> ci-dessus.</li>
+                    <li><strong>IMPORTANT:</strong> Dans l'onglet "SQL Editor" de Supabase, créez une table nommée
+                        <code>app_state</code> avec deux colonnes : <code>id</code> (text, primary key) et
+                        <code>config_data</code> (jsonb).</li>
+                </ol>
+            </div>
+        </div>
+    </div>
     </div>
 
     <script>
@@ -228,6 +291,7 @@
             if (tabId === 'teams') renderTeams();
             if (tabId === 'matches') renderMatches();
             if (tabId === 'draw') renderDraws();
+            if (tabId === 'data_mgmt') { /* No specific render needed for now */ }
         }
 
         // --- CATEGORIES ---
@@ -574,8 +638,87 @@
             }
         }
 
+        // --- DATA EXPORT/IMPORT ---
+        function exportData() {
+            const data = getData();
+            const dataStr = JSON.stringify(data, null, 4);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `ligue_data_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async function (e) {
+                    try {
+                        const json = JSON.parse(e.target.result);
+                        if (json.categories && json.teams) {
+                            if (confirm("Voulez-vous écraser vos données actuelles par celles du fichier ?")) {
+                                await saveData(json);
+                                alert("Données importées avec succès !");
+                                location.reload();
+                            }
+                        } else {
+                            alert("Format de fichier invalide.");
+                        }
+                    } catch (err) {
+                        alert("Erreur lors de la lecture du fichier.");
+                    }
+                };
+                reader.readAsText(input.files[0]);
+            }
+        }
+
+        // --- SUPABASE CONFIG ---
+        function loadSupabaseConfig() {
+            const config = JSON.parse(localStorage.getItem('ligue_supabase_config'));
+            if (config) {
+                document.getElementById('supabaseUrl').value = config.url || '';
+                document.getElementById('supabaseKey').value = config.key || '';
+                if (config.url && config.key) {
+                    document.getElementById('supabaseStatus').innerText = "✓ Sync Cloud configurée localement.";
+                }
+            }
+        }
+
+        async function saveSupabaseConfig() {
+            const url = document.getElementById('supabaseUrl').value.trim();
+            const key = document.getElementById('supabaseKey').value.trim();
+
+            if (!url || !key) {
+                alert("Veuillez remplir l'URL et la clé.");
+                return;
+            }
+
+            const config = { url, key };
+            localStorage.setItem('ligue_supabase_config', JSON.stringify(config));
+
+            // Re-init data with new config
+            document.getElementById('supabaseStatus').innerText = "Initialisation...";
+            try {
+                await initData();
+                // Test sync
+                await saveData(getData());
+                document.getElementById('supabaseStatus').innerText = "✓ Connecté et synchronisé !";
+                alert("Supabase est maintenant configuré. Vos données seront synchronisées automatiquement.");
+                location.reload();
+            } catch (e) {
+                document.getElementById('supabaseStatus').innerText = "❌ Erreur de connexion.";
+                console.error(e);
+            }
+        }
+
         // INIT
-        renderCategories();
+        initData().then(() => {
+            renderCategories();
+            loadSupabaseConfig();
+        });
     </script>
 </body>
 

@@ -10,6 +10,7 @@
     <title>Ligue Pro Des Académies | La Vitrine d'Élite du Football</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="data.js"></script>
 </head>
 
@@ -356,6 +357,12 @@
 
         updateStats();
         renderHomeMatches();
+
+        // INIT CLOUD DATA
+        initData().then(() => {
+            updateStats();
+            renderHomeMatches();
+        });
 
         // Animate elements on scroll
         const observerOptions = {

@@ -59,6 +59,14 @@
             <div class="footer_column">
                 <img src="images/logo_ligue.png" alt="Logo" style="height: 60px; margin-bottom: 20px;">
                 <p>L'élite du football académique au Sénégal. Détecter, former, rayonner.</p>
+                <div class="social_links">
+                    <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_link">
+                        <i class='bx bxl-facebook'></i>
+                    </a>
+                    <a href="https://www.instagram.com/ligue_pro_academies/" target="_blank" class="social_link">
+                        <i class='bx bxl-instagram'></i>
+                    </a>
+                </div>
             </div>
             <div class="footer_column">
                 <h4>Navigation</h4>
@@ -101,6 +109,12 @@
             menuToggle.classList.toggle('active');
         });
 
+        // Linkify URLs in text
+        function linkify(text) {
+            const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            return text.replace(urlPattern, '<a href="$1" target="_blank" style="color: var(--jaune-or); text-decoration: underline;">$1</a>');
+        }
+
         // Load News
         async function loadBlog() {
             await initData();
@@ -130,7 +144,7 @@
                     <div class="news_card_content">
                         <span class="news_date"><i class='bx bx-calendar'></i> ${dateFormated}</span>
                         <h3>${post.title}</h3>
-                        <p>${post.summary}</p>
+                        <p>${linkify(post.summary)}</p>
                         <button class="btn-outline-small" onclick="viewPost(${post.id})">Lire la suite</button>
                     </div>
                 `;
@@ -139,8 +153,23 @@
         }
 
         function viewPost(id) {
-            // Future expansion: dedicated article page
-            alert("Cette fonctionnalité sera bientôt disponible : lecture complète de l'article.");
+            const data = getData();
+            const post = data.news.find(n => n.id === id);
+            if (!post) return;
+
+            // Simplified full view modal for now
+            const modal = document.createElement('div');
+            modal.style = "position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px;";
+            modal.innerHTML = `
+                <div style="background: var(--noir); border: 1px solid var(--vert-principal); width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; border-radius: 20px; position: relative; padding: 40px;">
+                    <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer;"><i class='bx bx-x'></i></button>
+                    <img src="${post.image}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 10px; margin-bottom: 25px;">
+                    <h2 style="margin-bottom: 15px;">${post.title}</h2>
+                    <div style="color: var(--jaune-or); font-size: 0.9rem; margin-bottom: 20px;"><i class='bx bx-calendar'></i> ${new Date(post.date).toLocaleDateString()}</div>
+                    <div style="line-height: 1.8; color: rgba(255,255,255,0.8); white-space: pre-wrap;">${linkify(post.content)}</div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
         loadBlog();

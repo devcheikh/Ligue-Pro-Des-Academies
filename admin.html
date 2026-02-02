@@ -182,6 +182,7 @@
                                     <th>Nom</th>
                                     <th>Championnat</th>
                                     <th>Points</th>
+                                    <th>Diff</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -477,6 +478,7 @@
                     <td><strong>${t.name}</strong></td>
                     <td>${cat ? cat.name : 'Inconnu'}</td>
                     <td><input type="number" value="${t.points}" onchange="handleUpdatePoints(${t.id}, this.value)" style="width: 50px; background: transparent; color: white; border: 1px solid var(--vert-principal); text-align: center;"></td>
+                    <td><strong>${t.diff > 0 ? '+' + t.diff : t.diff}</strong></td>
                     <td>
                         <button class="btn_action btn_edit" onclick="handleEditTeam(${t.id})"><i class='bx bx-edit'></i></button>
                         <button class="btn_action btn_delete" onclick="handleDeleteTeam(${t.id})"><i class='bx bx-trash'></i></button>

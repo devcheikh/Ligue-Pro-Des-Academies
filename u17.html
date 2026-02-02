@@ -205,7 +205,10 @@
         function renderGrid(containerId, teams) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
-            teams.sort((a, b) => b.points - a.points).forEach((t, index) => {
+            teams.sort((a, b) => {
+                if (b.points !== a.points) return b.points - a.points;
+                return b.diff - a.diff;
+            }).forEach((t, index) => {
                 const rank = index + 1;
                 let badgeClass = rank <= 2 ? 'semi' : (rank <= 6 ? 'quarter' : '');
                 let badgeText = rank <= 2 ? 'DEMI' : (rank <= 6 ? 'QUART' : '');
@@ -222,6 +225,7 @@
                         <div class="team_stats">
                             <span><strong>${t.points}</strong> pts</span>
                             <span>${t.v}V ${t.n}N ${t.d}D</span>
+                            <span>Diff: <strong>${t.diff > 0 ? '+' + t.diff : t.diff}</strong></span>
                         </div>
                     </div>
                     ${badgeClass ? `<div class="team_badge ${badgeClass}">${badgeText}</div>` : ''}

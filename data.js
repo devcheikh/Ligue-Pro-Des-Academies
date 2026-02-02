@@ -131,6 +131,7 @@ async function initData() {
 
 function getData() {
     const data = JSON.parse(localStorage.getItem(LIGUE_DATA_KEY)) || defaultData;
+    if (!data.news) data.news = []; // Ensure news array exist for older data
     return data;
 }
 

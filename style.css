@@ -2364,6 +2364,7 @@ footer {
 .admin_dashboard.authenticated .admin_sidebar {
     display: flex;
 }
+
 /* ============ CHAT WIDGET ============ */
 .chat-widget-container {
     position: fixed;
@@ -2568,7 +2569,8 @@ footer {
     margin-bottom: 15px;
 }
 
-.form-input, .form-textarea {
+.form-input,
+.form-textarea {
     width: 100%;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2585,7 +2587,8 @@ footer {
     min-height: 100px;
 }
 
-.form-input:focus, .form-textarea:focus {
+.form-input:focus,
+.form-textarea:focus {
     border-color: var(--jaune-or);
     background: rgba(0, 0, 0, 0.5);
 }
@@ -2644,3 +2647,35 @@ footer {
     color: rgba(255, 255, 255, 0.8);
 }
 
+
+/* ============ RESPONSIVE CHAT ============ */
+@media (max-width: 480px) {
+    .chat-widget-container {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .chat-window {
+        position: fixed !important;
+        /* Force fixed positioning relative to viewport */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        bottom: 0;
+        border-radius: 0;
+        transform: translateY(100%);
+        z-index: 100000;
+        /* Ensure it's above everything */
+    }
+
+    .chat-window.active {
+        transform: translateY(0);
+    }
+
+    .chat-messages {
+        padding-bottom: 80px;
+        /* Extra padding for mobile keyboard/scrolling */
+    }
+}

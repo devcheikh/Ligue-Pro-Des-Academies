@@ -370,3 +370,95 @@ function deleteNews(id) {
 
 // Initial sync
 initData();
+
+// --- CHAT & COMMENTS FEATURES ---
+
+// 1. PUBLIC CHAT
+async function sendMessage(username, content) {
+    if (!supabaseClient) return null;
+    try {
+        const { data, error } = await supabaseClient
+            .from('messages')
+            .insert([{ username, content }])
+            .select();
+
+        if (error) throw error;
+        return data[0];
+    } catch (e) {
+        console.error("Error sending message:", e);
+        alert("Erreur d'envoi (vérifiez que la table 'messages' existe).");
+        return null;
+    }
+}
+
+async function getRecentMessages(limit = 50) {
+    if (!supabaseClient) return [];
+    try {
+        const { data, error } = await supabaseClient
+            .from('messages')
+            .select('*')
+            .order('created_at', { ascending: true }) // Oldest first for chat flow? Or newest? usually chat is bottom-up. Let's do ascending for history.
+            .limit(limit);
+
+        if (error) throw error;
+        return data;
+    } catch (e) {
+        console.error("Error fetching messages:", e);
+        return [];
+    }
+}
+
+function subscribeToMessages(onNewMessage) {
+    if (!supabaseClient) return;
+    return supabaseClient
+        .channel('public:messages')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+            onNewMessage(payload.new);
+        })
+        .subscribe();
+}
+
+// 2. COMMENTS (Championships)
+async function sendComment(contextId, username, content) {
+    if (!supabaseClient) return null;
+    try {
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .insert([{ context_id: contextId, username, content }])
+            .select();
+
+        if (error) throw error;
+        return data[0];
+    } catch (e) {
+        console.error("Error sending comment:", e);
+        alert("Erreur d'envoi (vérifiez que la table 'comments' existe).");
+        return null;
+    }
+}
+
+async function getComments(contextId) {
+    if (!supabaseClient) return [];
+    try {
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .select('*')
+            .eq('context_id', contextId)
+            .order('created_at', { ascending: false }); // Newest on top for comments
+
+        if (error) throw error;
+        return data;
+    } catch (e) {
+        console.error("Error fetching comments:", e);
+        return [];
+    }
+}
+
+function subscribeToComments(contextId, onNewComment) {
+    if (!supabaseClient) return;
+    return supabaseClient
+        .channel(`public:comments:${contextId}`)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'comments', filter: `context_id=eq.${contextId}` }, payload => {
+            onNewComment(payload.new);
+        })
+        .subscribe();
+}

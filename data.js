@@ -82,7 +82,9 @@ const defaultData = {
         { id: 24, name: "US Gorée U19", categoryId: "u19", logo: "images/logo_ligue.png", points: 0, v: 0, n: 0, d: 0, bp: 0, bc: 0, diff: 0 }
     ],
     matches: [],
-    news: []
+    news: [],
+    stadiums: [], // { id, name, location, contact, image }
+    stadiumSlots: [] // { id, stadiumId, date, start, end, status, price }
 };
 
 let initPromise = null;
@@ -132,6 +134,8 @@ async function initData() {
 function getData() {
     const data = JSON.parse(localStorage.getItem(LIGUE_DATA_KEY)) || defaultData;
     if (!data.news) data.news = []; // Ensure news array exist for older data
+    if (!data.stadiums) data.stadiums = [];
+    if (!data.stadiumSlots) data.stadiumSlots = [];
     return data;
 }
 
@@ -366,6 +370,81 @@ function deleteNews(id) {
     const data = getData();
     data.news = data.news.filter(n => n.id !== parseInt(id));
     saveData(data);
+}
+
+// Stadiums Management
+function addStadium(name, location, contact, image = 'images/stadium_default.jpg') {
+    const data = getData();
+    const newStadium = {
+        id: Date.now(),
+        name,
+        location,
+        contact,
+        image
+    };
+    data.stadiums.push(newStadium);
+    saveData(data);
+    return newStadium;
+}
+
+function updateStadium(id, updates) {
+    const data = getData();
+    const index = data.stadiums.findIndex(s => s.id === parseInt(id));
+    if (index !== -1) {
+        data.stadiums[index] = { ...data.stadiums[index], ...updates };
+        saveData(data);
+        return true;
+    }
+    return false;
+}
+
+function deleteStadium(id) {
+    const data = getData();
+    data.stadiums = data.stadiums.filter(s => s.id !== parseInt(id));
+    // Also delete associated slots
+    data.stadiumSlots = data.stadiumSlots.filter(slot => slot.stadiumId !== parseInt(id));
+    saveData(data);
+}
+
+// Stadium Slots Management
+function addSlot(stadiumId, date, start, end, price) {
+    const data = getData();
+    const newSlot = {
+        id: Date.now(),
+        stadiumId: parseInt(stadiumId),
+        date,
+        start,
+        end,
+        price,
+        status: 'available' // available, booked
+    };
+    data.stadiumSlots.push(newSlot);
+    saveData(data);
+    return newSlot;
+}
+
+function deleteSlot(id) {
+    const data = getData();
+    data.stadiumSlots = data.stadiumSlots.filter(s => s.id !== parseInt(id));
+    saveData(data);
+}
+
+function updateSlotStatus(id, newStatus) {
+    const data = getData();
+    const index = data.stadiumSlots.findIndex(s => s.id === parseInt(id));
+    if (index !== -1) {
+        data.stadiumSlots[index].status = newStatus;
+        saveData(data);
+        return true;
+    }
+    return false;
+}
+
+function getStadiumSlots(stadiumId) {
+    const data = getData();
+    return data.stadiumSlots
+        .filter(s => s.stadiumId === parseInt(stadiumId))
+        .sort((a, b) => new Date(a.date + ' ' + a.start) - new Date(b.date + ' ' + b.start));
 }
 
 // Initial sync

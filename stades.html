@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stades & Réservations | Ligue Pro Des Académies</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="data.js"></script>
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <nav id="navbar">
+        <a href="index.html" class="nav_logo">
+            <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+        </a>
+
+        <div class="nav_menu" id="nav-menu">
+            <i class='bx bx-x menu_close' id="menu-close"></i>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="u17.html">U17</a></li>
+                <li><a href="u19.html">U19</a></li>
+                <li><a href="stades.html" class="active">Stades</a></li>
+                <li><a href="blog.html">Actualités</a></li>
+                <li><a href="membres.html">Membres</a></li>
+            </ul>
+        </div>
+
+        <div class="menu_toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page_header"
+        style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/hero_bg.jpg');">
+        <h1>Stades & <span class="highlight">Réservations</span></h1>
+        <p>Réservez des créneaux d'entraînement ou de match dans nos stades partenaires.</p>
+    </header>
+
+    <!-- STADIUMS LIST -->
+    <section class="section_container">
+        <div id="stadiums-list" class="portfolio_grid">
+            <!-- Stadium cards injected here -->
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer_content">
+            <div class="footer_brand">
+                <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+                <p>La vitrine d'élite du football sénégalais.</p>
+            </div>
+        </div>
+        <div class="footer_bottom">
+            <p>&copy; 2026 Ligue Pro Des Académies.</p>
+        </div>
+    </footer>
+
+    <script src="chat.js"></script>
+    <script>
+        // Navbar
+        const toggle = document.getElementById('menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const close = document.getElementById('menu-close');
+        if (toggle) toggle.addEventListener('click', () => navMenu.classList.add('active'));
+        if (close) close.addEventListener('click', () => navMenu.classList.remove('active'));
+
+        // Render Stadiums
+        document.addEventListener('DOMContentLoaded', () => {
+            initData().then(() => {
+                renderPublicStadiums();
+            });
+        });
+
+        function renderPublicStadiums() {
+            const data = getData();
+            const container = document.getElementById('stadiums-list');
+            container.innerHTML = '';
+
+            if (data.stadiums.length === 0) {
+                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; opacity:0.6;">Aucun stade partenaire pour le moment.</p>';
+                return;
+            }
+
+            data.stadiums.forEach(s => {
+                const slots = getStadiumSlots(s.id).filter(slot => slot.status === 'available');
+
+                const card = document.createElement('div');
+                card.className = 'portfolio_item';
+                card.style.cursor = 'default';
+                card.style.padding = '0';
+                card.style.overflow = 'hidden';
+
+                let slotsHtml = '';
+                if (slots.length > 0) {
+                    slotsHtml = `<div class="slots-list" style="padding: 15px; background: rgba(0,0,0,0.2);">
+                        <h4 style="margin-bottom: 10px; color: var(--jaune-or); font-size: 0.9rem;">Créneaux Disponibles</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">`;
+
+                    // Show max 6 slots
+                    slots.slice(0, 6).forEach(slot => {
+                        slotsHtml += `
+                            <div class="slot-badge" style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">
+                                <div><i class='bx bx-calendar'></i> ${new Date(slot.date).toLocaleDateString()}</div>
+                                <div style="font-weight:bold;">${slot.start} - ${slot.end}</div>
+                                <div style="font-size:0.75rem; opacity:0.8;">${slot.price} FCFA</div>
+                            </div>
+                        `;
+                    });
+
+                    if (slots.length > 6) {
+                        slotsHtml += `<div style="font-size: 0.8rem; padding: 5px;">+ ${slots.length - 6} autres...</div>`;
+                    }
+                    slotsHtml += `</div>
+                        <button onclick="contactManager('${s.contact}', '${s.name}')" class="btn-primary" style="width:100%; margin-top: 15px; font-size: 0.9rem;">
+                            <i class='bx bx-phone'></i> Contacter pour Réserver
+                        </button>
+                    </div>`;
+                } else {
+                    slotsHtml = `<div style="padding: 15px; text-align: center; opacity: 0.6; font-size: 0.9rem;">Aucun créneau disponible actuellement.</div>`;
+                }
+
+                card.innerHTML = `
+                    <div style="height: 200px; overflow: hidden;">
+                        <img src="${s.image}" alt="${s.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="portfolio_item_content">
+                        <span class="portfolio_category"><i class='bx bx-map'></i> ${s.location}</span>
+                        <h3 class="portfolio_title" style="margin: 5px 0 15px 0;">${s.name}</h3>
+                        <p class="portfolio_description" style="margin-bottom: 0;">
+                            <strong>Contact:</strong> ${s.contact || 'Non renseigné'}
+                        </p>
+                    </div>
+                    ${slotsHtml}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function contactManager(contact, stadiumName) {
+            alert(`Pour réserver au ${stadiumName}, veuillez contacter le gérant au :\n${contact}`);
+        }
+    </script>
+</body>
+
+</html>

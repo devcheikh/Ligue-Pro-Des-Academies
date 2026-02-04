@@ -97,6 +97,7 @@
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'teams')">Équipes</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'matches')">Matchs</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'news')">Actualités</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'stadiums')">Stades</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'draw')">Tirage</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'data_mgmt')">Données</button>
         </div>
@@ -309,6 +310,114 @@
                 <p>Gérez le tirage aléatoire du calendrier ou des compositions par catégorie.</p>
             </div>
         </div>
+
+        <!-- STADIUMS TAB -->
+        <div id="stadiums" class="admin_tab_content" style="display: none;">
+            <div class="admin_content_card">
+                <h2>Gérer les <span class="highlight">Stades</span></h2>
+
+                <!-- Add Stadium Form -->
+                <form class="admin_form" id="stadiumForm">
+                    <div class="form_group">
+                        <label>Nom du Stade</label>
+                        <input type="text" id="stadiumName" required placeholder="Ex: Stade Caroline Faye">
+                    </div>
+                    <div class="form_group">
+                        <label>Lieu / Ville</label>
+                        <input type="text" id="stadiumLocation" required placeholder="Ex: Mbour">
+                    </div>
+                    <div class="form_group">
+                        <label>Contact Gérant</label>
+                        <input type="text" id="stadiumContact" placeholder="Tél ou Email">
+                    </div>
+                    <div class="form_group">
+                        <label>Photo</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <input type="file" id="stadiumImageFile" accept="image/*"
+                                onchange="previewStadiumImage(this)" style="display: none;">
+                            <label for="stadiumImageFile" class="btn-outline"
+                                style="cursor: pointer; margin: 0; padding: 10px 20px;">
+                                <i class='bx bx-upload'></i> Choisir Image
+                            </label>
+                            <div id="stadiumImagePreview"
+                                style="width: 80px; height: 80px; border-radius: 10px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--vert-principal);">
+                                <i class='bx bx-image' style="opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form_group" style="justify-content: flex-end;">
+                        <button type="submit" class="btn-primary">Ajouter Stade</button>
+                    </div>
+                </form>
+
+                <!-- Stadiums List -->
+                <div class="classement_table admin_table">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Nom</th>
+                                    <th>Lieu</th>
+                                    <th>Contact</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stadiumTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr style="margin: 40px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+
+                <!-- Slots Management Section -->
+                <h3>Gestion des <span class="highlight">Créneaux</span></h3>
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <div class="form_group">
+                        <label>Choisir un Stade pour gérer ses créneaux</label>
+                        <select id="slotStadiumSelect" onchange="renderStadiumSlots()"></select>
+                    </div>
+
+                    <form id="slotForm"
+                        style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                        <div class="form_group">
+                            <label>Date</label>
+                            <input type="date" id="slotDate" required>
+                        </div>
+                        <div class="form_group">
+                            <label>Début</label>
+                            <input type="time" id="slotStart" required>
+                        </div>
+                        <div class="form_group">
+                            <label>Fin</label>
+                            <input type="time" id="slotEnd" required>
+                        </div>
+                        <div class="form_group">
+                            <label>Prix (FCFA)</label>
+                            <input type="number" id="slotPrice" placeholder="50000" required>
+                        </div>
+                        <div class="form_group">
+                            <button type="submit" class="btn-primary"><i class='bx bx-plus'></i> Ajout</button>
+                        </div>
+                    </form>
+
+                    <div class="classement_table admin_table" style="margin-top: 20px;">
+                        <table style="font-size: 0.9rem;">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Heure</th>
+                                    <th>Prix</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="slotTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- DATA MANAGEMENT TAB -->
@@ -398,8 +507,158 @@
             if (tabId === 'teams') renderTeams();
             if (tabId === 'matches') renderMatches();
             if (tabId === 'news') renderNews();
+            if (tabId === 'stadiums') renderStadiums();
             if (tabId === 'draw') renderDraws();
             if (tabId === 'data_mgmt') { /* No specific render needed for now */ }
+        }
+
+        // --- STADIUMS ---
+        function renderStadiums() {
+            const data = getData();
+            const tbody = document.getElementById('stadiumTableBody');
+            tbody.innerHTML = '';
+
+            // Populate select for slots
+            const slotSelect = document.getElementById('slotStadiumSelect');
+            const currentSel = slotSelect.value;
+            slotSelect.innerHTML = '<option value="">-- Choisir un stade --</option>';
+
+            data.stadiums.forEach(s => {
+                // Table Row
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${s.image}" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover;"></td>
+                    <td><strong>${s.name}</strong></td>
+                    <td>${s.location}</td>
+                    <td>${s.contact || '-'}</td>
+                    <td>
+                        <button class="btn_action btn_edit" onclick="handleEditStadium(${s.id})"><i class='bx bx-edit'></i></button>
+                        <button class="btn_action btn_delete" onclick="handleDeleteStadium(${s.id})"><i class='bx bx-trash'></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+
+                // Select Option
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = s.name;
+                slotSelect.appendChild(opt);
+            });
+
+            if (currentSel) slotSelect.value = currentSel;
+        }
+
+        let editingStadiumId = null;
+        let currentStadiumImageBase64 = 'images/stadium_default.jpg';
+
+        function previewStadiumImage(input) {
+            const preview = document.getElementById('stadiumImagePreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    currentStadiumImageBase64 = e.target.result;
+                    preview.innerHTML = `<img src="${currentStadiumImageBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function handleEditStadium(id) {
+            const data = getData();
+            const s = data.stadiums.find(item => item.id === id);
+            if (!s) return;
+
+            editingStadiumId = id;
+            document.getElementById('stadiumName').value = s.name;
+            document.getElementById('stadiumLocation').value = s.location;
+            document.getElementById('stadiumContact').value = s.contact;
+
+            currentStadiumImageBase64 = s.image || 'images/stadium_default.jpg';
+            document.getElementById('stadiumImagePreview').innerHTML = `<img src="${currentStadiumImageBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
+
+            document.querySelector('#stadiumForm .btn-primary').innerText = "Mettre à jour";
+            document.getElementById('stadiumForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('stadiumForm').onsubmit = function (e) {
+            e.preventDefault();
+            const name = document.getElementById('stadiumName').value;
+            const location = document.getElementById('stadiumLocation').value;
+            const contact = document.getElementById('stadiumContact').value;
+            const image = currentStadiumImageBase64;
+
+            if (editingStadiumId) {
+                updateStadium(editingStadiumId, { name, location, contact, image });
+                editingStadiumId = null;
+                document.querySelector('#stadiumForm .btn-primary').innerText = "Ajouter Stade";
+            } else {
+                addStadium(name, location, contact, image);
+            }
+
+            this.reset();
+            currentStadiumImageBase64 = 'images/stadium_default.jpg';
+            document.getElementById('stadiumImagePreview').innerHTML = `<i class='bx bx-image' style="opacity: 0.3;"></i>`;
+            renderStadiums();
+        };
+
+        function handleDeleteStadium(id) {
+            if (confirm('Supprimer ce stade et tous ses créneaux ?')) {
+                deleteStadium(id);
+                renderStadiums();
+            }
+        }
+
+        // --- STADIUM SLOTS ---
+        function renderStadiumSlots() {
+            const stadiumId = document.getElementById('slotStadiumSelect').value;
+            const tbody = document.getElementById('slotTableBody');
+            tbody.innerHTML = '';
+
+            if (!stadiumId) return;
+
+            const slots = getStadiumSlots(stadiumId);
+            slots.forEach(s => {
+                const tr = document.createElement('tr');
+                const isBooked = s.status === 'booked';
+                tr.innerHTML = `
+                    <td>${new Date(s.date).toLocaleDateString()}</td>
+                    <td>${s.start} - ${s.end}</td>
+                    <td>${s.price} FCFA</td>
+                    <td><span style="color: ${isBooked ? 'var(--jaune-or)' : '#10b981'}; font-weight: bold;">${isBooked ? 'RÉSERVÉ' : 'LIBRE'}</span></td>
+                    <td>
+                        <button class="btn_action btn_delete" onclick="handleDeleteSlot(${s.id})"><i class='bx bx-trash'></i></button>
+                        ${!isBooked ? `<button class="btn_action" onclick="updateSlotStatus(${s.id}, 'booked'); renderStadiumSlots();" style="border: 1px solid var(--jaune-or); color: var(--jaune-or);" title="Marquer réservé"><i class='bx bx-check'></i></button>` :
+                        `<button class="btn_action" onclick="updateSlotStatus(${s.id}, 'available'); renderStadiumSlots();" style="border: 1px solid #10b981; color: #10b981;" title="Marquer libre"><i class='bx bx-undo'></i></button>`}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById('slotForm').onsubmit = function (e) {
+            e.preventDefault();
+            const stadiumId = document.getElementById('slotStadiumSelect').value;
+            if (!stadiumId) {
+                alert("Veuillez d'abord sélectionner un stade.");
+                return;
+            }
+
+            const date = document.getElementById('slotDate').value;
+            const start = document.getElementById('slotStart').value;
+            const end = document.getElementById('slotEnd').value;
+            const price = document.getElementById('slotPrice').value;
+
+            addSlot(stadiumId, date, start, end, price);
+            // Don't reset everything, maybe just times?
+            // this.reset(); 
+            renderStadiumSlots();
+        };
+
+        function handleDeleteSlot(id) {
+            if (confirm('Supprimer ce créneau ?')) {
+                deleteSlot(id);
+                renderStadiumSlots();
+            }
         }
 
         // --- CATEGORIES ---

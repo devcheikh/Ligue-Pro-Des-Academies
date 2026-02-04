@@ -386,7 +386,7 @@ async function sendMessage(username, content) {
         return data[0];
     } catch (e) {
         console.error("Error sending message:", e);
-        alert("Erreur d'envoi (vérifiez que la table 'messages' existe).");
+        alert("Erreur d'envoi : " + (e.message || "Vérifiez la console"));
         return null;
     }
 }
@@ -431,7 +431,7 @@ async function sendComment(contextId, username, content) {
         return data[0];
     } catch (e) {
         console.error("Error sending comment:", e);
-        alert("Erreur d'envoi (vérifiez que la table 'comments' existe).");
+        alert("Erreur d'envoi commentaire : " + (e.message || "Vérifiez la console"));
         return null;
     }
 }

@@ -2709,4 +2709,22 @@ footer {
         justify-content: space-between;
         align-items: center;
     }
+
+    /* Fix for mobile text visibility (disable hover effect) */
+    .portfolio_item_content {
+        position: relative;
+        opacity: 1;
+        transform: translateY(0);
+        background: var(--gradient-dark);
+        padding: 20px;
+    }
+
+    .portfolio_item {
+        background: var(--gradient-dark);
+        height: auto !important;
+    }
+
+    .portfolio_icon {
+        display: none;
+    }
 }

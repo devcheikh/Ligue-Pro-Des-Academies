@@ -2679,3 +2679,34 @@ footer {
         /* Extra padding for mobile keyboard/scrolling */
     }
 }
+
+/* ============ RESPONSIVE STADIUMS ============ */
+@media (max-width: 1024px) {
+    .portfolio_grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .portfolio_grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .portfolio_item {
+        margin-bottom: 20px;
+    }
+
+    .slots-list {
+        padding: 10px !important;
+    }
+
+    .slot-badge {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}

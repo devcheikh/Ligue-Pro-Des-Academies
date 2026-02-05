@@ -2717,11 +2717,16 @@ footer {
         transform: translateY(0);
         background: var(--gradient-dark);
         padding: 20px;
+        margin-top: 0;
     }
 
     .portfolio_item {
         background: var(--gradient-dark);
         height: auto !important;
+        aspect-ratio: auto !important;
+        /* Critical fix: Allow card to grow */
+        display: flex;
+        flex-direction: column;
     }
 
     .portfolio_icon {

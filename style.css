@@ -2727,6 +2727,8 @@ footer {
         /* Critical fix: Allow card to grow */
         display: flex;
         flex-direction: column;
+        overflow: visible !important;
+        /* Ensure nothing is clipped */
     }
 
     .portfolio_icon {

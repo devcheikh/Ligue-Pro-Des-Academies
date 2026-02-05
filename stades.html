@@ -132,14 +132,20 @@
                     <div style="height: 200px; overflow: hidden;">
                         <img src="${s.image}" alt="${s.name}" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div class="portfolio_item_content">
-                        <span class="portfolio_category"><i class='bx bx-map'></i> ${s.location}</span>
-                        <h3 class="portfolio_title" style="margin: 5px 0 15px 0;">${s.name}</h3>
-                        <p class="portfolio_description" style="margin-bottom: 0;">
-                            <strong>Contact:</strong> ${s.contact || 'Non renseigné'}
+                    <div class="portfolio_item_content" style="display: flex; flex-direction: column; gap: 10px;">
+                        <div>
+                            <span class="portfolio_category"><i class='bx bx-map'></i> ${s.location}</span>
+                            <h3 class="portfolio_title" style="margin: 5px 0 0 0;">${s.name}</h3>
+                        </div>
+                        
+                        <!-- Slots (Reservation) First -->
+                        ${slotsHtml}
+
+                        <!-- Contact (Text) Bottom -->
+                        <p class="portfolio_description" style="margin-bottom: 0; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                            <strong>Contact Gérant:</strong> <br> ${s.contact || 'Non renseigné'}
                         </p>
                     </div>
-                    ${slotsHtml}
                 `;
                 container.appendChild(card);
             });

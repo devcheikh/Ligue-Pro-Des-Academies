@@ -17,8 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             
             <div class="comment-form">
-                <div class="form-group">
-                    <input type="text" id="commentUsername" class="form-input" placeholder="Votre Nom / Pseudo" maxlength="30">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div class="form-group" style="margin: 0;">
+                        <input type="text" id="commentUsername" class="form-input" placeholder="Votre Nom / Pseudo" maxlength="30" style="margin: 0;">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <input type="email" id="commentEmail" class="form-input" placeholder="Email (optionnel)" style="margin: 0;">
+                    </div>
                 </div>
                 <div class="form-group">
                     <textarea id="commentContent" class="form-textarea" placeholder="Votre commentaire sur le championnat..." maxlength="500"></textarea>
@@ -37,11 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const list = document.getElementById('commentsList');
     const btn = document.getElementById('postCommentBtn');
     const nameInput = document.getElementById('commentUsername');
+    const emailInput = document.getElementById('commentEmail');
     const contentInput = document.getElementById('commentContent');
 
-    // Pre-fill username if known
-    const storedName = localStorage.getItem('chat_username');
-    if (storedName) nameInput.value = storedName;
+    // Pre-fill if known
+    if (localStorage.getItem('lpa_user_name')) nameInput.value = localStorage.getItem('lpa_user_name');
+    else if (localStorage.getItem('chat_username')) nameInput.value = localStorage.getItem('chat_username');
+
+    if (localStorage.getItem('lpa_user_email')) emailInput.value = localStorage.getItem('lpa_user_email');
 
     // Render single comment
     function renderComment(c) {
@@ -100,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Post Comment
     btn.addEventListener('click', async () => {
         const user = nameInput.value.trim();
+        const email = emailInput.value.trim();
         const text = contentInput.value.trim();
 
         if (!user || !text) {
@@ -107,14 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Save username for future
-        localStorage.setItem('chat_username', user);
-
         // Disable btn
         btn.disabled = true;
         btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Envoi...';
 
-        const result = await sendComment(contextId, user, text);
+        const result = await sendComment(contextId, user, text, email);
 
         btn.disabled = false;
         btn.innerHTML = '<i class="bx bx-send"></i> Publier';

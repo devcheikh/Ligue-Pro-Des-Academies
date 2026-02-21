@@ -447,21 +447,76 @@ function getStadiumSlots(stadiumId) {
         .sort((a, b) => new Date(a.date + ' ' + a.start) - new Date(b.date + ' ' + b.start));
 }
 
-// Initial sync
-initData();
+// --- VISITOR TRACKING ---
+const VISITOR_ID_KEY = 'lpa_visitor_id';
+
+function getVisitorId() {
+    let id = localStorage.getItem(VISITOR_ID_KEY);
+    if (!id) {
+        id = 'vis_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        localStorage.setItem(VISITOR_ID_KEY, id);
+    }
+    return id;
+}
+
+async function logConnection() {
+    if (!supabaseClient) return;
+
+    // Check if logged in this session
+    if (sessionStorage.getItem('lpa_logged_this_session')) return;
+
+    try {
+        const payload = {
+            visitor_id: getVisitorId(),
+            browser: navigator.userAgent,
+            platform: navigator.platform,
+            last_page: window.location.pathname.split('/').pop() || 'index.html',
+            username: localStorage.getItem('lpa_user_name') || null,
+            email: localStorage.getItem('lpa_user_email') || null
+        };
+
+        const { error } = await supabaseClient
+            .from('connection_logs')
+            .insert([payload]);
+
+        if (!error) {
+            sessionStorage.setItem('lpa_logged_this_session', 'true');
+            console.log("Connection logged silently.");
+        }
+    } catch (e) {
+        console.warn("Silent logging failed:", e);
+    }
+}
+
+// Initial sync & Log connection
+initData().then(() => {
+    logConnection();
+});
 
 // --- CHAT & COMMENTS FEATURES ---
 
 // 1. PUBLIC CHAT
-async function sendMessage(username, content) {
+async function sendMessage(username, content, email = null) {
     if (!supabaseClient) return null;
+
+    // Save to local for future tracking
+    localStorage.setItem('lpa_user_name', username);
+    if (email) localStorage.setItem('lpa_user_email', email);
+
     try {
+        const payload = { username, content };
+        if (email) payload.email = email;
+
         const { data, error } = await supabaseClient
             .from('messages')
-            .insert([{ username, content }])
+            .insert([payload])
             .select();
 
         if (error) throw error;
+
+        // Also update connection log with this info
+        logConnection();
+
         return data[0];
     } catch (e) {
         console.error("Error sending message:", e);
@@ -476,7 +531,7 @@ async function getRecentMessages(limit = 50) {
         const { data, error } = await supabaseClient
             .from('messages')
             .select('*')
-            .order('created_at', { ascending: true }) // Oldest first for chat flow? Or newest? usually chat is bottom-up. Let's do ascending for history.
+            .order('created_at', { ascending: true })
             .limit(limit);
 
         if (error) throw error;
@@ -498,15 +553,25 @@ function subscribeToMessages(onNewMessage) {
 }
 
 // 2. COMMENTS (Championships)
-async function sendComment(contextId, username, content) {
+async function sendComment(contextId, username, content, email = null) {
     if (!supabaseClient) return null;
+
+    localStorage.setItem('lpa_user_name', username);
+    if (email) localStorage.setItem('lpa_user_email', email);
+
     try {
+        const payload = { context_id: contextId, username, content };
+        if (email) payload.email = email;
+
         const { data, error } = await supabaseClient
             .from('comments')
-            .insert([{ context_id: contextId, username, content }])
+            .insert([payload])
             .select();
 
         if (error) throw error;
+
+        logConnection();
+
         return data[0];
     } catch (e) {
         console.error("Error sending comment:", e);
@@ -522,7 +587,7 @@ async function getComments(contextId) {
             .from('comments')
             .select('*')
             .eq('context_id', contextId)
-            .order('created_at', { ascending: false }); // Newest on top for comments
+            .order('created_at', { ascending: false });
 
         if (error) throw error;
         return data;
@@ -540,4 +605,20 @@ function subscribeToComments(contextId, onNewComment) {
             onNewComment(payload.new);
         })
         .subscribe();
+}
+
+async function getConnectionLogs(limit = 100) {
+    if (!supabaseClient) return [];
+    try {
+        const { data, error } = await supabaseClient
+            .from('connection_logs')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(limit);
+        if (error) throw error;
+        return data;
+    } catch (e) {
+        console.error("Error fetching logs:", e);
+        return [];
+    }
 }

@@ -98,6 +98,7 @@
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'matches')">Matchs</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'news')">Actualités</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'stadiums')">Stades</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'users')">Utilisateurs</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'draw')">Tirage</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'data_mgmt')">Données</button>
         </div>
@@ -420,6 +421,34 @@
         </div>
     </div>
 
+    <!-- USERS / ACTIVITY TAB -->
+    <div id="users" class="admin_tab_content" style="display: none;">
+        <div class="admin_content_card">
+            <h2>Suivi de l'<span class="highlight">Activité</span></h2>
+            <p>Historique des connexions et interactions récentes.</p>
+
+            <div class="classement_table admin_table" style="margin-top: 20px;">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date / Heure</th>
+                                <th>Identité (Pseudo / Email)</th>
+                                <th>Appareil / Browser</th>
+                                <th>Dernière Page</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; opacity: 0.5;">Chargement des données...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- DATA MANAGEMENT TAB -->
     <div id="data_mgmt" class="admin_tab_content" style="display: none;">
         <div class="admin_content_card">
@@ -508,6 +537,7 @@
             if (tabId === 'matches') renderMatches();
             if (tabId === 'news') renderNews();
             if (tabId === 'stadiums') renderStadiums();
+            if (tabId === 'users') renderActivity();
             if (tabId === 'draw') renderDraws();
             if (tabId === 'data_mgmt') { /* No specific render needed for now */ }
         }
@@ -1215,6 +1245,48 @@
 
                 alert(details);
             }
+        }
+
+        try {
+            const logs = await getConnectionLogs(100);
+            const tbody = document.getElementById('activityTableBody');
+            tbody.innerHTML = '';
+
+            if (logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; opacity: 0.5;">Aucune activité enregistrée.</td></tr>';
+                return;
+            }
+
+            logs.forEach(log => {
+                const date = new Date(log.created_at).toLocaleString();
+                const tr = document.createElement('tr');
+
+                // Format identity
+                let identity = '<span style="opacity: 0.4;">Anonyme</span>';
+                if (log.username || log.email) {
+                    identity = `<strong>${log.username || '-'}</strong><br><small style="color: var(--jaune-or);">${log.email || '-'}</small>`;
+                }
+
+                // Simple browser display
+                let browserIcon = '<i class="bx bxl-chrome"></i>';
+                if (log.browser.includes('Firefox')) browserIcon = '<i class="bx bxl-firefox"></i>';
+                else if (log.browser.includes('Safari') && !log.browser.includes('Chrome')) browserIcon = '<i class="bx bxl-apple"></i>';
+
+                tr.innerHTML = `
+                        <td style="font-size: 0.8rem;">${date}</td>
+                        <td>${identity}</td>
+                        <td style="font-size: 0.75rem; opacity: 0.7;">
+                            ${log.platform}<br>
+                            ${log.browser.split(' ').slice(-1)}
+                        </td>
+                        <td><code style="font-size: 0.75rem; color: var(--vert-principal);">${log.last_page}</code></td>
+                    `;
+                tbody.appendChild(tr);
+            });
+        } catch (err) {
+            console.error(err);
+            document.getElementById('activityTableBody').innerHTML = '<tr><td colspan="4" style="text-align: center; color: #ef4444;">Erreur de chargement.</td></tr>';
+        }
         }
 
         // INIT

@@ -19,11 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         Bienvenue dans le chat officiel !
                     </div>
                 </div>
-                <div class="chat-input-area">
-                    <input type="text" class="chat-input" id="chatInput" placeholder="Message..." maxlength="200">
-                    <button class="chat-send" id="chatSend">
-                        <i class='bx bx-send'></i>
-                    </button>
+                <div class="chat-input-area" style="flex-direction: column; gap: 5px;">
+                    <div style="display: flex; gap: 5px; width: 100%;">
+                        <input type="email" class="chat-input" id="chatEmail" placeholder="Email (optionnel)" style="flex: 1; font-size: 11px; padding: 5px 10px; height: auto;">
+                    </div>
+                    <div style="display: flex; gap: 5px; width: 100%;">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="Message..." maxlength="200" style="flex: 1;">
+                        <button class="chat-send" id="chatSend">
+                            <i class='bx bx-send'></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -36,9 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatWindow = document.getElementById('chatWindow');
     const messagesContainer = document.getElementById('chatMessages');
     const input = document.getElementById('chatInput');
+    const emailInput = document.getElementById('chatEmail');
     const sendBtn = document.getElementById('chatSend');
 
     let username = localStorage.getItem('chat_username');
+    if (localStorage.getItem('lpa_user_email')) {
+        emailInput.value = localStorage.getItem('lpa_user_email');
+    }
 
     // UI Toggles
     toggleBtn.addEventListener('click', () => {
@@ -54,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Send Message
     async function handleSend() {
         const content = input.value.trim();
+        const email = emailInput.value.trim();
         if (!content) return;
 
         if (!username) {
@@ -62,19 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('chat_username', username);
         }
 
-        // Optimistic UI update (optional, but Supabase Realtime is fast so maybe wait?)
-        // Let's rely on Realtime for now to confirm receipt, but show spinner?
-        // Actually, better to show immediately as pending? 
-        // For simplicity, we send and wait for the subscription to echo it back OR just append it.
-        // If we append it and then subscription comes, we might duplicate.
-        // Standard pattern: Send, and ignore your own message in subscription by ID?
-        // Or simpler: clear input, wait for subscription. Supabase is fast ~100ms.
-
-        // Let's just clear input
+        // Clear input
         input.value = '';
 
         // Attempt send
-        const result = await sendMessage(username, content);
+        const result = await sendMessage(username, content, email);
         if (!result) {
             alert("Erreur: Impossible d'envoyer le message.");
         }

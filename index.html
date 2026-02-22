@@ -407,10 +407,11 @@
         updateStats();
         renderHomeMatches();
 
-        // INIT CLOUD DATA
+        // INIT CLOUD DATA + stats publiques
         initData().then(() => {
             updateStats();
             renderHomeMatches();
+            loadPublicStats();
         });
 
         // Animate elements on scroll
@@ -441,16 +442,15 @@
                 el.textContent = target;
                 return;
             }
-            const start = 0;
-            const step = (timestamp) => {
-                if (!animateCount._start) animateCount._start = {};
-                if (!animateCount._start[el.id]) animateCount._start[el.id] = timestamp;
-                const progress = Math.min((timestamp - animateCount._start[el.id]) / duration, 1);
-                el.textContent = Math.floor(progress * (target - start) + start).toLocaleString('fr-FR');
-                if (progress < 1) requestAnimationFrame(step);
+            const startTime = performance.now();
+            const animate = (currentTime) => {
+                const progress = Math.min((currentTime - startTime) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+                el.textContent = Math.floor(eased * target).toLocaleString('fr-FR');
+                if (progress < 1) requestAnimationFrame(animate);
                 else el.textContent = target.toLocaleString('fr-FR');
             };
-            requestAnimationFrame(step);
+            requestAnimationFrame(animate);
         }
 
         async function loadPublicStats() {
@@ -466,21 +466,6 @@
             if (msgEl) animateCount(msgEl, typeof stats.totalMessages === 'number' ? stats.totalMessages : stats.totalMessages);
             if (cmtEl) animateCount(cmtEl, typeof stats.totalComments === 'number' ? stats.totalComments : stats.totalComments);
             if (topEl) topEl.textContent = stats.topPage;
-        }
-
-        // Trigger when section comes into view
-        const statsSection = document.getElementById('communaute');
-        let statsLoaded = false;
-        if (statsSection) {
-            const statsObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !statsLoaded) {
-                        statsLoaded = true;
-                        loadPublicStats();
-                    }
-                });
-            }, { threshold: 0.1 });
-            statsObserver.observe(statsSection);
         }
     </script>
 

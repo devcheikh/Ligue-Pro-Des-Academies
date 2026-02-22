@@ -419,104 +419,107 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- USERS / ACTIVITY TAB -->
-    <div id="users" class="admin_tab_content" style="display: none;">
-        <div class="admin_content_card">
-            <h2>Suivi de l'<span class="highlight">Activité</span></h2>
-            <p>Historique des connexions et interactions récentes.</p>
+        <!-- USERS / ACTIVITY TAB -->
+        <div id="users" class="admin_tab_content" style="display: none;">
+            <div class="admin_content_card">
+                <h2>Suivi de l'<span class="highlight">Activité</span></h2>
+                <p>Historique des connexions et interactions récentes.</p>
 
-            <div class="classement_table admin_table" style="margin-top: 20px;">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date / Heure</th>
-                                <th>Identité (Pseudo / Email)</th>
-                                <th>Appareil / Browser</th>
-                                <th>Dernière Page</th>
-                            </tr>
-                        </thead>
-                        <tbody id="activityTableBody">
-                            <tr>
-                                <td colspan="4" style="text-align: center; opacity: 0.5;">Chargement des données...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="classement_table admin_table" style="margin-top: 20px;">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date / Heure</th>
+                                    <th>Identité (Pseudo / Email)</th>
+                                    <th>Appareil / Browser</th>
+                                    <th>Dernière Page</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activityTableBody">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; opacity: 0.5;">Chargement des données...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- DATA MANAGEMENT TAB -->
-    <div id="data_mgmt" class="admin_tab_content" style="display: none;">
-        <div class="admin_content_card">
-            <h2>Gestion des <span class="highlight">Données</span></h2>
-            <p>Exportez vos données locales pour les sauvegarder ou les synchroniser avec Vercel.</p>
+        <!-- DATA MANAGEMENT TAB -->
+        <div id="data_mgmt" class="admin_tab_content" style="display: none;">
+            <div class="admin_content_card">
+                <h2>Gestion des <span class="highlight">Données</span></h2>
+                <p>Exportez vos données locales pour les sauvegarder ou les synchroniser avec Vercel.</p>
 
-            <div style="display: flex; gap: 20px; margin-top: 30px; flex-wrap: wrap;">
-                <button class="btn-primary" onclick="exportData()">
-                    <i class='bx bx-download'></i> Exporter les données (.json)
-                </button>
-
-                <div style="position: relative;">
-                    <input type="file" id="importFile" accept=".json" onchange="importData(this)"
-                        style="display: none;">
-                    <label for="importFile" class="btn-outline"
-                        style="cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 10px;">
-                        <i class='bx bx-upload'></i> Importer un fichier (.json)
-                    </label>
-                </div>
-            </div>
-
-            <div
-                style="margin-top: 40px; padding: 20px; background: rgba(5, 150, 105, 0.1); border-left: 4px solid var(--vert-principal); border-radius: 4px;">
-                <h4 style="color: var(--vert-principal); margin-bottom: 10px;"><i class='bx bx-cloud'></i> Configuration
-                    Supabase (Auto-Sync)</h4>
-                <p style="font-size: 0.85rem; margin-bottom: 15px; opacity: 0.8;">Connectez votre base de données pour
-                    que Vercel se mette à jour automatiquement sans modification de code.</p>
-
-                <div class="admin_form" style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;">
-                    <div class="form_group">
-                        <label style="font-size: 0.8rem;">Supabase URL</label>
-                        <input type="text" id="supabaseUrl" placeholder="https://xyz.supabase.co"
-                            style="font-size: 0.9rem;">
-                    </div>
-                    <div class="form_group">
-                        <label style="font-size: 0.8rem;">Supabase Anon Key</label>
-                        <input type="password" id="supabaseKey" placeholder="votre-cle-api-anon"
-                            style="font-size: 0.9rem;">
-                    </div>
-                    <button class="btn-primary" onclick="saveSupabaseConfig()"
-                        style="width: fit-content; margin-top: 5px;">
-                        Activer la Sync Cloud
+                <div style="display: flex; gap: 20px; margin-top: 30px; flex-wrap: wrap;">
+                    <button class="btn-primary" onclick="exportData()">
+                        <i class='bx bx-download'></i> Exporter les données (.json)
                     </button>
-                    <button class="btn-outline" onclick="testSupabaseDirect()"
-                        style="width: fit-content; margin-top: 5px; border-color: #6366f1; color: #6366f1;">
-                        <i class='bx bx-bug'></i> Tester la Connexion Directe
-                    </button>
-                    <p id="supabaseStatus" style="font-size: 0.75rem; color: var(--jaune-or); margin-top: 5px;"></p>
-                </div>
-            </div>
 
-            <div
-                style="margin-top: 20px; padding: 20px; background: rgba(255,193,7,0.1); border-left: 4px solid var(--jaune-or); border-radius: 4px;">
-                <h4 style="color: var(--jaune-or); margin-bottom: 10px;"><i class='bx bx-info-circle'></i> Aide à la
-                    configuration</h4>
-                <ol style="margin-left: 20px; line-height: 1.6; font-size: 0.9rem;">
-                    <li>Créez un projet sur <a href="https://supabase.com" target="_blank"
-                            style="color: var(--jaune-or);">Supabase</a>.</li>
-                    <li>Dans votre dashboard Supabase, allez dans <strong>Project Settings > API</strong>.</li>
-                    <li>Copiez le <strong>Project URL</strong> et la <strong>anon public Key</strong> ci-dessus.</li>
-                    <li><strong>IMPORTANT:</strong> Dans l'onglet "SQL Editor" de Supabase, créez une table nommée
-                        <code>app_state</code> avec deux colonnes : <code>id</code> (text, primary key) et
-                        <code>config_data</code> (jsonb).
-                    </li>
-                </ol>
+                    <div style="position: relative;">
+                        <input type="file" id="importFile" accept=".json" onchange="importData(this)"
+                            style="display: none;">
+                        <label for="importFile" class="btn-outline"
+                            style="cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 10px;">
+                            <i class='bx bx-upload'></i> Importer un fichier (.json)
+                        </label>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 40px; padding: 20px; background: rgba(5, 150, 105, 0.1); border-left: 4px solid var(--vert-principal); border-radius: 4px;">
+                    <h4 style="color: var(--vert-principal); margin-bottom: 10px;"><i class='bx bx-cloud'></i>
+                        Configuration
+                        Supabase (Auto-Sync)</h4>
+                    <p style="font-size: 0.85rem; margin-bottom: 15px; opacity: 0.8;">Connectez votre base de données
+                        pour
+                        que Vercel se mette à jour automatiquement sans modification de code.</p>
+
+                    <div class="admin_form" style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;">
+                        <div class="form_group">
+                            <label style="font-size: 0.8rem;">Supabase URL</label>
+                            <input type="text" id="supabaseUrl" placeholder="https://xyz.supabase.co"
+                                style="font-size: 0.9rem;">
+                        </div>
+                        <div class="form_group">
+                            <label style="font-size: 0.8rem;">Supabase Anon Key</label>
+                            <input type="password" id="supabaseKey" placeholder="votre-cle-api-anon"
+                                style="font-size: 0.9rem;">
+                        </div>
+                        <button class="btn-primary" onclick="saveSupabaseConfig()"
+                            style="width: fit-content; margin-top: 5px;">
+                            Activer la Sync Cloud
+                        </button>
+                        <button class="btn-outline" onclick="testSupabaseDirect()"
+                            style="width: fit-content; margin-top: 5px; border-color: #6366f1; color: #6366f1;">
+                            <i class='bx bx-bug'></i> Tester la Connexion Directe
+                        </button>
+                        <p id="supabaseStatus" style="font-size: 0.75rem; color: var(--jaune-or); margin-top: 5px;"></p>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 20px; padding: 20px; background: rgba(255,193,7,0.1); border-left: 4px solid var(--jaune-or); border-radius: 4px;">
+                    <h4 style="color: var(--jaune-or); margin-bottom: 10px;"><i class='bx bx-info-circle'></i> Aide à la
+                        configuration</h4>
+                    <ol style="margin-left: 20px; line-height: 1.6; font-size: 0.9rem;">
+                        <li>Créez un projet sur <a href="https://supabase.com" target="_blank"
+                                style="color: var(--jaune-or);">Supabase</a>.</li>
+                        <li>Dans votre dashboard Supabase, allez dans <strong>Project Settings > API</strong>.</li>
+                        <li>Copiez le <strong>Project URL</strong> et la <strong>anon public Key</strong> ci-dessus.
+                        </li>
+                        <li><strong>IMPORTANT:</strong> Dans l'onglet "SQL Editor" de Supabase, créez une table nommée
+                            <code>app_state</code> avec deux colonnes : <code>id</code> (text, primary key) et
+                            <code>config_data</code> (jsonb).
+                        </li>
+                    </ol>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
     <script>

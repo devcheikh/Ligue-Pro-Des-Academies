@@ -150,8 +150,11 @@
 
         function renderU19() {
             const data = getData();
+
+            // Robust lookup
+            const catU19 = data.categories.find(c => (c.name.toLowerCase().includes('u19') || c.id === 'u19')) || { id: 'u19' };
             const container = document.getElementById('pouleU19_Grid');
-            const teams = data.teams.filter(t => t.categoryId === 'u19').sort((a, b) => {
+            const teams = data.teams.filter(t => t.categoryId === catU19.id).sort((a, b) => {
                 if (b.points !== a.points) return b.points - a.points;
                 return b.diff - a.diff;
             });
@@ -183,7 +186,7 @@
             });
 
             const matchContainer = document.getElementById('matchGridU19');
-            const matches = data.matches.filter(m => m.categoryId === 'u19');
+            const matches = data.matches.filter(m => m.categoryId === catU19.id);
             matchContainer.innerHTML = '';
 
             if (matches.length === 0) {

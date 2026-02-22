@@ -165,13 +165,17 @@
         function renderU17() {
             const data = getData();
 
-            // Link IDs must match data.js or be handled flexibly. 
-            // Default IDs are 'u17-a' and 'u17-b'.
-            renderGrid('pouleA_Grid', data.teams.filter(t => t.categoryId === 'u17-a'));
-            renderGrid('pouleB_Grid', data.teams.filter(t => t.categoryId === 'u17-b'));
+            // Find categories by name/pattern instead of hardcoded IDs
+            const catA = data.categories.find(c => (c.name.toLowerCase().includes('poule a') || c.id === 'u17-a') && c.id.toLowerCase().includes('u17')) || { id: 'u17-a' };
+            const catB = data.categories.find(c => (c.name.toLowerCase().includes('poule b') || c.id === 'u17-b') && c.id.toLowerCase().includes('u17')) || { id: 'u17-b' };
+
+            renderGrid('pouleA_Grid', data.teams.filter(t => t.categoryId === catA.id));
+            renderGrid('pouleB_Grid', data.teams.filter(t => t.categoryId === catB.id));
 
             const matchContainer = document.getElementById('matchGridU17');
-            const matches = data.matches.filter(m => m.categoryId === 'u17-a' || m.categoryId === 'u17-b');
+            matchContainer.innerHTML = '';
+
+            const matches = data.matches.filter(m => m.categoryId === catA.id || m.categoryId === catB.id);
 
             if (matches.length === 0) {
                 matchContainer.innerHTML = '<p style="text-align: center; grid-column: 1/-1; opacity: 0.5;">Aucun match programmé pour le moment.</p>';

@@ -199,6 +199,52 @@
         </div>
     </section>
 
+    <!-- COMMUNAUTÉ STATS SECTION -->
+    <section class="community_stats_section" id="communaute">
+        <div class="section_header">
+            <div class="section_label">Notre Communauté</div>
+            <h2 class="section_title">
+                La Plateforme en <span class="highlight">Chiffres</span>
+            </h2>
+        </div>
+
+        <div class="community_stats_grid">
+            <div class="community_stat_card" id="csc-visitors">
+                <div class="csc_icon"><i class='bx bx-user-check'></i></div>
+                <div class="csc_number" id="pubStatVisitors">
+                    <span class="csc_spinner"></span>
+                </div>
+                <div class="csc_label">Visiteurs Uniques</div>
+            </div>
+            <div class="community_stat_card" id="csc-visits">
+                <div class="csc_icon"><i class='bx bx-globe'></i></div>
+                <div class="csc_number" id="pubStatVisits">
+                    <span class="csc_spinner"></span>
+                </div>
+                <div class="csc_label">Visites Totales</div>
+            </div>
+            <div class="community_stat_card" id="csc-messages">
+                <div class="csc_icon"><i class='bx bx-chat'></i></div>
+                <div class="csc_number" id="pubStatMessages">
+                    <span class="csc_spinner"></span>
+                </div>
+                <div class="csc_label">Messages Envoyés</div>
+            </div>
+            <div class="community_stat_card" id="csc-comments">
+                <div class="csc_icon"><i class='bx bx-comment-dots'></i></div>
+                <div class="csc_number" id="pubStatComments">
+                    <span class="csc_spinner"></span>
+                </div>
+                <div class="csc_label">Commentaires Postés</div>
+            </div>
+        </div>
+
+        <div class="csc_top_page_wrapper">
+            <i class='bx bx-trending-up'></i>
+            Page la plus visitée : <strong id="pubStatTopPage"><span class="csc_spinner_inline"></span></strong>
+        </div>
+    </section>
+
     <!-- CTA SECTION -->
     <section class="cta_section" id="contact">
         <div class="cta_content">
@@ -388,7 +434,56 @@
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             fadeInObserver.observe(el);
         });
+
+        // ---- PUBLIC COMMUNITY STATS ----
+        function animateCount(el, target, duration = 1400) {
+            if (typeof target !== 'number') {
+                el.textContent = target;
+                return;
+            }
+            const start = 0;
+            const step = (timestamp) => {
+                if (!animateCount._start) animateCount._start = {};
+                if (!animateCount._start[el.id]) animateCount._start[el.id] = timestamp;
+                const progress = Math.min((timestamp - animateCount._start[el.id]) / duration, 1);
+                el.textContent = Math.floor(progress * (target - start) + start).toLocaleString('fr-FR');
+                if (progress < 1) requestAnimationFrame(step);
+                else el.textContent = target.toLocaleString('fr-FR');
+            };
+            requestAnimationFrame(step);
+        }
+
+        async function loadPublicStats() {
+            const stats = await getPublicStats();
+            const visEl = document.getElementById('pubStatVisitors');
+            const totEl = document.getElementById('pubStatVisits');
+            const msgEl = document.getElementById('pubStatMessages');
+            const cmtEl = document.getElementById('pubStatComments');
+            const topEl = document.getElementById('pubStatTopPage');
+
+            if (visEl) animateCount(visEl, typeof stats.uniqueVisitors === 'number' ? stats.uniqueVisitors : stats.uniqueVisitors);
+            if (totEl) animateCount(totEl, typeof stats.totalVisits === 'number' ? stats.totalVisits : stats.totalVisits);
+            if (msgEl) animateCount(msgEl, typeof stats.totalMessages === 'number' ? stats.totalMessages : stats.totalMessages);
+            if (cmtEl) animateCount(cmtEl, typeof stats.totalComments === 'number' ? stats.totalComments : stats.totalComments);
+            if (topEl) topEl.textContent = stats.topPage;
+        }
+
+        // Trigger when section comes into view
+        const statsSection = document.getElementById('communaute');
+        let statsLoaded = false;
+        if (statsSection) {
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !statsLoaded) {
+                        statsLoaded = true;
+                        loadPublicStats();
+                    }
+                });
+            }, { threshold: 0.1 });
+            statsObserver.observe(statsSection);
+        }
     </script>
+
 </body>
 
 </html>

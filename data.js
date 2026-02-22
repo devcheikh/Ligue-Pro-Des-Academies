@@ -95,6 +95,8 @@ async function initData() {
     initPromise = (async () => {
         initSupabase();
 
+        const localData = JSON.parse(localStorage.getItem(LIGUE_DATA_KEY));
+
         if (supabaseClient) {
             try {
                 const { data, error } = await supabaseClient
@@ -103,32 +105,97 @@ async function initData() {
                     .eq('id', 'global_state')
                     .single();
 
-                if (error) {
-                    if (error.code === 'PGRST116') {
-                        console.log("Supabase table exists but is empty.");
-                    } else {
-                        console.warn("Supabase check error (might be missing table):", error);
-                    }
-                }
-
                 if (data && data.config_data) {
-                    localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(data.config_data));
-                    console.log("Data loaded from Supabase");
-                    return;
+                    const cloudData = data.config_data;
+
+                    // IF we have local data, we MERGE instead of OVERWRITE
+                    if (localData) {
+                        console.log("Merging local and cloud data...");
+                        // Strategy: Keep union of matches/news/stadiums by ID
+                        const merge = (localArr, cloudArr) => {
+                            if (!localArr) return cloudArr || [];
+                            if (!cloudArr) return localArr || [];
+                            const map = new Map();
+                            [...cloudArr, ...localArr].forEach(item => map.set(item.id, item));
+                            return Array.from(map.values());
+                        };
+
+                        const mergedData = {
+                            ...cloudData, // Use cloud as base for categories/teams
+                            matches: merge(localData.matches, cloudData.matches),
+                            news: merge(localData.news, cloudData.news),
+                            stadiums: merge(localData.stadiums, cloudData.stadiums),
+                            stadiumSlots: merge(localData.stadiumSlots, cloudData.stadiumSlots)
+                        };
+
+                        localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(mergedData));
+                        reconcileOrphanedData(); // Fix any broken links
+                        return;
+                    } else {
+                        localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(cloudData));
+                        reconcileOrphanedData();
+                        console.log("Data loaded from Supabase (Fresh start)");
+                        return;
+                    }
                 }
             } catch (e) {
                 console.error("Failed to load from Supabase:", e);
             }
         }
 
-        // Fallback to local storage or default
-        const storedData = localStorage.getItem(LIGUE_DATA_KEY);
-        if (!storedData) {
+        // Fallback to local storage or default if everything else fails
+        if (!localData) {
             localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(defaultData));
+        } else {
+            reconcileOrphanedData();
         }
     })();
 
     return initPromise;
+}
+
+/**
+ * Automatically relinks teams and matches to categories if they lost their link
+ * (e.g. if the user deleted and recreated a category with the same name)
+ */
+function reconcileOrphanedData() {
+    const data = getData();
+    let changed = false;
+
+    const findCatByName = (name) => {
+        return data.categories.find(c => c.name.toLowerCase().trim() === name.toLowerCase().trim());
+    };
+
+    // Fix teams
+    data.teams.forEach(t => {
+        const cat = data.categories.find(c => c.id === t.categoryId);
+        if (!cat) {
+            // Try to find a category with the same name? 
+            // This is risky but likely what the user needs if they re-created Poule B.
+            // For now, let's just log it.
+            console.warn("Orphaned team found:", t.name);
+        }
+    });
+
+    // Fix matches
+    data.matches.forEach(m => {
+        const cat = data.categories.find(c => c.id === m.categoryId);
+        if (!cat) {
+            console.warn("Orphaned match found, trying to relink...", m);
+            // Try to guess category based on teams
+            const teams = m.teams.split(' vs ');
+            const t1 = data.teams.find(t => t.name === teams[0]);
+            if (t1 && t1.categoryId) {
+                m.categoryId = t1.categoryId;
+                changed = true;
+                console.log("Relinked match to:", t1.categoryId);
+            }
+        }
+    });
+
+    if (changed) {
+        saveData(data);
+    }
 }
 
 function getData() {
@@ -605,6 +672,65 @@ function subscribeToComments(contextId, onNewComment) {
             onNewComment(payload.new);
         })
         .subscribe();
+}
+
+/**
+ * PUBLIC STATS - Aggregated visitor statistics for public display
+ * Returns: uniqueVisitors, totalVisits, totalMessages, totalComments, topPage
+ */
+async function getPublicStats() {
+    const result = {
+        uniqueVisitors: '—',
+        totalVisits: '—',
+        totalMessages: '—',
+        totalComments: '—',
+        topPage: '—'
+    };
+    if (!supabaseClient) return result;
+
+    try {
+        // Total visits & unique visitors from connection_logs
+        const { data: logs, error: logsErr } = await supabaseClient
+            .from('connection_logs')
+            .select('visitor_id, last_page');
+
+        if (!logsErr && logs) {
+            result.totalVisits = logs.length;
+            const uniqueIds = new Set(logs.map(l => l.visitor_id).filter(Boolean));
+            result.uniqueVisitors = uniqueIds.size;
+
+            // Most visited page
+            const pageCount = {};
+            logs.forEach(l => {
+                if (l.last_page) {
+                    pageCount[l.last_page] = (pageCount[l.last_page] || 0) + 1;
+                }
+            });
+            const topEntry = Object.entries(pageCount).sort((a, b) => b[1] - a[1])[0];
+            if (topEntry) {
+                // Clean up page name for display
+                let pageName = topEntry[0].replace('.html', '').replace('index', 'Accueil');
+                pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
+                result.topPage = pageName || 'Accueil';
+            }
+        }
+
+        // Total messages
+        const { count: msgCount, error: msgErr } = await supabaseClient
+            .from('messages')
+            .select('id', { count: 'exact', head: true });
+        if (!msgErr) result.totalMessages = msgCount || 0;
+
+        // Total comments
+        const { count: cmtCount, error: cmtErr } = await supabaseClient
+            .from('comments')
+            .select('id', { count: 'exact', head: true });
+        if (!cmtErr) result.totalComments = cmtCount || 0;
+
+    } catch (e) {
+        console.warn('getPublicStats error:', e);
+    }
+    return result;
 }
 
 async function getConnectionLogs(limit = 100) {

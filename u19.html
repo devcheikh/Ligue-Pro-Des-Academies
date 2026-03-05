@@ -74,6 +74,45 @@
         <div id="pouleU19_Grid" class="teams_portfolio_grid"></div>
     </section>
 
+    <!-- CLASSEMENT TABLE U19 -->
+    <section class="about poule_portfolio alt_bg" id="classement-table-u19">
+        <div class="section_header">
+            <div class="section_label">Classement Officiel</div>
+            <h2 class="section_title">Classement <span class="highlight">U19</span></h2>
+        </div>
+        <div class="standings_section">
+            <div class="standings_wrapper">
+                <div class="table-responsive">
+                    <table class="standings_table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Équipe</th>
+                                <th>MJ</th>
+                                <th>V</th>
+                                <th>N</th>
+                                <th>D</th>
+                                <th>BP</th>
+                                <th>BC</th>
+                                <th>Diff</th>
+                                <th>Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standingsBodyU19"></tbody>
+                    </table>
+                </div>
+                <div class="standings_legend">
+                    <div class="standings_legend_item">
+                        <span class="standings_legend_dot semi"></span> Demi-finales
+                    </div>
+                    <div class="standings_legend_item">
+                        <span class="standings_legend_dot quarter"></span> Quarts de finale
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CALENDRIER -->
     <section class="portfolio matches_portfolio alt_bg" id="calendrier">
         <div class="section_header">
@@ -148,6 +187,41 @@
             }
         });
 
+        function renderStandingsTable(tbodyId, categoryId) {
+            const teams = getStandings(categoryId);
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            teams.forEach((t, index) => {
+                const rank = index + 1;
+                let zoneClass = rank <= 2 ? 'zone-semi' : (rank <= 6 ? 'zone-quarter' : '');
+                const diffSign = t.diff > 0 ? '+' + t.diff : t.diff;
+                const diffClass = t.diff > 0 ? 'positive' : (t.diff < 0 ? 'negative' : 'zero');
+
+                const tr = document.createElement('tr');
+                tr.className = zoneClass;
+                tr.innerHTML = `
+                    <td class="st-rank">${rank}</td>
+                    <td>
+                        <div class="st-team-cell">
+                            <img class="st-team-logo" src="${t.logo || 'images/logo_ligue.png'}" alt="${t.name}">
+                            ${t.name}
+                        </div>
+                    </td>
+                    <td>${t.mj}</td>
+                    <td>${t.v}</td>
+                    <td>${t.n}</td>
+                    <td>${t.d}</td>
+                    <td>${t.bp}</td>
+                    <td>${t.bc}</td>
+                    <td class="st-diff ${diffClass}">${diffSign}</td>
+                    <td class="st-pts">${t.points}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
         function renderU19() {
             const data = getData();
 
@@ -156,7 +230,9 @@
             const container = document.getElementById('pouleU19_Grid');
             const teams = data.teams.filter(t => t.categoryId === catU19.id).sort((a, b) => {
                 if (b.points !== a.points) return b.points - a.points;
-                return b.diff - a.diff;
+                if (b.diff !== a.diff) return b.diff - a.diff;
+                if (b.bp !== a.bp) return b.bp - a.bp;
+                return a.name.localeCompare(b.name);
             });
 
             container.innerHTML = '';
@@ -184,6 +260,9 @@
                 `;
                 container.appendChild(div);
             });
+
+            // Render standings table
+            renderStandingsTable('standingsBodyU19', catU19.id);
 
             const matchContainer = document.getElementById('matchGridU19');
             const matches = data.matches.filter(m => m.categoryId === catU19.id);

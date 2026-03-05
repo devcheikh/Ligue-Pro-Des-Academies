@@ -2931,3 +2931,213 @@ footer {
         text-align: center;
     }
 }
+
+/* ============================================
+   STANDINGS TABLE - CLASSEMENT GOAL DIFFERENCE
+   ============================================ */
+
+.standings_section {
+    padding: 40px 5% 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.standings_section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--blanc);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.standings_section h3 i {
+    color: var(--jaune-or);
+    font-size: 1.5rem;
+}
+
+.standings_wrapper {
+    background: rgba(13, 21, 13, 0.85);
+    border: 1px solid rgba(34, 139, 34, 0.2);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.standings_wrapper .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.standings_table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.standings_table thead th {
+    background: rgba(34, 139, 34, 0.25);
+    padding: 14px 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--jaune-or);
+    text-align: center;
+    border-bottom: 2px solid rgba(34, 139, 34, 0.3);
+    white-space: nowrap;
+}
+
+.standings_table thead th:nth-child(2) {
+    text-align: left;
+    padding-left: 15px;
+}
+
+.standings_table tbody td {
+    padding: 13px 10px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+    transition: all 0.3s ease;
+}
+
+.standings_table tbody td:nth-child(2) {
+    text-align: left;
+    padding-left: 15px;
+    font-weight: 600;
+    color: var(--blanc);
+}
+
+.standings_table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.standings_table tbody tr:hover {
+    background: rgba(34, 139, 34, 0.12);
+}
+
+.standings_table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Rank column */
+.standings_table .st-rank {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--jaune-or);
+    width: 45px;
+}
+
+/* Points column highlight */
+.standings_table .st-pts {
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--blanc);
+    background: rgba(34, 139, 34, 0.15);
+}
+
+/* Goal Difference column */
+.standings_table .st-diff {
+    font-weight: 700;
+}
+
+.standings_table .st-diff.positive {
+    color: #4CAF50;
+}
+
+.standings_table .st-diff.negative {
+    color: #ef5350;
+}
+
+.standings_table .st-diff.zero {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Qualification zone rows */
+.standings_table tbody tr.zone-semi {
+    border-left: 4px solid var(--vert-principal);
+}
+
+.standings_table tbody tr.zone-quarter {
+    border-left: 4px solid var(--jaune-or);
+}
+
+/* Team name with logo */
+.st-team-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.st-team-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(34, 139, 34, 0.2);
+    padding: 2px;
+    flex-shrink: 0;
+}
+
+/* Standings Legend */
+.standings_legend {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    padding: 15px 20px;
+    border-top: 1px solid rgba(34, 139, 34, 0.15);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.standings_legend_item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.standings_legend_dot {
+    width: 14px;
+    height: 4px;
+    border-radius: 2px;
+}
+
+.standings_legend_dot.semi {
+    background: var(--vert-principal);
+}
+
+.standings_legend_dot.quarter {
+    background: var(--jaune-or);
+}
+
+/* Mobile responsive for standings */
+@media (max-width: 768px) {
+    .standings_section {
+        padding: 25px 3% 40px;
+    }
+
+    .standings_table thead th {
+        padding: 10px 6px;
+        font-size: 0.65rem;
+        letter-spacing: 0.5px;
+    }
+
+    .standings_table tbody td {
+        padding: 10px 6px;
+        font-size: 0.8rem;
+    }
+
+    .st-team-logo {
+        width: 22px;
+        height: 22px;
+    }
+
+    .standings_legend {
+        gap: 15px;
+        padding: 12px 15px;
+    }
+}

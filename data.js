@@ -382,6 +382,37 @@ function recalculateStandings() {
     saveData(data);
 }
 
+/**
+ * Returns sorted standings for a category using goal difference principle:
+ * 1. Points (desc)
+ * 2. Goal Difference (desc)
+ * 3. Goals For (desc)
+ * 4. Alphabetical name (asc)
+ * Each team gets an additional 'mj' (matchs joués) field.
+ */
+function getStandings(categoryId) {
+    const data = getData();
+    const teams = data.teams
+        .filter(t => t.categoryId === categoryId)
+        .map(t => ({
+            ...t,
+            mj: (t.v || 0) + (t.n || 0) + (t.d || 0)
+        }));
+
+    teams.sort((a, b) => {
+        // 1. Points descending
+        if (b.points !== a.points) return b.points - a.points;
+        // 2. Goal Difference descending
+        if (b.diff !== a.diff) return b.diff - a.diff;
+        // 3. Goals For descending
+        if (b.bp !== a.bp) return b.bp - a.bp;
+        // 4. Alphabetical name
+        return a.name.localeCompare(b.name);
+    });
+
+    return teams;
+}
+
 function getUpcomingMatches(limit = 4) {
     const data = getData();
     return data.matches

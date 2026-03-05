@@ -309,6 +309,9 @@
             <div class="admin_content_card">
                 <h2>Tirages au Sort <span class="highlight">Indépendants</span></h2>
                 <p>Gérez le tirage aléatoire du calendrier ou des compositions par catégorie.</p>
+                <div id="drawGrid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 30px;">
+                </div>
             </div>
         </div>
 
@@ -423,10 +426,57 @@
         <!-- USERS / ACTIVITY TAB -->
         <div id="users" class="admin_tab_content" style="display: none;">
             <div class="admin_content_card">
-                <h2>Suivi de l'<span class="highlight">Activité</span></h2>
-                <p>Historique des connexions et interactions récentes.</p>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <h2>Suivi des <span class="highlight">Utilisateurs</span></h2>
+                    <button class="btn-outline" onclick="renderActivity()"
+                        style="padding: 8px 15px; font-size: 0.8rem;">
+                        <i class='bx bx-refresh'></i> Rafraîchir
+                    </button>
+                </div>
+                <p>Tracking des visiteurs, connexions et interactions.</p>
 
-                <div class="classement_table admin_table" style="margin-top: 20px;">
+                <!-- Summary Stats -->
+                <div id="userTrackingStats"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin: 25px 0;">
+                    <div
+                        style="background: rgba(34, 139, 34, 0.1); border: 1px solid rgba(34, 139, 34, 0.3); border-radius: 15px; padding: 20px; text-align: center;">
+                        <i class='bx bx-user-check' style="font-size: 1.8rem; color: var(--vert-principal);"></i>
+                        <div id="trackStatVisitors"
+                            style="font-size: 1.8rem; font-weight: 800; color: var(--blanc); margin: 5px 0;">—</div>
+                        <div style="font-size: 0.75rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
+                            Visiteurs Uniques</div>
+                    </div>
+                    <div
+                        style="background: rgba(255, 215, 0, 0.08); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 15px; padding: 20px; text-align: center;">
+                        <i class='bx bx-globe' style="font-size: 1.8rem; color: var(--jaune-or);"></i>
+                        <div id="trackStatConnections"
+                            style="font-size: 1.8rem; font-weight: 800; color: var(--blanc); margin: 5px 0;">—</div>
+                        <div style="font-size: 0.75rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
+                            Connexions Totales</div>
+                    </div>
+                    <div
+                        style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 15px; padding: 20px; text-align: center;">
+                        <i class='bx bx-chat' style="font-size: 1.8rem; color: #818cf8;"></i>
+                        <div id="trackStatMessages"
+                            style="font-size: 1.8rem; font-weight: 800; color: var(--blanc); margin: 5px 0;">—</div>
+                        <div style="font-size: 0.75rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
+                            Messages</div>
+                    </div>
+                    <div
+                        style="background: rgba(236, 72, 153, 0.08); border: 1px solid rgba(236, 72, 153, 0.2); border-radius: 15px; padding: 20px; text-align: center;">
+                        <i class='bx bx-trending-up' style="font-size: 1.8rem; color: #f472b6;"></i>
+                        <div id="trackStatTopPage"
+                            style="font-size: 1.2rem; font-weight: 700; color: var(--blanc); margin: 5px 0;">—</div>
+                        <div style="font-size: 0.75rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
+                            Page Populaire</div>
+                    </div>
+                </div>
+
+                <!-- Connection Logs Table -->
+                <h3 style="margin-bottom: 15px;"><i class='bx bx-list-ul' style="color: var(--jaune-or);"></i> Dernières
+                    Connexions</h3>
+                <div class="classement_table admin_table">
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -1087,6 +1137,7 @@
         function renderDraws() {
             const data = getData();
             const grid = document.getElementById('drawGrid');
+            if (!grid) return;
             grid.innerHTML = '';
 
             data.categories.forEach(c => {
@@ -1252,6 +1303,19 @@
 
         async function renderActivity() {
             try {
+                // Load summary stats
+                const stats = await getPublicStats();
+                const visEl = document.getElementById('trackStatVisitors');
+                const connEl = document.getElementById('trackStatConnections');
+                const msgEl = document.getElementById('trackStatMessages');
+                const topEl = document.getElementById('trackStatTopPage');
+
+                if (visEl) visEl.textContent = stats.uniqueVisitors;
+                if (connEl) connEl.textContent = stats.totalVisits;
+                if (msgEl) msgEl.textContent = stats.totalMessages;
+                if (topEl) topEl.textContent = stats.topPage;
+
+                // Load connection logs
                 const logs = await getConnectionLogs(100);
                 const tbody = document.getElementById('activityTableBody');
                 if (!tbody) return;

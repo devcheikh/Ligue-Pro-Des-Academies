@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="i18n.js"></script>
     <script src="data.js"></script>
 </head>
 
@@ -21,10 +22,12 @@
         <div class="nav_menu" id="nav-menu">
             <i class='bx bx-x menu_close' id="menu-close"></i>
             <ul>
-                <li><a href="index.html">Accueil</a></li>
+                <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
                 <li><a href="u17.html">U17</a></li>
                 <li><a href="u19.html" class="active">U19</a></li>
-                <li><a href="blog.html">Actualités</a></li>
+                <li><a href="stades.html" data-i18n="nav.stadiums">Stades</a></li>
+                <li><a href="blog.html" data-i18n="nav.news">Actualités</a></li>
+                <li><a href="membres.html" data-i18n="nav.members">Membres</a></li>
             </ul>
         </div>
 
@@ -39,18 +42,18 @@
     <section class="hero page_hero u19" id="accueil">
         <div class="hero_content">
             <div class="hero_text">
-                <div class="hero_label">Élite Académique</div>
+                <div class="hero_label" data-i18n="u19.hero.label">Élite Académique</div>
                 <h1 class="hero_title">
                     <span class="line1">CHAMPIONNAT</span>
                     <span class="line2">U19</span>
                 </h1>
-                <p class="hero_description">
+                <p class="hero_description" data-i18n="u19.hero.desc">
                     L'antichambre du professionnalisme. Un duel de titans entre les
                     <strong>académies les plus prestigieuses</strong>. Plongez au cœur de l'action
                     là où les espoirs deviennent des légendes.
                 </p>
                 <div class="hero_cta">
-                    <a href="#classement" class="btn-primary">
+                    <a href="#classement" class="btn-primary" data-i18n="u19.btn.classement">
                         <i class='bx bx-list-ol'></i> Classement
                     </a>
                 </div>
@@ -68,8 +71,9 @@
     <section class="about poule_portfolio" id="classement">
         <span class="section_number">19</span>
         <div class="section_header">
-            <div class="section_label">Classement Dynamique</div>
-            <h2 class="section_title">Poule <span class="highlight">Unique</span></h2>
+            <div class="section_label" data-i18n="u19.class.label">Classement Dynamique</div>
+            <h2 class="section_title"><span data-i18n="u19.class.title.1">Poule</span> <span class="highlight"
+                    data-i18n="u19.class.title.2">Unique</span></h2>
         </div>
         <div id="pouleU19_Grid" class="teams_portfolio_grid"></div>
     </section>
@@ -77,8 +81,9 @@
     <!-- CLASSEMENT TABLE U19 -->
     <section class="about poule_portfolio alt_bg" id="classement-table-u19">
         <div class="section_header">
-            <div class="section_label">Classement Officiel</div>
-            <h2 class="section_title">Classement <span class="highlight">U19</span></h2>
+            <div class="section_label" data-i18n="u19.classtable.label">Classement Officiel</div>
+            <h2 class="section_title"><span data-i18n="u19.classtable.title.1">Classement</span> <span class="highlight"
+                    data-i18n="u19.classtable.title.2">U19</span></h2>
         </div>
         <div class="standings_section">
             <div class="standings_wrapper">
@@ -87,7 +92,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Équipe</th>
+                                <th data-i18n="table.team">Équipe</th>
                                 <th>MJ</th>
                                 <th>V</th>
                                 <th>N</th>
@@ -95,7 +100,7 @@
                                 <th>BP</th>
                                 <th>BC</th>
                                 <th>Diff</th>
-                                <th>Pts</th>
+                                <th data-i18n="table.pts">Pts</th>
                             </tr>
                         </thead>
                         <tbody id="standingsBodyU19"></tbody>
@@ -116,8 +121,9 @@
     <!-- CALENDRIER -->
     <section class="portfolio matches_portfolio alt_bg" id="calendrier">
         <div class="section_header">
-            <div class="section_label">Calendrier</div>
-            <h2 class="section_title">Matchs <span class="highlight">U19</span></h2>
+            <div class="section_label" data-i18n="u19.calendar.label">Calendrier</div>
+            <h2 class="section_title"><span data-i18n="u19.calendar.title.1">Matchs</span> <span class="highlight"
+                    data-i18n="u19.calendar.title.2">U19</span></h2>
         </div>
         <div id="matchGridU19" class="portfolio_grid"
             style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"></div>
@@ -131,7 +137,8 @@
         <div class="footer_content">
             <div class="footer_brand">
                 <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
-                <p>L'antichambre du professionnalisme. Donnez à vos espoirs la scène qu'ils méritent.</p>
+                <p data-i18n="footer.brand">La Ligue Pro Des Académies : votre partenaire pour la visibilité
+                    professionnelle de vos compétitions de football.</p>
                 <div class="social_links">
                     <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_link">
                         <i class='bx bxl-facebook'></i>
@@ -142,17 +149,18 @@
                 </div>
             </div>
             <div class="footer_column">
-                <h4>Championnats</h4>
+                <h4 data-i18n="footer.champ">Championnats</h4>
                 <ul>
                     <li><a href="u17.html">U17 Elite</a></li>
                     <li><a href="u19.html">U19 Elite</a></li>
                 </ul>
             </div>
             <div class="footer_column">
-                <h4>Championnats</h4>
+                <h4 data-i18n="footer.org">Organisation</h4>
                 <ul>
-                    <li><a href="u17.html">U17 Elite</a></li>
-                    <li><a href="u19.html">U19 Elite</a></li>
+                    <li><a href="membres.html" data-i18n="footer.org.members">Nos Membres</a></li>
+                    <li><a href="blog.html" data-i18n="footer.org.news">Actualités</a></li>
+                    <li><a href="membres.html" data-i18n="footer.org.contact">Contact</a></li>
                 </ul>
             </div>
         </div>

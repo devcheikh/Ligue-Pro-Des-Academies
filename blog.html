@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="i18n.js"></script>
     <script src="data.js"></script>
 </head>
 
@@ -20,11 +21,12 @@
 
         <div class="nav_menu" id="nav-menu">
             <ul>
-                <li><a href="index.html">Accueil</a></li>
+                <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
                 <li><a href="u17.html">U17</a></li>
                 <li><a href="u19.html">U19</a></li>
-                <li><a href="blog.html" class="active">Actualités</a></li>
-                <li><a href="membres.html">Membres</a></li>
+                <li><a href="stades.html" data-i18n="nav.stadiums">Stades</a></li>
+                <li><a href="blog.html" class="active" data-i18n="nav.news">Actualités</a></li>
+                <li><a href="membres.html" data-i18n="nav.members">Membres</a></li>
             </ul>
         </div>
 
@@ -39,8 +41,9 @@
     <section class="hero_mini"
         style="background: linear-gradient(rgba(10,15,10,0.8), rgba(10,15,10,0.8)), url('images/hero_bg.jpg') center/cover;">
         <div class="hero_mini_content">
-            <h1 class="section_title">Actualités <span class="highlight">& News</span></h1>
-            <p>Retrouvez toute la vie de la Ligue Pro Des Académies en temps réel.</p>
+            <h1 class="section_title"><span data-i18n="blog.title.1">Actualités </span><span class="highlight"
+                    data-i18n="blog.title.2">& News</span></h1>
+            <p data-i18n="blog.desc">Retrouvez toute la vie de la Ligue Pro Des Académies en temps réel.</p>
         </div>
     </section>
 
@@ -48,7 +51,7 @@
     <section class="news_feed">
         <div class="news_container" id="news-container">
             <!-- News cards will be injected here -->
-            <div class="loading_news">
+            <div class="loading_news" data-i18n="blog.loading">
                 <i class='bx bx-loader-alt bx-spin'></i> Chargement des actualités...
             </div>
         </div>
@@ -57,9 +60,10 @@
     <!-- FOOTER -->
     <footer>
         <div class="footer_content">
-            <div class="footer_column">
-                <img src="images/logo_ligue.png" alt="Logo" style="height: 60px; margin-bottom: 20px;">
-                <p>L'élite du football académique au Sénégal. Détecter, former, rayonner.</p>
+            <div class="footer_brand">
+                <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+                <p data-i18n="footer.brand">La Ligue Pro Des Académies : votre partenaire pour la visibilité
+                    professionnelle de vos compétitions de football.</p>
                 <div class="social_links">
                     <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_link">
                         <i class='bx bxl-facebook'></i>
@@ -70,24 +74,23 @@
                 </div>
             </div>
             <div class="footer_column">
-                <h4>Navigation</h4>
+                <h4 data-i18n="footer.champ">Championnats</h4>
                 <ul>
-                    <li><a href="index.html">Accueil</a></li>
                     <li><a href="u17.html">U17 Elite</a></li>
                     <li><a href="u19.html">U19 Elite</a></li>
-                    <li><a href="blog.html">Actualités</a></li>
                 </ul>
             </div>
             <div class="footer_column">
-                <h4>Championnats</h4>
+                <h4 data-i18n="footer.org">Organisation</h4>
                 <ul>
-                    <li><a href="u17.html">U17 Elite</a></li>
-                    <li><a href="u19.html">U19 Elite</a></li>
+                    <li><a href="membres.html" data-i18n="footer.org.members">Nos Membres</a></li>
+                    <li><a href="blog.html" data-i18n="footer.org.news">Actualités</a></li>
+                    <li><a href="membres.html" data-i18n="footer.org.contact">Contact</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer_bottom">
-            <p>&copy; 2026 Ligue Pro Des Académies. Tous droits réservés.</p>
+            <p data-i18n="footer.copy">&copy; 2026 Ligue Pro Des Académies. Tous droits réservés.</p>
         </div>
     </footer>
 
@@ -126,7 +129,7 @@
                 container.innerHTML = `
                     <div style="text-align: center; padding: 50px; opacity: 0.5; grid-column: 1/-1;">
                         <i class='bx bx-news' style="font-size: 4rem; margin-bottom: 20px;"></i>
-                        <p>Aucune actualité pour le moment.</p>
+                        <p data-i18n="blog.empty">Aucune actualité pour le moment.</p>
                     </div>
                 `;
                 return;
@@ -146,7 +149,7 @@
                         <span class="news_date"><i class='bx bx-calendar'></i> ${dateFormated}</span>
                         <h3>${post.title}</h3>
                         <p>${linkify(post.summary)}</p>
-                        <button class="btn-outline-small" onclick="viewPost(${post.id})">Lire la suite</button>
+                        <button class="btn-outline-small" onclick="viewPost('${post.id}')" data-i18n="blog.readmore">Lire la suite</button>
                     </div>
                 `;
                 container.appendChild(card);

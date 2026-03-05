@@ -11,6 +11,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="i18n.js"></script>
     <script src="data.js"></script>
 </head>
 
@@ -24,12 +25,12 @@
         <div class="nav_menu" id="nav-menu">
             <i class='bx bx-x menu_close' id="menu-close"></i>
             <ul>
-                <li><a href="index.html" class="active">Accueil</a></li>
+                <li><a href="index.html" class="active" data-i18n="nav.home">Accueil</a></li>
                 <li><a href="u17.html">U17</a></li>
                 <li><a href="u19.html">U19</a></li>
-                <li><a href="stades.html">Stades</a></li>
-                <li><a href="blog.html">Actualités</a></li>
-                <li><a href="membres.html">Membres</a></li>
+                <li><a href="stades.html" data-i18n="nav.stadiums">Stades</a></li>
+                <li><a href="blog.html" data-i18n="nav.news">Actualités</a></li>
+                <li><a href="membres.html" data-i18n="nav.members">Membres</a></li>
             </ul>
         </div>
 
@@ -42,227 +43,175 @@
 
     <!-- HERO SECTION -->
     <section class="hero" id="accueil">
+        <video autoplay muted loop id="bg-video">
+            <source src="videos/mix.mp4" type="video/mp4">
+        </video>
         <div class="hero_content">
-            <div class="hero_text">
-                <div class="hero_label">Plateforme Officielle</div>
-                <h1 class="hero_title">
-                    <span class="line1">LIGUE</span>
-                    <span class="line2">PRO DES</span>
-                    <span class="line3">ACADÉMIES</span>
-                </h1>
-                <p class="hero_description">
-                    Accélérez votre ascension vers les sommets. La Ligue Pro Des Académies transcende
-                    la simple plateforme pour devenir le <strong>catalyseur ultime de l'élite</strong>.
-                    Nous propulsons les futurs cracks du football sur une scène internationale où chaque
-                    match et chaque statistique sculptent une <strong>visibilité professionnelle sans
-                        précédent</strong>.
-                </p>
-                <div class="hero_cta">
-                    <button class="btn-primary" onclick="location.href='u17.html'">
-                        <i class='bx bx-trophy'></i> Championnat U17
-                    </button>
-                    <button class="btn-outline" onclick="location.href='u19.html'">
-                        <i class='bx bx-football'></i> Championnat U19
-                    </button>
-                </div>
+            <div class="hero_badge" data-i18n="hero.label"><i class='bx bx-check-shield'></i> Plateforme Officielle
             </div>
-            <div class="hero_visual">
-                <div class="hero_logo_container">
-                    <div class="hero_circle"></div>
-                    <div class="hero_circle"></div>
-                    <div class="hero_circle"></div>
-                    <img src="images/logo_ligue.png" alt="Logo Ligue Pro Des Académies">
-                    <div class="hero_floating_element"></div>
-                    <div class="hero_floating_element"></div>
-                </div>
+            <h1>LIGUE PRO DES <span class="highlight">ACADÉMIES</span></h1>
+            <p data-i18n="hero.desc">
+                Accélérez votre ascension vers les sommets. La Ligue Pro Des Académies dépasse le cadre
+                d'une simple plateforme pour s'imposer comme le <strong>catalyseur d'élite par
+                    excellence</strong>. Nous propulsons les futures stars du football sur une scène internationale
+                où chaque match et chaque statistique forgent une <strong>visibilité professionnelle
+                    inédite</strong>.
+            </p>
+            <div class="hero_buttons">
+                <a href="#championships" class="btn-primary" data-i18n="hero.btn.u17"><i class='bx bx-trophy'></i>
+                    Championnat U17</a>
+                <a href="#championships" class="btn-outline" data-i18n="hero.btn.u19"><i class='bx bx-football'></i>
+                    Championnat U19</a>
             </div>
-        </div>
-        <div class="scroll_indicator">
-            Scroll
-            <span></span>
         </div>
     </section>
 
     <!-- MATCHES SECTION -->
-    <section class="portfolio" id="matches">
-        <div class="section_header">
-            <div class="section_label">Calendrier</div>
-            <h2 class="section_title">
-                Matchs <span class="highlight">à Venir</span>
-            </h2>
-        </div>
-
-        <div id="homeMatchGrid" class="portfolio_grid"
-            style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-            <!-- Matches will be injected here -->
-        </div>
-
-        <div class="hero_cta" style="justify-content: center; margin-top: 50px;">
-            <button class="btn-outline" onclick="location.href='u17.html'">
-                Voir tout le calendrier
-            </button>
-        </div>
-    </section>
-
-    <!-- CHAMPIONNATS SECTION -->
-    <section class="portfolio" id="championnats">
-        <div class="section_header">
-            <div class="section_label">Nos Compétitions</div>
-            <h2 class="section_title">
-                Championnats <span class="highlight">Officiels</span>
-            </h2>
-        </div>
-
-        <div class="portfolio_grid">
-            <!-- U17 -->
-            <div class="portfolio_item large card-u17" onclick="location.href='u17.html'" style="cursor:pointer;">
-                <div class="portfolio_item_content">
-                    <span class="portfolio_category">Championnat Elite</span>
-                    <h3 class="portfolio_title">Championnat U17</h3>
-                    <p class="portfolio_description">
-                        2 poules de 8 équipes • Phase de playoffs •
-                        Les meilleurs talents U17 en compétition.
-                    </p>
-                </div>
-            </div>
-
-            <!-- U19 -->
-            <div class="portfolio_item card-u19" onclick="location.href='u19.html'" style="cursor:pointer;">
-                <div class="portfolio_item_content">
-                    <span class="portfolio_category">Championnat</span>
-                    <h3 class="portfolio_title">Championnat U19</h3>
-                    <p class="portfolio_description">
-                        1 poule unique • Playoffs • L'élite U19.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Membres -->
-            <div class="portfolio_item card-team" onclick="location.href='membres.html'" style="cursor:pointer;">
-                <div class="portfolio_item_content">
-                    <span class="portfolio_category">Organisation</span>
-                    <h3 class="portfolio_title">Notre Équipe</h3>
-                    <p class="portfolio_description">
-                        Découvrez les membres qui font vivre la ligue.
-                    </p>
-                </div>
+    <section class="matches_ticker">
+        <div class="ticker_container">
+            <div class="ticker_label" data-i18n="matches.label">Programme</div>
+            <div class="ticker_content" id="next-matches-ticker">
+                <div style="opacity: 0.5; font-size: 0.9rem;" data-i18n="blog.loading">Chargement des matchs...</div>
             </div>
         </div>
     </section>
 
-    <!-- ABOUT SECTION -->
-    <section class="about" id="about">
-        <span class="section_number">01</span>
+    <!-- CHAMPIONSHIPS / CATEGORIES -->
+    <section class="about" id="championships">
         <div class="section_header">
-            <div class="section_label">À Propos</div>
-            <h2 class="section_title">
-                La <span class="highlight">Vitrine d'Élite</span>
-            </h2>
+            <div class="section_label" data-i18n="champ.label">Nos Compétitions</div>
+            <h2 class="section_title"><span data-i18n="champ.title.1">Championnats</span> <span class="highlight"
+                    data-i18n="champ.title.2">Officiels</span></h2>
         </div>
+        <div class="features_grid">
+            <div class="feature_card" onclick="location.href='u17.html'" style="cursor: pointer;">
+                <div class="feature_icon"><i class='bx bx-trophy'></i></div>
+                <div class="feature_badge" data-i18n="champ.u17.cat">Championnat Élite</div>
+                <h3 data-i18n="champ.u17.title">Championnat U17</h3>
+                <p data-i18n="champ.u17.desc">2 poules de 8 équipes • Phase de playoffs • Les meilleurs talents U17 en
+                    compétition.</p>
+                <div class="feature_link">Explorer <i class='bx bx-right-arrow-alt'></i></div>
+            </div>
 
-        <div class="about_content">
+            <div class="feature_card" onclick="location.href='u19.html'" style="cursor: pointer;">
+                <div class="feature_icon"><i class='bx bx-football'></i></div>
+                <div class="feature_badge" data-i18n="champ.u19.cat">Championnat</div>
+                <h3 data-i18n="champ.u19.title">Championnat U19</h3>
+                <p data-i18n="champ.u19.desc">1 Poule Unique • Playoffs • L'élite de la catégorie U19.</p>
+                <div class="feature_link">Explorer <i class='bx bx-right-arrow-alt'></i></div>
+            </div>
+
+            <div class="feature_card" onclick="location.href='membres.html'"
+                style="cursor: pointer; border-color: var(--jaune-or);">
+                <div class="feature_icon" style="color: var(--jaune-or);"><i class='bx bx-group'></i></div>
+                <div class="feature_badge" style="background: rgba(255, 215, 0, 0.1); color: var(--jaune-or);"
+                    data-i18n="champ.team.cat">Organisation</div>
+                <h3 data-i18n="champ.team.title">Notre Équipe</h3>
+                <p data-i18n="champ.team.desc">Découvrez les membres qui font vivre la ligue.</p>
+                <div class="feature_link" style="color: var(--jaune-or);">Découvrir <i
+                        class='bx bx-right-arrow-alt'></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT US SECTION -->
+    <section class="about alt_bg" id="concept">
+        <div class="about_container">
             <div class="about_text">
-                <p>
-                    La <strong>Ligue Pro Des Académies</strong> s'impose comme l'épicentre de l'excellence
-                    et la référence absolue pour le football de demain. Plus qu'une plateforme, nous sommes le
-                    pont digital entre les talents bruts et le monde professionnel.
+                <div class="section_label" data-i18n="about.label">À Propos</div>
+                <h2 class="section_title"><span data-i18n="about.title.1">La Vitrine</span> <span class="highlight"
+                        data-i18n="about.title.2">d'Élite</span></h2>
+                <p data-i18n="about.p1">
+                    La <strong>Ligue Pro Des Académies</strong> s'érige comme l'épicentre de l'excellence et la
+                    référence absolue du football de demain. Bien plus qu'une plateforme, nous sommes la passerelle
+                    numérique entre les talents à l'état brut et le monde professionnel.
                 </p>
-                <p>
-                    Nous métamorphosons les compétitions traditionnelles en <strong>vitrines de classe
-                        mondiale</strong>.
-                    En combinant technologie de précision, statistiques détaillées et une présence en ligne percutante,
-                    nous offrons à chaque espoir l'opportunité de briller sous les projecteurs de l'élite.
+                <p data-i18n="about.p2">
+                    Nous métamorphosons les compétitions traditionnelles en <strong>vitrines d'envergure
+                        mondiale</strong>. En conjuguant des technologies de précision, des statistiques détaillées
+                    et une présence en ligne percutante, nous offrons à chaque prospect l'opportunité de briller
+                    sous les projecteurs de l'élite.
                 </p>
-
-                <div id="dynamicStats" class="about_stats">
-                    <div class="about_stat">
-                        <div class="about_stat_number" id="statComps">2</div>
-                        <div class="about_stat_label">Compétitions</div>
+                <div class="about_stats">
+                    <div class="stat_item">
+                        <h4 id="stat-competitions">2</h4>
+                        <span data-i18n="about.stat.comps">Compétitions</span>
                     </div>
-                    <div class="about_stat">
-                        <div class="about_stat_number" id="statTeams">18</div>
-                        <div class="about_stat_label">Équipes</div>
+                    <div class="stat_item">
+                        <h4 id="stat-teams">24+</h4>
+                        <span data-i18n="about.stat.teams">Équipes</span>
                     </div>
-                    <div class="about_stat">
-                        <div class="about_stat_number" id="statMatches">0</div>
-                        <div class="about_stat_label">Matchs Prévus</div>
-                    </div>
-                    <div class="about_stat">
-                        <div class="about_stat_number">U17+</div>
-                        <div class="about_stat_label">Catégories</div>
+                    <div class="stat_item">
+                        <h4 id="stat-matches">0</h4>
+                        <span data-i18n="about.stat.matches">Matchs programmés</span>
                     </div>
                 </div>
             </div>
             <div class="about_image">
-                <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+                <div class="image_wrapper" style="background-image: url('images/hero_bg.jpg')"></div>
+                <!-- Dynamic block -->
+                <div class="experience_card" style="bottom: -20px; right: -20px; z-index: 2;">
+                    <div class="exp_years" id="stat-categories">2</div>
+                    <div class="exp_text">
+                        <span data-i18n="about.stat.cats">Catégories</span><br><strong>U17 & U19</strong>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- COMMUNAUTÉ STATS SECTION -->
-    <section class="community_stats_section" id="communaute">
+    <!-- COMMUNITY STATS -->
+    <section class="about" style="padding: 60px 8%;" id="stats-section">
         <div class="section_header">
-            <div class="section_label">Notre Communauté</div>
-            <h2 class="section_title">
-                La Plateforme en <span class="highlight">Chiffres</span>
-            </h2>
+            <div class="section_label" data-i18n="community.label">Notre Communauté</div>
+            <h2 class="section_title"><span data-i18n="community.title.1">La plateforme en</span> <span
+                    class="highlight" data-i18n="community.title.2">Chiffres</span></h2>
         </div>
 
         <div class="community_stats_grid">
-            <div class="community_stat_card" id="csc-visitors">
-                <div class="csc_icon"><i class='bx bx-user-check'></i></div>
-                <div class="csc_number" id="pubStatVisitors">
-                    <span class="csc_spinner"></span>
-                </div>
-                <div class="csc_label">Visiteurs Uniques</div>
+            <div class="community_stat_card">
+                <i class='bx bx-user-check csc_icon'></i>
+                <div class="csc_number" id="csc-visitors">0</div>
+                <div class="csc_label" data-i18n="community.visitors">Visiteurs Uniques</div>
             </div>
-            <div class="community_stat_card" id="csc-visits">
-                <div class="csc_icon"><i class='bx bx-globe'></i></div>
-                <div class="csc_number" id="pubStatVisits">
-                    <span class="csc_spinner"></span>
-                </div>
-                <div class="csc_label">Visites Totales</div>
+            <div class="community_stat_card">
+                <i class='bx bx-globe csc_icon'></i>
+                <div class="csc_number" id="csc-visits">0</div>
+                <div class="csc_label" data-i18n="community.visits">Visites Totales</div>
             </div>
-            <div class="community_stat_card" id="csc-messages">
-                <div class="csc_icon"><i class='bx bx-chat'></i></div>
-                <div class="csc_number" id="pubStatMessages">
-                    <span class="csc_spinner"></span>
-                </div>
-                <div class="csc_label">Messages Envoyés</div>
+            <div class="community_stat_card">
+                <i class='bx bx-chat csc_icon'></i>
+                <div class="csc_number" id="csc-messages">0</div>
+                <div class="csc_label" data-i18n="community.messages">Messages Envoyés</div>
             </div>
-            <div class="community_stat_card" id="csc-comments">
-                <div class="csc_icon"><i class='bx bx-comment-dots'></i></div>
-                <div class="csc_number" id="pubStatComments">
-                    <span class="csc_spinner"></span>
-                </div>
-                <div class="csc_label">Commentaires Postés</div>
+            <div class="community_stat_card">
+                <i class='bx bx-message-rounded-dots csc_icon'></i>
+                <div class="csc_number" id="csc-comments">0</div>
+                <div class="csc_label" data-i18n="community.comments">Commentaires Postés</div>
             </div>
         </div>
 
         <div class="csc_top_page_wrapper">
-            <i class='bx bx-trending-up'></i>
-            Page la plus visitée : <strong id="pubStatTopPage"><span class="csc_spinner_inline"></span></strong>
+            <i class='bx bx-trending-up' style="font-size: 1.5rem; color: #f472b6;"></i>
+            <span style="font-size: 0.9rem; opacity: 0.8;" data-i18n="community.toppage">Page la plus consultée :
+            </span>
+            <strong id="csc-top-page" style="color: var(--blanc);">—</strong>
         </div>
     </section>
 
-    <!-- CTA SECTION -->
-    <section class="cta_section" id="contact">
-        <div class="cta_content">
-            <h2 class="cta_title">
-                Suivez-nous sur les réseaux !
-            </h2>
-            <p class="cta_description">
-                Restez informé des résultats, classements et actualités
-                de tous nos championnats en nous suivant sur les réseaux sociaux.
-            </p>
-            <div class="social_large">
-                <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_btn facebook">
-                    <i class='bx bxl-facebook'></i> Facebook
-                </a>
-                <a href="https://www.instagram.com/ligueproacademies" target="_blank" class="social_btn instagram">
-                    <i class='bx bxl-instagram'></i> Instagram
-                </a>
-            </div>
+    <!-- CTA BANNER -->
+    <section class="cta_banner"
+        style="background: linear-gradient(rgba(10,15,10,0.9), rgba(10,15,10,0.9)), url('images/hero_bg.jpg') center/cover;">
+        <h2 data-i18n="cta.title">Suivez-nous sur les réseaux !</h2>
+        <p data-i18n="cta.desc">Restez informé des résultats, des classements et des actualités de nos championnats en
+            nous suivant sur nos réseaux sociaux.</p>
+        <div class="social_large">
+            <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_btn facebook">
+                <i class='bx bxl-facebook'></i> Facebook
+            </a>
+            <a href="https://www.instagram.com/ligue_pro_academies/" target="_blank" class="social_btn instagram">
+                <i class='bx bxl-instagram'></i> Instagram
+            </a>
         </div>
     </section>
 
@@ -271,10 +220,8 @@
         <div class="footer_content">
             <div class="footer_brand">
                 <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
-                <p>
-                    La Ligue Pro Des Académies : votre partenaire pour une visibilité
-                    professionnelle de vos compétitions de football.
-                </p>
+                <p data-i18n="footer.brand">La Ligue Pro Des Académies : votre partenaire pour la visibilité
+                    professionnelle de vos compétitions de football.</p>
                 <div class="social_links">
                     <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_link">
                         <i class='bx bxl-facebook'></i>
@@ -284,38 +231,27 @@
                     </a>
                 </div>
             </div>
-
             <div class="footer_column">
-                <h4>Championnats</h4>
+                <h4 data-i18n="footer.champ">Championnats</h4>
                 <ul>
-                    <li><a href="u17.html"><i class='bx bx-chevron-right'></i> Championnat U17</a></li>
-                    <li><a href="u19.html"><i class='bx bx-chevron-right'></i> Championnat U19</a></li>
+                    <li><a href="u17.html">U17 Elite</a></li>
+                    <li><a href="u19.html">U19 Elite</a></li>
                 </ul>
             </div>
-
             <div class="footer_column">
-                <h4>Organisation</h4>
+                <h4 data-i18n="footer.org">Organisation</h4>
                 <ul>
-                    <li><a href="membres.html"><i class='bx bx-chevron-right'></i> Nos Membres</a></li>
-                    <li><a href="blog.html"><i class='bx bx-news'></i> Actualités</a></li>
-                    <li><a href="membres.html#contact"><i class='bx bx-chevron-right'></i> Contact</a></li>
-                </ul>
-            </div>
-
-            <div class="footer_column">
-                <h4>Réseaux Sociaux</h4>
-                <ul>
-                    <li><a href="https://www.facebook.com/ligue_pro_academies" target="_blank"><i
-                                class='bx bxl-facebook'></i> Facebook</a></li>
-                    <li><a href="https://www.instagram.com/ligue_pro_academies" target="_blank"><i
-                                class='bx bxl-instagram'></i> Instagram</a></li>
+                    <li><a href="membres.html" data-i18n="footer.org.members">Nos Membres</a></li>
+                    <li><a href="blog.html" data-i18n="footer.org.news">Actualités</a></li>
+                    <li><a href="membres.html" data-i18n="footer.org.contact">Contact</a></li>
                 </ul>
             </div>
         </div>
-
         <div class="footer_bottom">
-            <p>&copy; 2026 Ligue Pro Des Académies. Tous droits réservés.</p>
-            <p>Développé avec Mbodja fara <i class='bx bx-heart' style="color: #E53935;"></i> au Sénégal</p>
+            <p data-i18n="footer.copy">&copy; 2026 Ligue Pro Des Académies. Tous droits réservés.</p>
+            <p class="developed_by" data-i18n="footer.dev">Développé avec <span>Mbodja fara <i class='bx bx-heart'
+                        style="color: #E53935;"></i></span>
+                au Sénégal</p>
         </div>
     </footer>
 
@@ -358,8 +294,8 @@
         // Update Stats Dynamically
         function updateStats() {
             const data = getData();
-            document.getElementById('statTeams').innerText = data.teams.length;
-            document.getElementById('statMatches').innerText = data.matches.length;
+            document.getElementById('stat-teams').innerText = data.teams.length;
+            document.getElementById('stat-matches').innerText = data.matches.length;
         }
 
         // Render Upcoming Matches
@@ -373,7 +309,7 @@
                 container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; opacity: 0.5;">Aucun match programmé pour le moment.</p>';
             } else {
                 matches.forEach(m => {
-                    const displayDate = m.date ? new Date(m.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) : 'À définir';
+                    const displayDate = m.date ? new Date(m.date).toLocaleDateString(getCurrentLang(), { weekday: 'short', day: 'numeric', month: 'short' }) : (getCurrentLang() === 'en' ? 'TBD' : 'À définir');
                     const displayTime = m.time ? m.time : '';
                     const teams = m.teams.split(' vs ');
                     const t1Name = teams[0] || 'TBD';
@@ -392,7 +328,7 @@
                             <div class="match_teams_wrapper">
                                 <div class="match_team_logo"><img src="${t1 ? t1.logo : 'images/logo_ligue.png'}" alt=""></div>
                                 <span class="match_team_name">${t1Name}</span>
-                                <div class="match_vs_divider">${m.status === 'played' ? m.score1 + ' - ' + m.score2 : 'VS'}</div>
+                                <div class="match_vs_divider">${m.status === 'played' ? m.score1 + ' - ' + m.score2 : '<span data-i18n="vs">VS</span>'}</div>
                                 <span class="match_team_name">${t2Name}</span>
                                 <div class="match_team_logo"><img src="${t2 ? t2.logo : 'images/logo_ligue.png'}" alt=""></div>
                             </div>

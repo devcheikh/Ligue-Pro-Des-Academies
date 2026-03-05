@@ -3141,3 +3141,39 @@ footer {
         padding: 12px 15px;
     }
 }
+
+/* ============================================
+   LANGUAGE SWITCH (i18n)
+   ============================================ */
+.lang-switch-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--blanc);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    margin-left: 15px;
+}
+
+.lang-switch-btn:hover {
+    background: rgba(34, 139, 34, 0.2);
+    border-color: var(--vert-principal);
+    color: var(--jaune-or);
+}
+
+.lang-flag {
+    font-size: 1.1rem;
+}
+
+@media (max-width: 900px) {
+    .lang-switch-btn {
+        margin-left: 0;
+        margin-right: 15px;
+    }
+}

@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="i18n.js"></script>
     <script src="data.js"></script>
 </head>
 
@@ -21,10 +22,12 @@
         <div class="nav_menu" id="nav-menu">
             <i class='bx bx-x menu_close' id="menu-close"></i>
             <ul>
-                <li><a href="index.html">Accueil</a></li>
+                <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
                 <li><a href="u17.html" class="active">U17</a></li>
                 <li><a href="u19.html">U19</a></li>
-                <li><a href="blog.html">Actualités</a></li>
+                <li><a href="stades.html" data-i18n="nav.stadiums">Stades</a></li>
+                <li><a href="blog.html" data-i18n="nav.news">Actualités</a></li>
+                <li><a href="membres.html" data-i18n="nav.members">Membres</a></li>
             </ul>
         </div>
 
@@ -39,21 +42,21 @@
     <section class="hero page_hero" id="accueil">
         <div class="hero_content">
             <div class="hero_text">
-                <div class="hero_label">Championnat Élite</div>
+                <div class="hero_label" data-i18n="u17.hero.label">Championnat Élite</div>
                 <h1 class="hero_title">
                     <span class="line1">CHAMPIONNAT</span>
                     <span class="line2">U17</span>
                 </h1>
-                <p class="hero_description">
+                <p class="hero_description" data-i18n="u17.hero.desc">
                     Le futur se dessine ici. Vivez l'intensité d'un championnat d'élite où les
                     <strong>8 meilleures académies</strong> par poule s'affrontent pour le sommet.
                     Découvrez les talents qui domineront bientôt le football mondial.
                 </p>
                 <div class="hero_cta">
-                    <a href="#poule-u17-a" class="btn-primary">
+                    <a href="#poule-u17-a" class="btn-primary" data-i18n="u17.btn.pouleA">
                         <i class='bx bx-group'></i> Poule A
                     </a>
-                    <a href="#poule-u17-b" class="btn-outline">
+                    <a href="#poule-u17-b" class="btn-outline" data-i18n="u17.btn.pouleB">
                         <i class='bx bx-group'></i> Poule B
                     </a>
                 </div>
@@ -72,8 +75,8 @@
     <section class="about poule_portfolio" id="poule-u17-a">
         <span class="section_number">A</span>
         <div class="section_header">
-            <div class="section_label">Saison 2026</div>
-            <h2 class="section_title">Poule <span class="highlight">A</span></h2>
+            <div class="section_label" data-i18n="u17.season">Saison 2026</div>
+            <h2 class="section_title" data-i18n="u17.pouleA">Poule <span class="highlight">A</span></h2>
         </div>
         <div id="pouleA_Grid" class="teams_portfolio_grid"></div>
     </section>
@@ -82,8 +85,8 @@
     <section class="about poule_portfolio alt_bg" id="poule-u17-b">
         <span class="section_number">B</span>
         <div class="section_header">
-            <div class="section_label">Saison 2026</div>
-            <h2 class="section_title">Poule <span class="highlight">B</span></h2>
+            <div class="section_label" data-i18n="u17.season">Saison 2026</div>
+            <h2 class="section_title" data-i18n="u17.pouleB">Poule <span class="highlight">B</span></h2>
         </div>
         <div id="pouleB_Grid" class="teams_portfolio_grid"></div>
     </section>
@@ -91,8 +94,9 @@
     <!-- CLASSEMENT POULE A -->
     <section class="about poule_portfolio" id="classement-u17-a">
         <div class="section_header">
-            <div class="section_label">Classement</div>
-            <h2 class="section_title">Classement Poule <span class="highlight">A</span></h2>
+            <div class="section_label" data-i18n="u17.classA.label">Classement</div>
+            <h2 class="section_title"><span data-i18n="u17.classA.title.prefix">Classement Poule </span><span
+                    class="highlight" data-i18n="u17.classA.title.2">A</span></h2>
         </div>
         <div class="standings_section">
             <div class="standings_wrapper">
@@ -130,8 +134,9 @@
     <!-- CLASSEMENT POULE B -->
     <section class="about poule_portfolio alt_bg" id="classement-u17-b">
         <div class="section_header">
-            <div class="section_label">Classement</div>
-            <h2 class="section_title">Classement Poule <span class="highlight">B</span></h2>
+            <div class="section_label" data-i18n="u17.classB.label">Classement</div>
+            <h2 class="section_title"><span data-i18n="u17.classB.title.prefix">Classement Poule </span><span
+                    class="highlight" data-i18n="u17.classB.title.2">B</span></h2>
         </div>
         <div class="standings_section">
             <div class="standings_wrapper">
@@ -169,8 +174,9 @@
     <!-- CALENDRIER -->
     <section class="portfolio matches_portfolio" id="calendrier">
         <div class="section_header">
-            <div class="section_label">Matchs à venir</div>
-            <h2 class="section_title">Calendrier <span class="highlight">U17</span></h2>
+            <div class="section_label" data-i18n="u17.calendar.label">Matchs à venir</div>
+            <h2 class="section_title"><span data-i18n="u17.calendar.title.1">Calendrier</span> <span class="highlight"
+                    data-i18n="u17.calendar.title.2">U17</span></h2>
         </div>
         <div id="matchGridU17" class="portfolio_grid"
             style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"></div>
@@ -184,7 +190,8 @@
         <div class="footer_content">
             <div class="footer_brand">
                 <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
-                <p>Digitalisez l'excellence. Propulsez vos talents vers l'élite du football mondial.</p>
+                <p data-i18n="footer.brand">La Ligue Pro Des Académies : votre partenaire pour la visibilité
+                    professionnelle de vos compétitions de football.</p>
                 <div class="social_links">
                     <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_link">
                         <i class='bx bxl-facebook'></i>
@@ -195,17 +202,18 @@
                 </div>
             </div>
             <div class="footer_column">
-                <h4>Championnats</h4>
+                <h4 data-i18n="footer.champ">Championnats</h4>
                 <ul>
                     <li><a href="u17.html">U17 Elite</a></li>
                     <li><a href="u19.html">U19 Elite</a></li>
                 </ul>
             </div>
             <div class="footer_column">
-                <h4>Championnats</h4>
+                <h4 data-i18n="footer.org">Organisation</h4>
                 <ul>
-                    <li><a href="u17.html">U17 Elite</a></li>
-                    <li><a href="u19.html">U19 Elite</a></li>
+                    <li><a href="membres.html" data-i18n="footer.org.members">Nos Membres</a></li>
+                    <li><a href="blog.html" data-i18n="footer.org.news">Actualités</a></li>
+                    <li><a href="membres.html" data-i18n="footer.org.contact">Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -295,10 +303,10 @@
             const matches = data.matches.filter(m => m.categoryId === catA.id || m.categoryId === catB.id);
 
             if (matches.length === 0) {
-                matchContainer.innerHTML = '<p style="text-align: center; grid-column: 1/-1; opacity: 0.5;">Aucun match programmé pour le moment.</p>';
+                container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; opacity: 0.5;">Aucun match programmé pour le moment.</p>';
             } else {
-                matches.sort((a, b) => new Date(a.date) - new Date(b.date)).forEach(m => {
-                    const displayDate = m.date ? new Date(m.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) : 'À définir';
+                matches.forEach(m => {
+                    const displayDate = m.date ? new Date(m.date).toLocaleDateString(getCurrentLang(), { weekday: 'short', day: 'numeric', month: 'short' }) : (getCurrentLang() === 'en' ? 'TBD' : 'À définir');
                     const displayTime = m.time ? m.time : '';
                     const teams = m.teams.split(' vs ');
                     const t1Name = teams[0] || 'TBD';
@@ -316,7 +324,7 @@
                             <div class="match_teams_wrapper">
                                 <div class="match_team_logo"><img src="${t1 ? t1.logo : 'images/logo_ligue.png'}" alt=""></div>
                                 <span class="match_team_name">${t1Name}</span>
-                                <div class="match_vs_divider">${m.status === 'played' ? m.score1 + ' - ' + m.score2 : 'VS'}</div>
+                                <div class="match_vs_divider">${m.status === 'played' ? m.score1 + ' - ' + m.score2 : '<span data-i18n="vs">VS</span>'}</div>
                                 <span class="match_team_name">${t2Name}</span>
                                 <div class="match_team_logo"><img src="${t2 ? t2.logo : 'images/logo_ligue.png'}" alt=""></div>
                             </div>

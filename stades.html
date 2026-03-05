@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="i18n.js"></script>
     <script src="data.js"></script>
 </head>
 
@@ -21,12 +22,12 @@
         <div class="nav_menu" id="nav-menu">
             <i class='bx bx-x menu_close' id="menu-close"></i>
             <ul>
-                <li><a href="index.html">Accueil</a></li>
+                <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
                 <li><a href="u17.html">U17</a></li>
                 <li><a href="u19.html">U19</a></li>
-                <li><a href="stades.html" class="active">Stades</a></li>
-                <li><a href="blog.html">Actualités</a></li>
-                <li><a href="membres.html">Membres</a></li>
+                <li><a href="stades.html" class="active" data-i18n="nav.stadiums">Stades</a></li>
+                <li><a href="blog.html" data-i18n="nav.news">Actualités</a></li>
+                <li><a href="membres.html" data-i18n="nav.members">Membres</a></li>
             </ul>
         </div>
 
@@ -40,8 +41,9 @@
     <!-- HEADER -->
     <header class="page_header"
         style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/hero_bg.jpg');">
-        <h1>Stades & <span class="highlight">Réservations</span></h1>
-        <p>Réservez des créneaux d'entraînement ou de match dans nos stades partenaires.</p>
+        <h1><span data-i18n="stades.title.1">Stades & </span><span class="highlight"
+                data-i18n="stades.title.2">Réservations</span></h1>
+        <p data-i18n="stades.desc">Réservez des créneaux d'entraînement ou de match dans nos stades partenaires.</p>
     </header>
 
     <!-- STADIUMS LIST -->
@@ -56,11 +58,11 @@
         <div class="footer_content">
             <div class="footer_brand">
                 <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
-                <p>La vitrine d'élite du football sénégalais.</p>
+                <p data-i18n="footer.brand">La vitrine d'élite du football sénégalais.</p>
             </div>
         </div>
         <div class="footer_bottom">
-            <p>&copy; 2026 Ligue Pro Des Académies.</p>
+            <p data-i18n="footer.copy">&copy; 2026 Ligue Pro Des Académies.</p>
         </div>
     </footer>
 
@@ -86,7 +88,7 @@
             container.innerHTML = '';
 
             if (data.stadiums.length === 0) {
-                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; opacity:0.6;">Aucun stade partenaire pour le moment.</p>';
+                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; opacity:0.6;" data-i18n="stades.empty">Aucun stade partenaire pour le moment.</p>';
                 return;
             }
 
@@ -102,7 +104,7 @@
                 let slotsHtml = '';
                 if (slots.length > 0) {
                     slotsHtml = `<div class="slots-list" style="padding: 15px; background: rgba(0,0,0,0.2);">
-                        <h4 style="margin-bottom: 10px; color: var(--jaune-or); font-size: 0.9rem;">Créneaux Disponibles</h4>
+                        <h4 style="margin-bottom: 10px; color: var(--jaune-or); font-size: 0.9rem;" data-i18n="stades.slots">Créneaux Disponibles</h4>
                         <div style="display: flex; flex-wrap: wrap; gap: 8px;">`;
 
                     // Show max 6 slots
@@ -121,11 +123,11 @@
                     }
                     slotsHtml += `</div>
                         <button onclick="contactManager('${s.contact}', '${s.name}')" class="btn-primary" style="width:100%; margin-top: 15px; font-size: 0.9rem;">
-                            <i class='bx bx-phone'></i> Contacter pour Réserver
+                            <i class='bx bx-phone'></i> <span data-i18n="stades.contact">Contacter pour Réserver</span>
                         </button>
                     </div>`;
                 } else {
-                    slotsHtml = `<div style="padding: 15px; text-align: center; opacity: 0.6; font-size: 0.9rem;">Aucun créneau disponible actuellement.</div>`;
+                    slotsHtml = `<div style="padding: 15px; text-align: center; opacity: 0.6; font-size: 0.9rem;" data-i18n="stades.noslots">Aucun créneau disponible actuellement.</div>`;
                 }
 
                 card.innerHTML = `
@@ -143,7 +145,7 @@
 
                         <!-- Contact (Text) Bottom -->
                         <p class="portfolio_description" style="margin-bottom: 0; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                            <strong>Contact Gérant:</strong> <br> ${s.contact || 'Non renseigné'}
+                            <strong data-i18n="stades.manager">Contact Gérant:</strong> <br> ${s.contact || (getCurrentLang() === 'en' ? 'Not specified' : 'Non renseigné')}
                         </p>
                     </div>
                 `;

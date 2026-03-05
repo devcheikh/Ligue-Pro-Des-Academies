@@ -7,6 +7,7 @@
     <title>Membres | Ligue Pro Des Académies</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
+    <script src="i18n.js"></script>
 </head>
 
 <body>
@@ -18,11 +19,12 @@
 
         <div class="nav_menu" id="navMenu">
             <ul>
-                <li><a href="index.html">Accueil</a></li>
+                <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
                 <li><a href="u17.html">U17</a></li>
                 <li><a href="u19.html">U19</a></li>
-                <li><a href="blog.html">Actualités</a></li>
-                <li><a href="membres.html" class="active">Membres</a></li>
+                <li><a href="stades.html" data-i18n="nav.stadiums">Stades</a></li>
+                <li><a href="blog.html" data-i18n="nav.news">Actualités</a></li>
+                <li><a href="membres.html" class="active" data-i18n="nav.members">Membres</a></li>
             </ul>
         </div>
 
@@ -36,9 +38,10 @@
     <!-- PAGE HEADER -->
     <section class="page_header membres">
         <div class="page_header_content">
-            <span class="page_badge">Notre Équipe</span>
-            <h1>Les <span class="highlight-yellow">Membres</span></h1>
-            <p>L'équipe qui fait vivre la Ligue Pro Des Académies</p>
+            <span class="page_badge" data-i18n="membres.badge">Notre Équipe</span>
+            <h1><span data-i18n="membres.title.1">Les </span><span class="highlight-yellow"
+                    data-i18n="membres.title.2">Membres</span></h1>
+            <p data-i18n="membres.desc">L'équipe qui fait vivre la Ligue Pro Des Académies</p>
         </div>
     </section>
 
@@ -46,8 +49,9 @@
     <section class="membres_section">
         <div class="container">
             <div class="section_header">
-                <div class="section_label">Direction</div>
-                <h2 class="section_title">Bureau <span class="highlight">Exécutif</span></h2>
+                <div class="section_label" data-i18n="membres.dir.label">Direction</div>
+                <h2 class="section_title"><span data-i18n="membres.dir.title.1">Bureau </span><span class="highlight"
+                        data-i18n="membres.dir.title.2">Exécutif</span></h2>
             </div>
 
             <div class="membres_grid direction">
@@ -102,8 +106,9 @@
     <section class="membres_section alt">
         <div class="container">
             <div class="section_header">
-                <div class="section_label">Technique</div>
-                <h2 class="section_title">Commission <span class="highlight">Technique</span></h2>
+                <div class="section_label" data-i18n="membres.tech.label">Technique</div>
+                <h2 class="section_title"><span data-i18n="membres.tech.title.1">Commission </span><span
+                        class="highlight" data-i18n="membres.tech.title.2">Technique</span></h2>
             </div>
 
             <div class="membres_grid">
@@ -147,8 +152,9 @@
     <section class="membres_section">
         <div class="container">
             <div class="section_header">
-                <div class="section_label">Communication</div>
-                <h2 class="section_title">Équipe <span class="highlight">Médias</span></h2>
+                <div class="section_label" data-i18n="membres.com.label">Communication</div>
+                <h2 class="section_title"><span data-i18n="membres.com.title.1">Équipe </span><span class="highlight"
+                        data-i18n="membres.com.title.2">Médias</span></h2>
             </div>
 
             <div class="membres_grid">
@@ -193,8 +199,9 @@
         <div class="container">
             <div class="contact_content">
                 <div class="contact_info">
-                    <h2>Nous <span class="highlight">Contacter</span></h2>
-                    <p>Pour toute information ou demande de partenariat</p>
+                    <h2><span data-i18n="membres.contact.title.1">Nous </span><span class="highlight"
+                            data-i18n="membres.contact.title.2">Contacter</span></h2>
+                    <p data-i18n="membres.contact.desc">Pour toute information ou demande de partenariat</p>
 
                     <div class="contact_items">
                         <div class="contact_item">
@@ -231,7 +238,8 @@
         <div class="footer_content">
             <div class="footer_brand">
                 <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
-                <p>La vitrine d'élite du football des académies.</p>
+                <p data-i18n="footer.brand">La Ligue Pro Des Académies : votre partenaire pour la visibilité
+                    professionnelle de vos compétitions de football.</p>
                 <div class="social_links">
                     <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_link">
                         <i class='bx bxl-facebook'></i>
@@ -243,18 +251,26 @@
             </div>
 
             <div class="footer_column">
-                <h4>Navigation</h4>
+                <h4 data-i18n="footer.champ">Championnats</h4>
                 <ul>
-                    <li><a href="index.html"><i class='bx bx-chevron-right'></i> Accueil</a></li>
-                    <li><a href="u17.html"><i class='bx bx-chevron-right'></i> U17</a></li>
-                    <li><a href="u19.html"><i class='bx bx-chevron-right'></i> U19</a></li>
-                    <li><a href="membres.html"><i class='bx bx-chevron-right'></i> Membres</a></li>
+                    <li><a href="u17.html"><i class='bx bx-chevron-right'></i> U17 Elite</a></li>
+                    <li><a href="u19.html"><i class='bx bx-chevron-right'></i> U19 Elite</a></li>
+                </ul>
+            </div>
+            <div class="footer_column">
+                <h4 data-i18n="footer.org">Organisation</h4>
+                <ul>
+                    <li><a href="membres.html" data-i18n="footer.org.members"><i class='bx bx-chevron-right'></i> Nos
+                            Membres</a></li>
+                    <li><a href="blog.html" data-i18n="footer.org.news"><i class='bx bx-chevron-right'></i>
+                            Actualités</a></li>
+                    <li><a href="membres.html" data-i18n="footer.org.contact"><i class='bx bx-chevron-right'></i>
+                            Contact</a></li>
                 </ul>
             </div>
         </div>
-
         <div class="footer_bottom">
-            <p>&copy; 2026 Ligue Pro Des Académies. Tous droits réservés.</p>
+            <p data-i18n="footer.copy">&copy; 2026 Ligue Pro Des Académies. Tous droits réservés.</p>
         </div>
     </footer>
 

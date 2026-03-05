@@ -668,6 +668,132 @@ nav.scrolled {
     z-index: -1;
 }
 
+/* ============ COMPETITIONS / FEATURES SECTION ============ */
+.features_grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 50px auto 0;
+}
+
+.feature_card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: linear-gradient(145deg, rgba(34, 139, 34, 0.1), rgba(10, 15, 10, 0.95));
+    border: 1px solid rgba(34, 139, 34, 0.2);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 420px;
+}
+
+.feature_card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--jaune-or);
+}
+
+.feature_image {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    transition: var(--transition);
+}
+
+.feature_image::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(10, 15, 10, 1), transparent);
+}
+
+.feature_card:hover .feature_image {
+    transform: scale(1.05);
+}
+
+.feature_content {
+    padding: 30px;
+    position: relative;
+    z-index: 2;
+    background: rgba(10, 15, 10, 0.9);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: -30px;
+    /* Overlap image */
+    border-radius: 20px 20px 0 0;
+}
+
+.feature_icon {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-vert);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--blanc);
+    margin-bottom: 20px;
+    box-shadow: 0 10px 20px rgba(34, 139, 34, 0.3);
+    position: absolute;
+    top: -30px;
+    right: 30px;
+}
+
+.feature_badge {
+    display: inline-block;
+    padding: 5px 15px;
+    background: rgba(34, 139, 34, 0.2);
+    color: var(--vert-principal);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    align-self: flex-start;
+}
+
+.feature_card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--blanc);
+}
+
+.feature_card p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin-bottom: 25px;
+    flex-grow: 1;
+}
+
+.feature_link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--vert-clair);
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition);
+}
+
+.feature_card:hover .feature_link {
+    color: var(--jaune-or);
+    gap: 15px;
+}
+
 /* ============ PORTFOLIO SECTION ============ */
 .portfolio {
     padding: 120px 8%;

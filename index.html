@@ -46,11 +46,10 @@
             <source src="videos/mix.mp4" type="video/mp4">
         </video>
         <div class="hero_content">
-            <div class="hero_badge reveal-delay-1" data-i18n="hero.label"><i class='bx bx-check-shield'></i> Plateforme
-                Officielle
+            <div class="hero_badge" data-i18n="hero.label"><i class='bx bx-check-shield'></i> Plateforme Officielle
             </div>
-            <h1 class="glow-text reveal-delay-2">LIGUE PRO DES <span class="highlight neon-text">ACADÉMIES</span></h1>
-            <p data-i18n="hero.desc" class="hero_desc_glass reveal-delay-3">
+            <h1>LIGUE PRO DES <span class="highlight">ACADÉMIES</span></h1>
+            <p data-i18n="hero.desc">
                 Accélérez votre ascension vers les sommets. La Ligue Pro Des Académies dépasse le cadre
                 d'une simple plateforme pour s'imposer comme le <strong>catalyseur d'élite par
                     excellence</strong>. Nous propulsons les futures stars du football sur une scène internationale
@@ -63,21 +62,6 @@
                 <a href="#championships" class="btn-outline" data-i18n="hero.btn.u19"><i class='bx bx-football'></i>
                     Championnat U19</a>
             </div>
-
-            <!-- Premium Glassmorphism Floating Badges -->
-            <div class="glass-badge floating-badge-1">
-                <div class="pulse-dot"></div> <span data-i18n="hero.badge1">En Direct</span>
-            </div>
-            <div class="glass-badge floating-badge-2">
-                <i class='bx bx-calendar-star'></i> <span data-i18n="hero.badge2">Saison 2026/2027</span>
-            </div>
-        </div>
-
-        <!-- Scroll Indicator -->
-        <div class="modern_scroll_indicator">
-            <span class="mouse">
-                <span class="wheel"></span>
-            </span>
         </div>
     </section>
 
@@ -93,14 +77,13 @@
 
     <!-- CHAMPIONSHIPS / CATEGORIES -->
     <section class="about" id="championships">
-        <div class="section_header scroll-reveal">
+        <div class="section_header">
             <div class="section_label" data-i18n="champ.label">Nos Compétitions</div>
             <h2 class="section_title"><span data-i18n="champ.title.1">Championnats</span> <span class="highlight"
                     data-i18n="champ.title.2">Officiels</span></h2>
         </div>
         <div class="features_grid">
-            <div class="feature_card scroll-reveal reveal-delay-1" onclick="location.href='u17.html'"
-                style="cursor: pointer;">
+            <div class="feature_card" onclick="location.href='u17.html'" style="cursor: pointer;">
                 <div class="feature_image" style="background-image: url('images/u17_bg.png');"></div>
                 <div class="feature_content">
                     <div class="feature_icon"><i class='bx bx-trophy'></i></div>
@@ -112,8 +95,7 @@
                 </div>
             </div>
 
-            <div class="feature_card scroll-reveal reveal-delay-2" onclick="location.href='u19.html'"
-                style="cursor: pointer;">
+            <div class="feature_card" onclick="location.href='u19.html'" style="cursor: pointer;">
                 <div class="feature_image" style="background-image: url('images/u19_bg.png');"></div>
                 <div class="feature_content">
                     <div class="feature_icon"><i class='bx bx-football'></i></div>
@@ -124,8 +106,8 @@
                 </div>
             </div>
 
-            <div class="feature_card scroll-reveal reveal-delay-3" onclick="location.href='membres.html'"
-                style="cursor: pointer;">
+            <div class="feature_card" onclick="location.href='membres.html'"
+                style="cursor: pointer; border-color: var(--jaune-or);">
                 <div class="feature_image" style="background-image: url('images/team_bg.png');"></div>
                 <div class="feature_content">
                     <div class="feature_icon" style="color: var(--jaune-or);"><i class='bx bx-group'></i></div>
@@ -142,7 +124,7 @@
 
     <!-- ABOUT US SECTION -->
     <section class="about alt_bg" id="concept">
-        <div class="about_container scroll-reveal">
+        <div class="about_container">
             <div class="about_text">
                 <div class="section_label" data-i18n="about.label">À Propos</div>
                 <h2 class="section_title"><span data-i18n="about.title.1">La Vitrine</span> <span class="highlight"
@@ -158,7 +140,7 @@
                     et une présence en ligne percutante, nous offrons à chaque prospect l'opportunité de briller
                     sous les projecteurs de l'élite.
                 </p>
-                <div class="about_stats scroll-reveal reveal-delay-2">
+                <div class="about_stats">
                     <div class="about_stat">
                         <h4 class="about_stat_number" id="stat-competitions">2</h4>
                         <span class="about_stat_label" data-i18n="about.stat.comps">Compétitions</span>
@@ -397,8 +379,8 @@
                 `;
             });
 
-            // Triple the items for safer seamless scrolling if items are few
-            tickerContainer.innerHTML = html + html + html;
+            // Duplicate the items for seamless scrolling effect
+            tickerContainer.innerHTML = html + html;
         }
 
         updateStats();
@@ -414,24 +396,26 @@
         });
 
         // Animate elements on scroll
-        const scrollObserver = new IntersectionObserver((entries) => {
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const fadeInObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
                 }
             });
-        }, { threshold: 0.1 });
+        }, observerOptions);
 
-        document.querySelectorAll('.scroll-reveal').forEach(el => {
-            scrollObserver.observe(el);
+        document.querySelectorAll('.about_content, .portfolio_item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            fadeInObserver.observe(el);
         });
-
-        // Safety fallback: if elements are still invisible after 2s, force them active
-        setTimeout(() => {
-            document.querySelectorAll('.scroll-reveal:not(.active)').forEach(el => {
-                el.classList.add('active');
-            });
-        }, 2000);
 
         // ---- PUBLIC COMMUNITY STATS ----
         function animateCount(el, target, duration = 1400) {

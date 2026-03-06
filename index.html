@@ -45,7 +45,7 @@
         <video autoplay muted loop id="bg-video">
             <source src="videos/mix.mp4" type="video/mp4">
         </video>
-        <div class="hero_content scroll-reveal">
+        <div class="hero_content">
             <div class="hero_badge reveal-delay-1" data-i18n="hero.label"><i class='bx bx-check-shield'></i> Plateforme
                 Officielle
             </div>
@@ -397,8 +397,8 @@
                 `;
             });
 
-            // Duplicate the items for seamless scrolling effect
-            tickerContainer.innerHTML = html + html;
+            // Triple the items for safer seamless scrolling if items are few
+            tickerContainer.innerHTML = html + html + html;
         }
 
         updateStats();
@@ -425,6 +425,13 @@
         document.querySelectorAll('.scroll-reveal').forEach(el => {
             scrollObserver.observe(el);
         });
+
+        // Safety fallback: if elements are still invisible after 2s, force them active
+        setTimeout(() => {
+            document.querySelectorAll('.scroll-reveal:not(.active)').forEach(el => {
+                el.classList.add('active');
+            });
+        }, 2000);
 
         // ---- PUBLIC COMMUNITY STATS ----
         function animateCount(el, target, duration = 1400) {

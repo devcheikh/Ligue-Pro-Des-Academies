@@ -768,12 +768,22 @@ nav.scrolled {
 
 @keyframes ticker {
     0% {
-        transform: translateX(100%);
+        transform: translateX(0);
     }
 
     100% {
         transform: translateX(-100%);
     }
+}
+
+/* Ensure ticker container respects animation */
+.ticker_content {
+    display: inline-flex;
+    gap: 40px;
+    white-space: nowrap;
+    animation: ticker 30s linear infinite;
+    align-items: center;
+    width: max-content;
 }
 
 .ticker_content .match-item {

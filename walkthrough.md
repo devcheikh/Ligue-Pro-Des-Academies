@@ -47,16 +47,6 @@ Pour répondre à votre demande "REND DYNAMIQUE" sur les compteurs et les matchs
 - **Animation des Compteurs :** Tous les chiffres de statistiques de la page d'accueil (ex: *24 Équipes, 45 Matchs*) et du panneau d'administration (ex: *0 Visiteurs, 0 Messages*) bénéficient désormais d'une **animation de décompte fluide** de 0 jusqu'au chiffre réel au chargement de la page (`animateCount`). Cela donne un aspect très professionnel et moderne (dynamique) à l'interface, même si la base de données ne contient pas encore beaucoup de chiffres.
 - **Programme de Matchs (Ticker) :** Le bandeau de matchs sur la page d'accueil ne reste plus bloqué sur "Chargement des matchs...". Il récupère désormais automatiquement les prochains matchs depuis la base de données et les affiche en continu dans le bandeau horizontal animé.
 
-## 6. Refonte Visuelle Ultra-Premium ("Cool" Mode)
-
-Pour transformer l'accueil en une expérience de classe mondiale, les éléments suivants ont été ajoutés :
-
-- **Glassmorphism & Néon :** La barre de navigation et le bandeau des matchs utilisent désormais un effet de verre dépoli (`backdrop-filter: blur`). Le titre principal possède un effet de lueur néon (`glow-text` et `neon-text`) dynamique.
-- **Badges Flottants :** Ajout de badges semi-transparents ("En Direct", "Saison 2026") qui flottent avec une animation douce par-dessus la vidéo de fond.
-- **Cartes 3D :** Les cartes des compétitions se soulèvent avec un effet 3D marqué et une ombre lumineuse intense au survol.
-- **Scroll Reveal :** Tous les contenus de la page apparaissent désormais avec un fondu glissant élégant. J'ai ajouté une sécurité pour que tout s'affiche instantanément si les animations tardent à se déclencher, garantissant que la page ne reste jamais "vide".
-- **Correction du Ticker :** Le bandeau des matchs a été corrigé pour défiler de manière fluide et infinie dès l'ouverture du site.
-
 ---
 
-*La visibilité a été restaurée et les animations stabilisées pour une expérience parfaite.*
+*La page d'accueil a été restaurée à sa version stable originale selon la demande de l'utilisateur.*

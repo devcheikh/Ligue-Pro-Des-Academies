@@ -531,6 +531,68 @@ nav.scrolled {
     }
 }
 
+/* ============ MATCHES TICKER ============ */
+.matches_ticker {
+    background: var(--vert-fonce);
+    padding: 15px 0;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 2px solid var(--jaune-or);
+    z-index: 20;
+}
+
+.ticker_container {
+    display: flex;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 8%;
+}
+
+.ticker_label {
+    background: var(--jaune-or);
+    color: var(--noir);
+    padding: 8px 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border-radius: 5px;
+    margin-right: 20px;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.ticker_content {
+    display: flex;
+    gap: 40px;
+    white-space: nowrap;
+    animation: ticker 25s linear infinite;
+    align-items: center;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.ticker_content .match-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--blanc);
+    font-size: 0.95rem;
+}
+
+.ticker_content .match-item strong {
+    color: var(--jaune-or);
+}
+
 /* ============ ABOUT SECTION ============ */
 .about {
     padding: 120px 8%;

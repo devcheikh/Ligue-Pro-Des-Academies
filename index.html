@@ -302,8 +302,14 @@
         // Update Stats Dynamically
         function updateStats() {
             const data = getData();
-            document.getElementById('stat-teams').innerText = data.teams.length;
-            document.getElementById('stat-matches').innerText = data.matches.length;
+            // Animate local HTML stats
+            const statTeams = document.getElementById('stat-teams');
+            const statMatches = document.getElementById('stat-matches');
+            if (statTeams && typeof animateCount === 'function') animateCount(statTeams, data.teams.length);
+            else if (statTeams) statTeams.innerText = data.teams.length;
+
+            if (statMatches && typeof animateCount === 'function') animateCount(statMatches, data.matches.length);
+            else if (statMatches) statMatches.innerText = data.matches.length;
         }
 
         // Render Upcoming Matches
@@ -348,13 +354,44 @@
             }
         }
 
+        function renderMatchTicker() {
+            const data = getData();
+            const tickerContainer = document.getElementById('next-matches-ticker');
+            if (!tickerContainer) return;
+
+            const matches = getUpcomingMatches(8); // Fetch up to 8 upcoming matches
+            if (matches.length === 0) {
+                tickerContainer.innerHTML = '<div style="opacity: 0.5; padding: 0 20px;">Aucun match programmé pour le moment.</div>';
+                return;
+            }
+
+            let html = '';
+            matches.forEach(m => {
+                const displayDate = m.date ? new Date(m.date).toLocaleDateString(getCurrentLang(), { weekday: 'short', day: 'numeric', month: 'short' }) : 'TBD';
+                const time = m.time ? ` à ${m.time}` : '';
+                html += `
+                    <div class="match-item">
+                        <span>${displayDate}${time}</span>
+                        <strong>${m.teams}</strong>
+                        <span>(${m.venue || 'Lieu à définir'})</span>
+                    </div>
+                    <span style="color: var(--vert-principal);">|</span>
+                `;
+            });
+
+            // Duplicate the items for seamless scrolling effect
+            tickerContainer.innerHTML = html + html;
+        }
+
         updateStats();
         renderHomeMatches();
+        renderMatchTicker();
 
         // INIT CLOUD DATA + stats publiques
         initData().then(() => {
             updateStats();
             renderHomeMatches();
+            renderMatchTicker();
             loadPublicStats();
         });
 

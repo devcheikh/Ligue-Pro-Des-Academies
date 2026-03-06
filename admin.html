@@ -1301,6 +1301,22 @@
             }
         }
 
+        function animateCount(el, target, duration = 1400) {
+            if (typeof target !== 'number') {
+                el.textContent = target;
+                return;
+            }
+            const startTime = performance.now();
+            const animate = (currentTime) => {
+                const progress = Math.min((currentTime - startTime) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.floor(eased * target).toLocaleString('fr-FR');
+                if (progress < 1) requestAnimationFrame(animate);
+                else el.textContent = target.toLocaleString('fr-FR');
+            };
+            requestAnimationFrame(animate);
+        }
+
         async function renderActivity() {
             try {
                 // Load summary stats
@@ -1310,9 +1326,9 @@
                 const msgEl = document.getElementById('trackStatMessages');
                 const topEl = document.getElementById('trackStatTopPage');
 
-                if (visEl) visEl.textContent = stats.uniqueVisitors;
-                if (connEl) connEl.textContent = stats.totalVisits;
-                if (msgEl) msgEl.textContent = stats.totalMessages;
+                if (visEl) animateCount(visEl, typeof stats.uniqueVisitors === 'number' ? stats.uniqueVisitors : stats.uniqueVisitors);
+                if (connEl) animateCount(connEl, typeof stats.totalVisits === 'number' ? stats.totalVisits : stats.totalVisits);
+                if (msgEl) animateCount(msgEl, typeof stats.totalMessages === 'number' ? stats.totalMessages : stats.totalMessages);
                 if (topEl) topEl.textContent = stats.topPage;
 
                 // Load connection logs

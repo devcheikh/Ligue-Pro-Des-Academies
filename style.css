@@ -185,6 +185,44 @@ nav.scrolled {
     width: 100%;
 }
 
+.lang-switch-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--blanc);
+    padding: 8px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin-right: 20px;
+    z-index: 1001;
+}
+
+.lang-switch-btn:hover {
+    background: rgba(34, 139, 34, 0.1);
+    border-color: var(--jaune-or);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(34, 139, 34, 0.2);
+}
+
+.lang-flag {
+    font-size: 16px;
+}
+
+@media screen and (max-width: 968px) {
+    .lang-switch-btn {
+        margin-right: 10px;
+        padding: 6px 12px;
+    }
+}
+
 .menu_toggle {
     display: none;
     flex-direction: column;

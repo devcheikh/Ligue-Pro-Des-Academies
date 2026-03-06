@@ -20,6 +20,8 @@ const translations = {
         'hero.desc': 'Accelerate your rise to the top. The Ligue Pro Des Académies goes beyond a simple platform to become the <strong>ultimate elite catalyst</strong>. We propel future football stars onto an international stage where every match and every statistic shapes an <strong>unprecedented professional visibility</strong>.',
         'hero.btn.u17': '<i class="bx bx-trophy"></i> U17 Championship',
         'hero.btn.u19': '<i class="bx bx-football"></i> U19 Championship',
+        'hero.badge1': 'Live Now',
+        'hero.badge2': 'Season 2026/2027',
 
         // ===== INDEX — MATCHES SECTION =====
         'matches.label': 'Schedule',

@@ -1258,6 +1258,12 @@ footer {
     .footer_content {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .features_grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 0 5%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1331,6 +1337,20 @@ footer {
         grid-template-columns: 1fr;
     }
 
+    .features_grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 0 5%;
+    }
+
+    .feature_card {
+        min-height: auto;
+    }
+
+    .feature_content {
+        padding: 25px;
+    }
+
     .portfolio_item.large {
         grid-column: span 1;
     }
@@ -1387,6 +1407,14 @@ footer {
 
     .section_title {
         font-size: 2rem;
+    }
+
+    .feature_card h3 {
+        font-size: 1.3rem;
+    }
+
+    .feature_content p {
+        font-size: 0.9rem;
     }
 
     .page_header h1 {

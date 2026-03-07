@@ -462,11 +462,11 @@
 
         async function loadPublicStats() {
             const stats = await getPublicStats();
-            const visEl = document.getElementById('pubStatVisitors');
-            const totEl = document.getElementById('pubStatVisits');
-            const msgEl = document.getElementById('pubStatMessages');
-            const cmtEl = document.getElementById('pubStatComments');
-            const topEl = document.getElementById('pubStatTopPage');
+            const visEl = document.getElementById('csc-visitors');
+            const totEl = document.getElementById('csc-visits');
+            const msgEl = document.getElementById('csc-messages');
+            const cmtEl = document.getElementById('csc-comments');
+            const topEl = document.getElementById('csc-top-page');
 
             if (visEl) animateCount(visEl, typeof stats.uniqueVisitors === 'number' ? stats.uniqueVisitors : stats.uniqueVisitors);
             if (totEl) animateCount(totEl, typeof stats.totalVisits === 'number' ? stats.totalVisits : stats.totalVisits);

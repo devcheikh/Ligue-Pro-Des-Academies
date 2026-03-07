@@ -461,18 +461,31 @@
         }
 
         async function loadPublicStats() {
-            const stats = await getPublicStats();
-            const visEl = document.getElementById('csc-visitors');
-            const totEl = document.getElementById('csc-visits');
-            const msgEl = document.getElementById('csc-messages');
-            const cmtEl = document.getElementById('csc-comments');
-            const topEl = document.getElementById('csc-top-page');
+            try {
+                console.log("loadPublicStats: Starting fetch...");
+                const stats = await getPublicStats();
+                console.log("loadPublicStats: Results received:", stats);
 
-            if (visEl) animateCount(visEl, typeof stats.uniqueVisitors === 'number' ? stats.uniqueVisitors : stats.uniqueVisitors);
-            if (totEl) animateCount(totEl, typeof stats.totalVisits === 'number' ? stats.totalVisits : stats.totalVisits);
-            if (msgEl) animateCount(msgEl, typeof stats.totalMessages === 'number' ? stats.totalMessages : stats.totalMessages);
-            if (cmtEl) animateCount(cmtEl, typeof stats.totalComments === 'number' ? stats.totalComments : stats.totalComments);
-            if (topEl) topEl.textContent = stats.topPage;
+                const visEl = document.getElementById('csc-visitors');
+                const totEl = document.getElementById('csc-visits');
+                const msgEl = document.getElementById('csc-messages');
+                const cmtEl = document.getElementById('csc-comments');
+                const topEl = document.getElementById('csc-top-page');
+
+                // Helper to safely parse to number or keep as is
+                const val = (v) => isNaN(parseInt(v)) ? v : parseInt(v);
+
+                if (visEl) animateCount(visEl, val(stats.uniqueVisitors));
+                if (totEl) animateCount(totEl, val(stats.totalVisits));
+                if (msgEl) animateCount(msgEl, val(stats.totalMessages));
+                if (cmtEl) animateCount(cmtEl, val(stats.totalComments));
+
+                if (topEl) {
+                    topEl.textContent = stats.topPage || '—';
+                }
+            } catch (err) {
+                console.error("loadPublicStats error:", err);
+            }
         }
     </script>
 

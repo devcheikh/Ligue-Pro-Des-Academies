@@ -77,7 +77,7 @@ const translations = {
         // ===== INDEX — GANI CUP ALERT =====
         'alert.cup.label': 'Official Launch',
         'alert.cup.title': 'GANI CUP',
-        'alert.cup.desc': 'The elite tournament bringing together the 8 best academies for an unprecedented cup.',
+        'alert.cup.desc': 'The elite tournament organized by GANI Real Estate (Niague), bringing together the 8 best academies for an unprecedented cup.',
 
         // ===== INDEX — CTA =====
         'cta.title': 'Follow us on social media!',

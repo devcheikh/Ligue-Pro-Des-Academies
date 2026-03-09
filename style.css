@@ -391,6 +391,7 @@ nav.scrolled {
     height: 200%;
     background: conic-gradient(from 0deg,
             transparent 0 340deg,
+            var(--vert-principal) 350deg,
             var(--jaune-or) 360deg);
     animation: rotateNeon 4s linear infinite;
     z-index: -1;
@@ -416,7 +417,7 @@ nav.scrolled {
 }
 
 .cup_alert_badge {
-    background: linear-gradient(45deg, #ff4d00, #ffae00);
+    background: linear-gradient(45deg, var(--rouge-accent), #ff5722);
     color: var(--blanc);
     padding: 4px 12px;
     border-radius: 4px;
@@ -425,7 +426,7 @@ nav.scrolled {
     text-transform: uppercase;
     letter-spacing: 1px;
     flex-shrink: 0;
-    box-shadow: 0 0 15px rgba(255, 77, 0, 0.5);
+    box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
     animation: pulseFire 2s infinite;
 }
 
@@ -434,12 +435,12 @@ nav.scrolled {
     0%,
     100% {
         transform: scale(1);
-        box-shadow: 0 0 15px rgba(255, 77, 0, 0.5);
+        box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
     }
 
     50% {
         transform: scale(1.05);
-        box-shadow: 0 0 25px rgba(255, 77, 0, 0.8);
+        box-shadow: 0 0 25px rgba(229, 57, 53, 0.8);
     }
 }
 
@@ -454,7 +455,7 @@ nav.scrolled {
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 2px;
-    background: linear-gradient(to right, #ffd700, #ff8c00, #ffd700);
+    background: linear-gradient(to right, var(--jaune-or), var(--jaune-clair), var(--jaune-or));
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;

@@ -472,7 +472,7 @@
         renderMatchTicker();
 
         // INIT CLOUD DATA + stats publiques
-        initData().then(() => {
+        initData().finally(() => {
             updateStats();
             renderHomeMatches();
             renderMatchTicker();
@@ -520,13 +520,24 @@
 
         async function loadPublicStats() {
             try {
-                console.log("loadPublicStats: Starting fetch...");
-
-                // 1. Fetch Leaders from each category
+                console.log("loadPublicStats: Fetching data...");
                 await initData();
-                const u17aStandings = getStandings('u17-a');
-                const u17bStandings = getStandings('u17-b');
-                const u19Standings = getStandings('u19');
+                const data = getData();
+
+                const findStandingsByKeyword = (keyword) => {
+                    // Try exact ID match first
+                    let cat = data.categories.find(c => c.id === keyword);
+                    // Then try name match (fuzzy)
+                    if (!cat) {
+                        cat = data.categories.find(c => c.name.toLowerCase().includes(keyword.replace('-', ' ').toLowerCase()));
+                    }
+                    if (cat) return getStandings(cat.id);
+                    return [];
+                };
+
+                const u17aStandings = findStandingsByKeyword('u17-a') || findStandingsByKeyword('u17 poule a');
+                const u17bStandings = findStandingsByKeyword('u17-b') || findStandingsByKeyword('u17 poule b');
+                const u19Standings = findStandingsByKeyword('u19');
 
                 const updateLeaderCard = (prefix, standings) => {
                     const logoEl = document.getElementById(`leader-${prefix}-logo`);
@@ -548,6 +559,8 @@
                         if (nEl) nEl.textContent = leader.n || 0;
                         if (dEl) dEl.textContent = leader.d || 0;
                         if (diffEl) diffEl.textContent = (leader.diff > 0 ? '+' : '') + (leader.diff || 0);
+                    } else {
+                        if (nameEl) nameEl.textContent = "Aucune donnée";
                     }
                 };
 
@@ -557,6 +570,8 @@
 
             } catch (err) {
                 console.error("loadPublicStats error:", err);
+                const loaders = document.querySelectorAll('.csc_team_name');
+                loaders.forEach(l => { if (l.textContent === "Chargement...") l.textContent = "Erreur"; });
             }
         }
     </script>

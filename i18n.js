@@ -55,14 +55,24 @@ const translations = {
         'about.stat.cats': 'Categories',
 
         // ===== INDEX — COMMUNITY =====
-        'community.label': 'Our Community',
-        'community.title.1': 'The Platform in ',
-        'community.title.2': 'Numbers',
+        'community.label': 'Elite Standings',
+        'community.title.1': 'Championship ',
+        'community.title.2': 'Leaders',
         'community.visitors': 'Unique Visitors',
         'community.visits': 'Total Visits',
         'community.messages': 'Messages Sent',
         'community.comments': 'Comments Posted',
         'community.toppage': 'Most visited page: ',
+        'community.leader.u17a': 'Leader U17 - Group A',
+        'community.leader.u17b': 'Leader U17 - Group B',
+        'community.leader.u19': 'Leader U19',
+        'community.stats.title': 'Platform Stats',
+        'community.points': 'pts',
+        'community.mj': 'MP',
+        'community.v': 'W',
+        'community.n': 'D',
+        'community.d': 'L',
+        'community.diff': 'GD',
 
         // ===== INDEX — CTA =====
         'cta.title': 'Follow us on social media!',

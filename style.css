@@ -2948,7 +2948,7 @@ footer {
 
 .community_stats_grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 25px;
     max-width: 1200px;
     margin: 0 auto 40px;
@@ -2976,6 +2976,77 @@ footer {
     background: var(--gradient-vert);
     opacity: 0;
     transition: var(--transition);
+}
+
+.csc_team_logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin: 0 auto 15px;
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+    background: white;
+    padding: 8px;
+    border-radius: 12px;
+}
+
+.csc_category_badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 9px;
+    background: rgba(34, 139, 34, 0.2);
+    color: var(--vert-principal);
+    padding: 3px 8px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.csc_team_name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--blanc);
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.csc_points {
+    font-size: 0.85rem;
+    color: var(--jaune-or);
+    font-weight: 600;
+}
+
+.csc_sub_stats {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 15px 0;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.csc_sub_stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.csc_sub_stat span {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.csc_sub_stat strong {
+    font-size: 0.9rem;
+    color: var(--blanc);
+    font-weight: 700;
 }
 
 .community_stat_card:hover {
@@ -3098,8 +3169,8 @@ footer {
 
 @media (max-width: 600px) {
     .community_stats_grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .community_stat_card {

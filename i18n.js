@@ -74,6 +74,11 @@ const translations = {
         'community.d': 'L',
         'community.diff': 'GD',
 
+        // ===== INDEX — GANI CUP ALERT =====
+        'alert.cup.label': 'Official Launch',
+        'alert.cup.title': 'GANI CUP',
+        'alert.cup.desc': 'The elite tournament bringing together the 8 best academies for an unprecedented cup.',
+
         // ===== INDEX — CTA =====
         'cta.title': 'Follow us on social media!',
         'cta.desc': 'Stay informed about results, standings and news from all our championships by following us on social media.',

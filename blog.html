@@ -148,7 +148,7 @@
                     <div class="news_card_content">
                         <span class="news_date"><i class='bx bx-calendar'></i> ${dateFormated}</span>
                         <h3>${post.title}</h3>
-                        <p>${linkify(post.summary)}</p>
+                        <p class="news_summary" onclick="viewPost('${post.id}')" title="Cliquez pour lire la suite">${linkify(post.summary)}</p>
                         <button class="btn-outline-small" onclick="viewPost('${post.id}')" data-i18n="blog.readmore">Lire la suite</button>
                     </div>
                 `;
@@ -230,11 +230,22 @@
             color: var(--blanc);
         }
 
-        .news_card p {
+        .news_card p.news_summary {
             font-size: 0.95rem;
             color: rgba(255, 255, 255, 0.7);
             margin-bottom: 20px;
             line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .news_card p.news_summary:hover {
+            color: var(--blanc);
         }
 
         .btn-outline-small {

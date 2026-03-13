@@ -3,8 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inject Chat HTML
     const chatHTML = `
         <div class="chat-widget-container">
-            <button class="chat-toggle-btn" id="chatToggle">
+            <a href="https://wa.me/221776700535" target="_blank" class="chat-whatsapp-btn" title="Contactez-nous sur WhatsApp">
+                <i class='bx bxl-whatsapp'></i>
+            </a>
+            <button class="chat-toggle-btn" id="chatToggle" title="Ouvrir le chat">
                 <i class='bx bx-message-rounded-dots'></i>
+                <span class="chat-notification-badge" id="chatBadge" style="display: none;">0</span>
             </button>
             <div class="chat-window" id="chatWindow">
                 <div class="chat-header">
@@ -43,8 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('chatInput');
     const emailInput = document.getElementById('chatEmail');
     const sendBtn = document.getElementById('chatSend');
+    const badge = document.getElementById('chatBadge');
 
     let username = localStorage.getItem('chat_username');
+    let unreadCount = 0;
+
     if (localStorage.getItem('lpa_user_email')) {
         emailInput.value = localStorage.getItem('lpa_user_email');
     }
@@ -55,6 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (chatWindow.classList.contains('active')) {
             scrollToBottom();
             input.focus();
+            
+            // Reset unread notifications when opening chat
+            unreadCount = 0;
+            badge.style.display = 'none';
+            badge.innerText = '0';
         }
     });
 
@@ -129,6 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Subscribe
     subscribeToMessages((newMsg) => {
+        // Prevent double adding if it's our own message we just sent (local update vs real-time echo)
+        // Usually Supabase real-time won't echo if we disabled changes locally, but just in case:
+        const isCurrentlyAtBottom = messagesContainer.scrollHeight - messagesContainer.scrollTop <= messagesContainer.clientHeight + 10;
+        
         appendMessage(newMsg);
+        
+        // Notification logic if chat is closed and it's not our own message
+        if (!chatWindow.classList.contains('active') && newMsg.username !== username) {
+            unreadCount++;
+            badge.innerText = unreadCount > 99 ? '99+' : unreadCount;
+            badge.style.display = 'flex';
+        }
     });
 });

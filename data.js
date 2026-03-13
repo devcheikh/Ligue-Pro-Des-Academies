@@ -84,7 +84,9 @@ const defaultData = {
     matches: [],
     news: [],
     stadiums: [], // { id, name, location, contact, image }
-    stadiumSlots: [] // { id, stadiumId, date, start, end, status, price }
+    stadiumSlots: [], // { id, stadiumId, date, start, end, status, price }
+    gallery: [], // { id, image, type }
+    partners: [] // { id, logo, name }
 };
 
 let initPromise = null;
@@ -125,7 +127,9 @@ async function initData() {
                             matches: merge(localData.matches, cloudData.matches),
                             news: merge(localData.news, cloudData.news),
                             stadiums: merge(localData.stadiums, cloudData.stadiums),
-                            stadiumSlots: merge(localData.stadiumSlots, cloudData.stadiumSlots)
+                            stadiumSlots: merge(localData.stadiumSlots, cloudData.stadiumSlots),
+                            gallery: merge(localData.gallery, cloudData.gallery),
+                            partners: merge(localData.partners, cloudData.partners)
                         };
 
                         localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(mergedData));
@@ -203,6 +207,8 @@ function getData() {
     if (!data.news) data.news = []; // Ensure news array exist for older data
     if (!data.stadiums) data.stadiums = [];
     if (!data.stadiumSlots) data.stadiumSlots = [];
+    if (!data.gallery) data.gallery = [];
+    if (!data.partners) data.partners = [];
     return data;
 }
 

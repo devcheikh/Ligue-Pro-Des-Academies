@@ -98,6 +98,8 @@
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'matches')">Matchs</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'news')">Actualités</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'stadiums')">Stades</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'gallery')">Galerie</button>
+            <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'partners')">Partenaires</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'users')">Utilisateurs</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'draw')">Tirage</button>
             <button class="nav_btn admin_nav_btn" onclick="showTab(event, 'data_mgmt')">Données</button>
@@ -592,6 +594,8 @@
             if (tabId === 'stadiums') renderStadiums();
             if (tabId === 'users') renderActivity();
             if (tabId === 'draw') renderDraws();
+            if (tabId === 'gallery') renderGallery();
+            if (tabId === 'partners') renderPartners();
             if (tabId === 'data_mgmt') { /* No specific render needed for now */ }
         }
 
@@ -1368,6 +1372,166 @@
                 const tbody = document.getElementById('activityTableBody');
                 if (tbody) tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #ef4444;">Erreur de chargement.</td></tr>';
             }
+        }
+
+        // --- GALLERY ---
+        let currentGalleryBase64 = null;
+        function previewGalleryLogo(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 1048576) {
+                    alert("L'image est trop volumineuse (max 1Mo).");
+                    input.value = ""; return;
+                }
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    currentGalleryBase64 = e.target.result;
+                    document.getElementById('galleryPreview').innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+                    document.getElementById('galleryUrl').value = ""; // Clear URL if file selected
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        document.getElementById('galleryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const urlNode = document.getElementById('galleryUrl');
+            const typeNode = document.getElementById('galleryType');
+            
+            const urlVal = urlNode ? urlNode.value.trim() : '';
+            const typeVal = typeNode ? typeNode.value : 'standard';
+            
+            let finalImage = currentGalleryBase64 || urlVal;
+
+            if (!finalImage) {
+                alert("Veuillez fournir une URL ou charger une image.");
+                return;
+            }
+
+            const data = getData();
+            data.gallery.push({
+                id: Date.now().toString(),
+                image: finalImage,
+                type: typeVal
+            });
+
+            await saveData(data);
+            e.target.reset();
+            currentGalleryBase64 = null;
+            document.getElementById('galleryPreview').innerHTML = `<i class='bx bx-image' style="opacity: 0.3;"></i>`;
+            renderGallery();
+        });
+
+        function renderGallery() {
+            const data = getData();
+            const tbody = document.getElementById('galleryTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            
+            if (!data.gallery || data.gallery.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; opacity: 0.5;">Aucune image dans la galerie.</td></tr>';
+                return;
+            }
+
+            data.gallery.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${item.image}" alt="Galerie" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;"></td>
+                    <td>${item.type}</td>
+                    <td>
+                        <button class="btn-primary" style="background: var(--rouge); border-color: var(--rouge);" onclick="deleteGalleryImage('${item.id}')">
+                            <i class='bx bx-trash'></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function deleteGalleryImage(id) {
+            if (!confirm("Voulez-vous vraiment supprimer cette image de la galerie ?")) return;
+            const data = getData();
+            data.gallery = data.gallery.filter(i => i.id !== id);
+            await saveData(data);
+            renderGallery();
+        }
+
+        // --- PARTNERS ---
+        let currentPartnerBase64 = null;
+        function previewPartnerLogo(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 1048576) {
+                    alert("L'image est trop volumineuse (max 1Mo).");
+                    input.value = ""; return;
+                }
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    currentPartnerBase64 = e.target.result;
+                    document.getElementById('partnerPreview').innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:contain;">`;
+                    document.getElementById('partnerUrl').value = "";
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        document.getElementById('partnerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nameNode = document.getElementById('partnerName');
+            const urlNode = document.getElementById('partnerUrl');
+            
+            const nameVal = nameNode ? nameNode.value.trim() : '';
+            const urlVal = urlNode ? urlNode.value.trim() : '';
+            
+            let finalImage = currentPartnerBase64 || urlVal;
+
+            if (!finalImage) {
+                alert("Veuillez fournir une URL ou charger un logo.");
+                return;
+            }
+
+            const data = getData();
+            data.partners.push({
+                id: Date.now().toString(),
+                name: nameVal,
+                logo: finalImage
+            });
+
+            await saveData(data);
+            e.target.reset();
+            currentPartnerBase64 = null;
+            document.getElementById('partnerPreview').innerHTML = `<i class='bx bx-image' style="opacity: 0.3;"></i>`;
+            renderPartners();
+        });
+
+        function renderPartners() {
+            const data = getData();
+            const tbody = document.getElementById('partnersTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            
+            if (!data.partners || data.partners.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; opacity: 0.5;">Aucun partenaire enregistré.</td></tr>';
+                return;
+            }
+
+            data.partners.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div style="background: white; padding: 5px; border-radius: 8px; display: inline-block;">
+                            <img src="${item.logo}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: contain;">
+                        </div>
+                    </td>
+                    <td>${item.name || '<em style="opacity: 0.5;">Non renseigné</em>'}</td>
+                    <td>
+                        <button class="btn-primary" style="background: var(--rouge); border-color: var(--rouge);" onclick="deletePartner('${item.id}')">
+                            <i class='bx bx-trash'></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         // INIT

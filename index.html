@@ -602,34 +602,53 @@
         }
 
         function loadDynamicSections(data) {
+            console.log("loadDynamicSections called with data: ", data);
             try {
                 // Render Gallery
                 const galleryContainer = document.getElementById('dynamicGalleryGrid');
-                if (galleryContainer && data.gallery && data.gallery.length > 0) {
-                    galleryContainer.innerHTML = '';
-                    data.gallery.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = `gallery_item ${item.type === 'standard' ? '' : item.type}`;
-                        div.innerHTML = `
-                            <img src="${item.image}" alt="Galerie" loading="lazy">
-                            <div class="gallery_overlay">
-                                <i class='bx bx-zoom-in'></i>
-                            </div>
-                        `;
-                        galleryContainer.appendChild(div);
-                    });
+                const gallerySection = document.getElementById('galerie');
+                if (galleryContainer && gallerySection) {
+                    if (data.gallery && data.gallery.length > 0) {
+                        gallerySection.style.display = 'block';
+                        galleryContainer.innerHTML = '';
+                        data.gallery.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = `gallery_item ${item.type === 'standard' ? '' : item.type}`;
+                            // Add inline styles to ensure visibility
+                            div.style.opacity = '1';
+                            div.style.transform = 'none';
+                            div.innerHTML = `
+                                <img src="${item.image}" alt="Galerie" loading="lazy">
+                                <div class="gallery_overlay">
+                                    <i class='bx bx-zoom-in'></i>
+                                </div>
+                            `;
+                            galleryContainer.appendChild(div);
+                        });
+                    } else {
+                        gallerySection.style.display = 'none';
+                    }
                 }
 
                 // Render Partners
                 const partnersContainer = document.getElementById('dynamicPartnersContainer');
-                if (partnersContainer && data.partners && data.partners.length > 0) {
-                    partnersContainer.innerHTML = '';
-                    data.partners.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'partner_logo';
-                        div.innerHTML = `<img src="${item.logo}" alt="${item.name || 'Partenaire'}" loading="lazy">`;
-                        partnersContainer.appendChild(div);
-                    });
+                const partnersSection = document.getElementById('partenaires');
+                if (partnersContainer && partnersSection) {
+                    if (data.partners && data.partners.length > 0) {
+                        partnersSection.style.display = 'block';
+                        partnersContainer.innerHTML = '';
+                        data.partners.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'partner_logo';
+                            // Add inline styles to ensure visibility
+                            div.style.opacity = '1';
+                            div.style.transform = 'none';
+                            div.innerHTML = `<img src="${item.logo}" alt="${item.name || 'Partenaire'}" loading="lazy">`;
+                            partnersContainer.appendChild(div);
+                        });
+                    } else {
+                        partnersSection.style.display = 'none';
+                    }
                 }
             } catch (err) {
                 console.error("Error loading dynamic sections:", err);

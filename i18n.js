@@ -79,6 +79,14 @@ const translations = {
         'alert.cup.title': 'GANI CUP',
         'alert.cup.desc': 'The elite tournament bringing together the 8 best academies for an unprecedented cup.',
 
+        // ===== INDEX — GALLERY & PARTNERS =====
+        'gallery.label': 'Gallery',
+        'gallery.title.1': 'Our Best ',
+        'gallery.title.2': 'Moments',
+        'partners.label': 'Trust',
+        'partners.title.1': 'Our ',
+        'partners.title.2': 'Partners',
+
         // ===== INDEX — CTA =====
         'cta.title': 'Follow us on social media!',
         'cta.desc': 'Stay informed about results, standings and news from all our championships by following us on social media.',

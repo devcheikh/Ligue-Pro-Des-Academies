@@ -501,6 +501,104 @@
             </div>
         </div>
 
+        <!-- GALLERY TAB -->
+        <div id="gallery" class="admin_tab_content" style="display: none;">
+            <div class="admin_content_card">
+                <h2>Boutique / <span class="highlight">Galerie</span></h2>
+                <form class="admin_form" id="galleryForm">
+                    <div class="form_group">
+                        <label>Image de la Galerie (Fichier ou URL)</label>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <input type="text" id="galleryUrl" placeholder="URL de l'image (ex: https://...)" style="width: 100%;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <span style="font-size:0.8rem; opacity:0.7;">OU</span>
+                                <input type="file" id="galleryFile" accept="image/*" onchange="previewGalleryLogo(this)" style="display: none;">
+                                <label for="galleryFile" class="btn-outline" style="cursor: pointer; margin: 0; padding: 10px 20px;">
+                                    <i class='bx bx-upload'></i> Charger (Max 1Mo)
+                                </label>
+                                <div id="galleryPreview" style="width: 50px; height: 50px; border-radius: 8px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--vert-principal);">
+                                    <i class='bx bx-image' style="opacity: 0.3;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form_group">
+                        <label>Format d'affichage</label>
+                        <select id="galleryType">
+                            <option value="standard">Standard (Carré 1x1)</option>
+                            <option value="large">Grand (Carré 2x2)</option>
+                            <option value="wide">Large (Paysage 2x1)</option>
+                        </select>
+                    </div>
+                    <div class="form_group" style="justify-content: flex-end;">
+                        <button type="submit" class="btn-primary">Ajouter</button>
+                    </div>
+                </form>
+
+                <div class="classement_table admin_table">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Aperçu</th>
+                                    <th>Format</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="galleryTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PARTNERS TAB -->
+        <div id="partners" class="admin_tab_content" style="display: none;">
+            <div class="admin_content_card">
+                <h2>Nos <span class="highlight">Partenaires</span></h2>
+                <form class="admin_form" id="partnerForm">
+                    <div class="form_group">
+                        <label>Nom du Partenaire (Optionnel)</label>
+                        <input type="text" id="partnerName" placeholder="Ex: Senelec">
+                    </div>
+                    <div class="form_group">
+                        <label>Logo (Fichier ou URL)</label>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <input type="text" id="partnerUrl" placeholder="URL du logo (ex: https://...)" style="width: 100%;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <span style="font-size:0.8rem; opacity:0.7;">OU</span>
+                                <input type="file" id="partnerFile" accept="image/*" onchange="previewPartnerLogo(this)" style="display: none;">
+                                <label for="partnerFile" class="btn-outline" style="cursor: pointer; margin: 0; padding: 10px 20px;">
+                                    <i class='bx bx-upload'></i> Charger (Max 1Mo)
+                                </label>
+                                <div id="partnerPreview" style="width: 50px; height: 50px; border-radius: 8px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--vert-principal);">
+                                    <i class='bx bx-image' style="opacity: 0.3;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form_group" style="justify-content: flex-end;">
+                        <button type="submit" class="btn-primary">Ajouter</button>
+                    </div>
+                </form>
+
+                <div class="classement_table admin_table">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Logo</th>
+                                    <th>Nom</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="partnersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- DATA MANAGEMENT TAB -->
         <div id="data_mgmt" class="admin_tab_content" style="display: none;">
             <div class="admin_content_card">

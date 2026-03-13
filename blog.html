@@ -120,8 +120,11 @@
         }
 
         // Load News
-        async function loadBlog() {
-            await initData();
+        async function loadBlog(forceRefresh = false) {
+            // Only initData if we are not just refreshing the language
+            if(!forceRefresh) {
+                await initData();
+            }
             const data = getData();
             const container = document.getElementById('news-container');
 
@@ -129,15 +132,18 @@
                 container.innerHTML = `
                     <div style="text-align: center; padding: 50px; opacity: 0.5; grid-column: 1/-1;">
                         <i class='bx bx-news' style="font-size: 4rem; margin-bottom: 20px;"></i>
-                        <p data-i18n="blog.empty">Aucune actualité pour le moment.</p>
+                        <p data-i18n="blog.empty">${getCurrentLang() === 'en' ? translations.en['blog.empty'] : 'Aucune actualité pour le moment.'}</p>
                     </div>
                 `;
                 return;
             }
 
             container.innerHTML = '';
+            const currentLang = getCurrentLang();
+            const readMoreText = currentLang === 'en' ? translations.en['blog.readmore'] : 'Lire la suite';
+
             data.news.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(post => {
-                const dateFormated = new Date(post.date).toLocaleDateString('fr-FR', {
+                const dateFormated = new Date(post.date).toLocaleDateString(currentLang === 'en' ? 'en-US' : 'fr-FR', {
                     day: 'numeric', month: 'long', year: 'numeric'
                 });
 
@@ -155,11 +161,13 @@
                         <div class="news_full_content" id="content-${post.id}" style="display: none; padding-bottom: 20px;">
                             <div style="line-height: 1.8; color: rgba(255,255,255,0.8); white-space: pre-wrap; margin-bottom: 20px;">${linkify(post.content)}</div>
                         </div>
-                        <button class="btn-outline-small read-more-btn" id="btn-${post.id}" onclick="togglePost('${post.id}')" data-i18n="blog.readmore">Lire la suite</button>
+                        <button class="btn-outline-small read-more-btn" id="btn-${post.id}" onclick="togglePost('${post.id}')" data-i18n="blog.readmore">${readMoreText}</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
+            // Re-apply translations for static texts that just got injected into the DOM
+            applyLanguage(currentLang);
         }
 
         function togglePost(id) {
@@ -174,7 +182,8 @@
                 // Expand
                 summaryDiv.style.display = 'none';
                 contentDiv.style.display = 'block';
-                btn.innerHTML = '<i class="bx bx-chevron-up"></i> Réduire';
+                const readLessText = getCurrentLang() === 'en' ? translations.en['blog.readless'] : 'Réduire';
+                btn.innerHTML = \`<i class="bx bx-chevron-up"></i> \${readLessText}\`;
                 // Optional: add a class to the card if you want to style the expanded state differently
                 if(card) card.classList.add('expanded');
             } else {
@@ -192,6 +201,11 @@
         }
 
         loadBlog();
+
+        // Listen for language changes to update the dynamically generated news content
+        window.addEventListener('languageChanged', (e) => {
+            loadBlog(true); // true means forceRefresh, avoiding another initData call
+        });
     </script>
 
     <style>

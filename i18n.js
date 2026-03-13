@@ -141,6 +141,7 @@ const translations = {
         'blog.loading': '<i class="bx bx-loader-alt bx-spin"></i> Loading news...',
         'blog.empty': 'No news at the moment.',
         'blog.readmore': 'Read more',
+        'blog.readless': 'Read less',
 
         // ===== STADES PAGE =====
         'stades.title.1': 'Stadiums & ',
@@ -201,6 +202,7 @@ function setLanguage(lang) {
     localStorage.setItem(I18N_LANG_KEY, lang);
     applyLanguage(lang);
     updateToggleUI(lang);
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
 }
 
 function toggleLanguage() {

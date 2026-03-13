@@ -143,37 +143,52 @@
 
                 const card = document.createElement('div');
                 card.className = 'news_card';
+                card.id = `news-card-${post.id}`;
                 card.innerHTML = `
                     <div class="news_card_image" style="background-image: url('${post.image}')"></div>
                     <div class="news_card_content">
                         <span class="news_date"><i class='bx bx-calendar'></i> ${dateFormated}</span>
                         <h3>${post.title}</h3>
-                        <p class="news_summary" onclick="viewPost('${post.id}')" title="Cliquez pour lire la suite">${linkify(post.summary)}</p>
-                        <button class="btn-outline-small" onclick="viewPost('${post.id}')" data-i18n="blog.readmore">Lire la suite</button>
+                        <div class="news_summary_container" id="summary-${post.id}">
+                            <p class="news_summary" onclick="togglePost('${post.id}')" title="Cliquez pour lire la suite">${linkify(post.summary)}</p>
+                        </div>
+                        <div class="news_full_content" id="content-${post.id}" style="display: none; padding-bottom: 20px;">
+                            <div style="line-height: 1.8; color: rgba(255,255,255,0.8); white-space: pre-wrap; margin-bottom: 20px;">${linkify(post.content)}</div>
+                        </div>
+                        <button class="btn-outline-small read-more-btn" id="btn-${post.id}" onclick="togglePost('${post.id}')" data-i18n="blog.readmore">Lire la suite</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function viewPost(id) {
-            const data = getData();
-            const post = data.news.find(n => n.id === id);
-            if (!post) return;
+        function togglePost(id) {
+            const summaryDiv = document.getElementById(`summary-${id}`);
+            const contentDiv = document.getElementById(`content-${id}`);
+            const btn = document.getElementById(`btn-${id}`);
+            const card = document.getElementById(`news-card-${id}`);
+            
+            if (!summaryDiv || !contentDiv || !btn) return;
 
-            // Simplified full view modal for now
-            const modal = document.createElement('div');
-            modal.style = "position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px;";
-            modal.innerHTML = `
-                <div style="background: var(--noir); border: 1px solid var(--vert-principal); width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; border-radius: 20px; position: relative; padding: 40px;">
-                    <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer;"><i class='bx bx-x'></i></button>
-                    <img src="${post.image}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 10px; margin-bottom: 25px;">
-                    <h2 style="margin-bottom: 15px;">${post.title}</h2>
-                    <div style="color: var(--jaune-or); font-size: 0.9rem; margin-bottom: 20px;"><i class='bx bx-calendar'></i> ${new Date(post.date).toLocaleDateString()}</div>
-                    <div style="line-height: 1.8; color: rgba(255,255,255,0.8); white-space: pre-wrap;">${linkify(post.content)}</div>
-                </div>
-            `;
-            document.body.appendChild(modal);
+            if (contentDiv.style.display === 'none') {
+                // Expand
+                summaryDiv.style.display = 'none';
+                contentDiv.style.display = 'block';
+                btn.innerHTML = '<i class="bx bx-chevron-up"></i> Réduire';
+                // Optional: add a class to the card if you want to style the expanded state differently
+                if(card) card.classList.add('expanded');
+            } else {
+                // Collapse
+                contentDiv.style.display = 'none';
+                summaryDiv.style.display = 'block';
+                // Re-apply translation if needed, or just set text
+                btn.innerHTML = (getCurrentLang() === 'en' && translations.en['blog.readmore']) ? translations.en['blog.readmore'] : 'Lire la suite';
+                if(card) card.classList.remove('expanded');
+                
+                // Scroll back to top of card smoothly
+                const y = card.getBoundingClientRect().top + window.scrollY - 100;
+                window.scrollTo({top: y, behavior: 'smooth'});
+            }
         }
 
         loadBlog();

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inject Chat HTML
     const chatHTML = `
         <div class="chat-widget-container">
-            <a href="https://wa.me/221776700535" target="_blank" class="chat-whatsapp-btn" title="Contactez-nous sur WhatsApp">
+            <a href="https://wa.me/221763573894" target="_blank" class="chat-whatsapp-btn" title="Contactez-nous sur WhatsApp">
                 <i class='bx bxl-whatsapp'></i>
             </a>
             <button class="chat-toggle-btn" id="chatToggle" title="Ouvrir le chat">

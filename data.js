@@ -211,11 +211,20 @@ function reconcileOrphanedData() {
 
 function getData() {
     const data = JSON.parse(localStorage.getItem(LIGUE_DATA_KEY)) || defaultData;
-    if (!data.news) data.news = []; // Ensure news array exist for older data
+    if (!data.news) data.news = []; 
     if (!data.stadiums) data.stadiums = [];
     if (!data.stadiumSlots) data.stadiumSlots = [];
-    if (!data.gallery) data.gallery = [];
-    if (!data.partners) data.partners = [];
+    
+    // Si la galerie est vide, on force l'ajout des images par défaut (pour l'affichage démo)
+    if (!data.gallery || data.gallery.length === 0) {
+        data.gallery = [...defaultData.gallery];
+    }
+    
+    // Pareil pour les partenaires
+    if (!data.partners || data.partners.length === 0) {
+        data.partners = [...defaultData.partners];
+    }
+
     return data;
 }
 

@@ -85,8 +85,15 @@ const defaultData = {
     news: [],
     stadiums: [], // { id, name, location, contact, image }
     stadiumSlots: [], // { id, stadiumId, date, start, end, status, price }
-    gallery: [], // { id, image, type }
-    partners: [] // { id, logo, name }
+    gallery: [
+        { id: "g1", image: "images/u17_bg.png", type: "large" },
+        { id: "g2", image: "images/u19_bg.png", type: "standard" },
+        { id: "g3", image: "images/1.png", type: "wide" }
+    ], // { id, image, type }
+    partners: [
+        { id: "p1", logo: "images/logo_ligue.png", name: "Ligue Pro" },
+        { id: "p2", logo: "images/logo_ligue.png", name: "Sponsor Élite" }
+    ] // { id, logo, name }
 };
 
 let initPromise = null;

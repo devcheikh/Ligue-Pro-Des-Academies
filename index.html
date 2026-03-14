@@ -655,8 +655,26 @@
             }
         }
 
-        // Initialize dynamic content on page load
-        document.addEventListener('DOMContentLoaded', loadPublicStats);
+        // Initialize dynamic content and mobile menu on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPublicStats();
+
+            // Mobile Menu Toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const navMenu = document.getElementById('nav-menu');
+            if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', () => {
+                    menuToggle.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+                navMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        menuToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+            }
+        });
     </script>
 </body>
 

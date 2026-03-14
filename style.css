@@ -2616,7 +2616,7 @@ footer {
     border-radius: 20px;
     overflow: hidden;
     cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .gallery_item img {
@@ -2629,7 +2629,7 @@ footer {
 .gallery_overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(10,15,10,0.9), transparent);
+    background: linear-gradient(to top, rgba(10, 15, 10, 0.9), transparent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2679,6 +2679,7 @@ footer {
         grid-template-columns: 1fr;
         grid-auto-rows: 250px;
     }
+
     .gallery_item.large,
     .gallery_item.wide {
         grid-column: span 1;
@@ -2700,7 +2701,7 @@ footer {
     left: 10%;
     right: 10%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(34,139,34,0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(34, 139, 34, 0.3), transparent);
 }
 
 .partners_container {
@@ -2738,6 +2739,7 @@ footer {
     .partners_container {
         gap: 30px;
     }
+
     .partner_logo {
         width: 80px;
         height: 80px;
@@ -2931,9 +2933,17 @@ footer {
 }
 
 @keyframes bounceBadge {
-    0% { transform: scale(0); }
-    80% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(0);
+    }
+
+    80% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .chat-toggle-btn:hover {

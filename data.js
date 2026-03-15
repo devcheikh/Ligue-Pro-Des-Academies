@@ -240,12 +240,15 @@ async function saveData(data) {
 
             if (error) {
                 console.error("Supabase Sync Error:", error);
-                if (error.message.includes("relation \"public.app_state\" does not exist")) {
-                    alert("ERREUR : La table 'app_state' n'existe pas sur Supabase. Allez sur Supabase et créez la table avec le script SQL fourni.");
-                } else {
-                    alert("Erreur de synchronisation Cloud : " + error.message);
+                // N'afficher l'alerte que si on est dans l'interface admin, pour ne pas polluer l'accueil public
+                if (window.location.pathname.includes('admin')) {
+                    if (error.message.includes("relation \"public.app_state\" does not exist")) {
+                        alert("ERREUR : La table 'app_state' n'existe pas sur Supabase. Allez sur Supabase et créez la table avec le script SQL fourni.");
+                    } else {
+                        alert("Erreur de synchronisation Cloud : " + error.message);
+                    }
                 }
-                throw error;
+                return; // On ne lance plus de 'throw' bloquant pour laisser le site public fonctionner avec les données locales
             }
             console.log("Data synced to Supabase");
         } catch (e) {

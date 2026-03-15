@@ -84,16 +84,7 @@ const defaultData = {
     matches: [],
     news: [],
     stadiums: [], // { id, name, location, contact, image }
-    stadiumSlots: [], // { id, stadiumId, date, start, end, status, price }
-    gallery: [
-        { id: "g1", image: "images/u17_bg.png", type: "large" },
-        { id: "g2", image: "images/u19_bg.png", type: "standard" },
-        { id: "g3", image: "images/1.png", type: "wide" }
-    ], // { id, image, type }
-    partners: [
-        { id: "p1", logo: "images/logo_ligue.png", name: "Ligue Pro" },
-        { id: "p2", logo: "images/logo_ligue.png", name: "Sponsor Élite" }
-    ] // { id, logo, name }
+    stadiumSlots: [] // { id, stadiumId, date, start, end, status, price }
 };
 
 let initPromise = null;
@@ -134,9 +125,7 @@ async function initData() {
                             matches: merge(localData.matches, cloudData.matches),
                             news: merge(localData.news, cloudData.news),
                             stadiums: merge(localData.stadiums, cloudData.stadiums),
-                            stadiumSlots: merge(localData.stadiumSlots, cloudData.stadiumSlots),
-                            gallery: merge(localData.gallery, cloudData.gallery),
-                            partners: merge(localData.partners, cloudData.partners)
+                            stadiumSlots: merge(localData.stadiumSlots, cloudData.stadiumSlots)
                         };
 
                         localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(mergedData));
@@ -214,16 +203,6 @@ function getData() {
     if (!data.news) data.news = []; 
     if (!data.stadiums) data.stadiums = [];
     if (!data.stadiumSlots) data.stadiumSlots = [];
-    
-    // Si la galerie est vide, on force l'ajout des images par défaut (pour l'affichage démo)
-    if (!data.gallery || data.gallery.length === 0) {
-        data.gallery = [...defaultData.gallery];
-    }
-    
-    // Pareil pour les partenaires
-    if (!data.partners || data.partners.length === 0) {
-        data.partners = [...defaultData.partners];
-    }
 
     return data;
 }

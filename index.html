@@ -291,29 +291,7 @@
         </div>
     </section>
 
-    <!-- GALLERY SECTION -->
-    <section class="gallery_section" id="galerie">
-        <div class="section_header">
-            <div class="section_label" data-i18n="gallery.label">Galerie</div>
-            <h2 class="section_title"><span data-i18n="gallery.title.1">Nos Moments</span> <span class="highlight"
-                    data-i18n="gallery.title.2">Forts</span></h2>
-        </div>
-        <div class="gallery_grid" id="dynamicGalleryGrid">
-            <!-- Dynamic Content handled by JS -->
-        </div>
-    </section>
-
-    <!-- PARTNERS SECTION -->
-    <section class="partners_section" id="partenaires">
-        <div class="section_header" style="text-align: center; margin-bottom: 40px;">
-            <div class="section_label" data-i18n="partners.label" style="justify-content: center;">Confiance</div>
-            <h2 class="section_title"><span data-i18n="partners.title.1">Nos</span> <span class="highlight"
-                    data-i18n="partners.title.2">Partenaires</span></h2>
-        </div>
-        <div class="partners_container" id="dynamicPartnersContainer">
-            <!-- Dynamic Content handled by JS -->
-        </div>
-    </section>
+    <!-- GALLERY AND PARTNERS SECTIONS REMOVED -->
 
     <!-- CTA BANNER -->
     <section class="cta_banner"
@@ -592,7 +570,7 @@
                 updateLeaderCard('u17b', u17bStandings);
                 updateLeaderCard('u19', u19Standings);
 
-                loadDynamicSections(data);
+                // loadDynamicSections(data); removed
 
             } catch (err) {
                 console.error("loadPublicStats error:", err);
@@ -601,59 +579,7 @@
             }
         }
 
-        function loadDynamicSections(data) {
-            console.log("loadDynamicSections called with data: ", data);
-            try {
-                // Render Gallery
-                const galleryContainer = document.getElementById('dynamicGalleryGrid');
-                const gallerySection = document.getElementById('galerie');
-                if (galleryContainer && gallerySection) {
-                    if (data.gallery && data.gallery.length > 0) {
-                        gallerySection.style.display = 'block';
-                        galleryContainer.innerHTML = '';
-                        data.gallery.forEach(item => {
-                            const div = document.createElement('div');
-                            div.className = `gallery_item ${item.type === 'standard' ? '' : item.type}`;
-                            // Add inline styles to ensure visibility
-                            div.style.opacity = '1';
-                            div.style.transform = 'none';
-                            div.innerHTML = `
-                                <img src="${item.image}" alt="Galerie" loading="lazy">
-                                <div class="gallery_overlay">
-                                    <i class='bx bx-zoom-in'></i>
-                                </div>
-                            `;
-                            galleryContainer.appendChild(div);
-                        });
-                    } else {
-                        gallerySection.style.display = 'none';
-                    }
-                }
-
-                // Render Partners
-                const partnersContainer = document.getElementById('dynamicPartnersContainer');
-                const partnersSection = document.getElementById('partenaires');
-                if (partnersContainer && partnersSection) {
-                    if (data.partners && data.partners.length > 0) {
-                        partnersSection.style.display = 'block';
-                        partnersContainer.innerHTML = '';
-                        data.partners.forEach(item => {
-                            const div = document.createElement('div');
-                            div.className = 'partner_logo';
-                            // Add inline styles to ensure visibility
-                            div.style.opacity = '1';
-                            div.style.transform = 'none';
-                            div.innerHTML = `<img src="${item.logo}" alt="${item.name || 'Partenaire'}" loading="lazy">`;
-                            partnersContainer.appendChild(div);
-                        });
-                    } else {
-                        partnersSection.style.display = 'none';
-                    }
-                }
-            } catch (err) {
-                console.error("Error loading dynamic sections:", err);
-            }
-        }
+        // function loadDynamicSections(data) removed
 
         // Initialize dynamic content and mobile menu on page load
         document.addEventListener('DOMContentLoaded', () => {

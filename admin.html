@@ -916,6 +916,7 @@
 
         // --- MATCHES ---
         function renderMatches() {
+            const currentScroll = window.scrollY || document.documentElement.scrollTop;
             const data = getData();
             const select = document.getElementById('matchCatSelect');
             const currentVal = select.value;
@@ -1020,6 +1021,9 @@
                 `;
                 tbody.appendChild(tr);
             });
+            
+            // Restaure la position de défilement pour éviter le saut (jump)
+            window.scrollTo(0, currentScroll);
         }
 
         let editingMatchId = null;
@@ -1053,9 +1057,7 @@
         function handleToggleStatus(id, newStatus) {
             updateMatch(id, { status: newStatus });
             renderMatches();
-            if (newStatus === 'played') {
-                alert("Score validé ! Le classement a été mis à jour automatiquement.");
-            }
+            // L'alerte bloquante a été retirée pour éviter un comportement gênant et un saut de page
         }
 
         function updateMatchTeams() {

@@ -333,8 +333,24 @@
                 backgroundColor: window.getComputedStyle(element).backgroundColor !== 'rgba(0, 0, 0, 0)' 
                                     ? window.getComputedStyle(element).backgroundColor 
                                     : '#0a0f0a',
-                scale: 2,
-                useCORS: true
+                scale: 3,
+                useCORS: true,
+                onclone: (clonedDoc) => {
+                    const clonedEl = clonedDoc.getElementById(elementId);
+                    if (clonedEl) {
+                        // Force une largeur "bureau" pour que l'image soit large et lisible
+                        clonedEl.style.width = '1000px';
+                        clonedEl.style.maxWidth = '1000px';
+                        clonedEl.style.padding = '30px';
+                        
+                        // Retire les barres de défilement mobile sur le clone
+                        const tables = clonedEl.querySelectorAll('.table-responsive');
+                        tables.forEach(t => {
+                            t.style.overflow = 'visible';
+                            t.style.width = '100%';
+                        });
+                    }
+                }
             }).then(canvas => {
                 btn.innerHTML = originalText;
                 const link = document.createElement('a');

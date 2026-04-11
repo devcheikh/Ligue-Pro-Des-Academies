@@ -1,0 +1,8 @@
+.git
+.gitignore
+.vercel
+node_modules/
+npm-debug.log
+.DS_Store
+implementation_plan.md
+walkthrough.md

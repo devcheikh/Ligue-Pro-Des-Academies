@@ -229,6 +229,17 @@
                         <button type="submit" class="btn-primary">Programmer</button>
                     </div>
                 </form>
+                
+                <!-- FILTER BAR -->
+                <div style="margin-top: 30px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 4px solid var(--vert-principal);">
+                    <h3 style="margin: 0; font-size: 1.1rem;"><i class='bx bx-filter-alt'></i> Filtrer les Matchs</h3>
+                    <div style="display: flex; gap: 10px; flex: 1; max-width: 300px;">
+                        <select id="matchFilterCatSelect" onchange="renderMatches()" style="flex: 1; padding: 8px 15px; border-radius: 5px; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--vert-principal); cursor: pointer;">
+                            <option value="all" style="color: black;">Toutes les catégories</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="classement_table admin_table">
                     <div class="table-responsive">
                         <table>
@@ -900,6 +911,7 @@
         function renderMatches() {
             const data = getData();
             const select = document.getElementById('matchCatSelect');
+            const currentVal = select.value;
             select.innerHTML = '';
             data.categories.forEach(c => {
                 const opt = document.createElement('option');
@@ -907,10 +919,31 @@
                 opt.textContent = c.name;
                 select.appendChild(opt);
             });
+            if(currentVal && Array.from(select.options).some(o => o.value === currentVal)) select.value = currentVal;
+
+            const filterSelect = document.getElementById('matchFilterCatSelect');
+            const currentFilter = filterSelect ? filterSelect.value : 'all';
+            if (filterSelect) {
+                filterSelect.innerHTML = '<option value="all" style="color: black;">Toutes les catégories</option>';
+                data.categories.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    opt.style.color = 'black';
+                    filterSelect.appendChild(opt);
+                });
+                filterSelect.value = currentFilter;
+            }
 
             const tbody = document.getElementById('matchTableBody');
             tbody.innerHTML = '';
-            data.matches.sort((a, b) => {
+            
+            let matchesToShow = data.matches;
+            if (currentFilter && currentFilter !== 'all') {
+                matchesToShow = matchesToShow.filter(m => m.categoryId === currentFilter);
+            }
+
+            matchesToShow.sort((a, b) => {
                 if (!a.date) return 1;
                 if (!b.date) return -1;
                 return new Date(a.date) - new Date(b.date);

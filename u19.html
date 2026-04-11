@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="i18n.js"></script>
     <script src="data.js"></script>
 </head>
@@ -114,6 +115,11 @@
                     <div class="standings_legend_item">
                         <span class="standings_legend_dot quarter"></span> Quarts de finale
                     </div>
+                </div>
+                <div class="download_actions" style="margin-top: 20px; text-align: center;" data-html2canvas-ignore>
+                    <button class="btn-outline" onclick="downloadStandingsAsImage('classement-table-u19', 'Classement_U19')" style="font-size: 0.9rem; padding: 10px 20px; cursor: pointer;">
+                        <i class='bx bxs-camera'></i> Télécharger l'Image
+                    </button>
                 </div>
             </div>
         </div>
@@ -313,6 +319,34 @@
         }
 
         renderU19();
+
+        function downloadStandingsAsImage(elementId, filename) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            // Notification visuelle
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Création...";
+
+            html2canvas(element, {
+                backgroundColor: window.getComputedStyle(element).backgroundColor !== 'rgba(0, 0, 0, 0)' 
+                                    ? window.getComputedStyle(element).backgroundColor 
+                                    : '#0a0f0a',
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                btn.innerHTML = originalText;
+                const link = document.createElement('a');
+                link.download = filename + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                btn.innerHTML = originalText;
+                console.error("Erreur génération image", err);
+                alert("Erreur lors de la création de l'image.");
+            });
+        }
 
         // INIT CLOUD DATA
         initData().then(() => {

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gani Cup | Ligue Pro Des Académies</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="data.js"></script>
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <nav id="navbar" class="scrolled">
+        <a href="index.html" class="nav_logo" ondblclick="location.href='admin.html'">
+            <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+        </a>
+
+        <div class="nav_menu" id="nav-menu">
+            <i class='bx bx-x menu_close' id="menu-close"></i>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="u17.html">U17</a></li>
+                <li><a href="u19.html">U19</a></li>
+                <li><a href="coupe-gani.html" class="active">Gani Cup</a></li>
+                <li><a href="stades.html">Stades</a></li>
+                <li><a href="blog.html">Actualités</a></li>
+                <li><a href="membres.html">Membres</a></li>
+            </ul>
+        </div>
+
+        <div class="menu_toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- HERO STYLE PAGE HEADER -->
+    <section class="hero page_hero" id="accueil">
+        <div class="hero_content">
+            <div class="hero_text">
+                <div class="hero_label">Tournoi d'Élite</div>
+                <h1 class="hero_title">
+                    <span class="line1">GANI</span>
+                    <span class="line2">CUP</span>
+                </h1>
+                <p class="hero_description">
+                    La coupe la plus prestigieuse regroupant les 8 meilleures académies. 
+                    Chaque match est une finale, chaque victoire rapproche de la légende. 
+                    Vivez le tournoi de l'année.
+                </p>
+                <div class="hero_cta">
+                    <a href="#calendrier" class="btn-primary">
+                        <i class='bx bx-calendar'></i> Voir les Matchs
+                    </a>
+                </div>
+            </div>
+            <div class="hero_visual">
+                <div class="hero_logo_container small">
+                    <div class="hero_circle"></div>
+                    <div class="hero_circle"></div>
+                    <img src="images/logo_ligue.png" alt="Logo">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALENDRIER -->
+    <section class="portfolio matches_portfolio" id="calendrier">
+        <div class="section_header">
+            <div class="section_label">Résultats et Programme</div>
+            <h2 class="section_title">Matchs <span class="highlight">Gani Cup</span></h2>
+        </div>
+        
+        <!-- Filter for matches (optional for public, but good for switching between quarters, semis etc if needed. Simple logic for now) -->
+        <div id="matchGridCup" class="portfolio_grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer_content">
+            <div class="footer_brand">
+                <img src="images/logo_ligue.png" alt="Ligue Pro Des Académies">
+                <p>La Ligue Pro Des Académies : votre partenaire pour la visibilité professionnelle de vos compétitions de football.</p>
+                <div class="social_links">
+                    <a href="https://www.facebook.com/LigueProAcademies" target="_blank" class="social_link">
+                        <i class='bx bxl-facebook'></i>
+                    </a>
+                    <a href="https://www.instagram.com/ligue_pro_academies/" target="_blank" class="social_link">
+                        <i class='bx bxl-instagram'></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer_column">
+                <h4>Compétitions</h4>
+                <ul>
+                    <li><a href="u17.html">U17 Elite</a></li>
+                    <li><a href="u19.html">U19 Elite</a></li>
+                    <li><a href="coupe-gani.html">Gani Cup</a></li>
+                </ul>
+            </div>
+            <div class="footer_column">
+                <h4>Organisation</h4>
+                <ul>
+                    <li><a href="membres.html">Nos Membres</a></li>
+                    <li><a href="blog.html">Actualités</a></li>
+                    <li><a href="membres.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="chat.js"></script>
+    <script>
+        const toggle = document.getElementById('menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const close = document.getElementById('menu-close');
+
+        if (toggle && navMenu) {
+            toggle.addEventListener('click', () => {
+                navMenu.classList.add('active');
+            });
+        }
+
+        if (close && navMenu) {
+            close.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        function renderCupMatches() {
+            const data = getData();
+            const matchContainer = document.getElementById('matchGridCup');
+            matchContainer.innerHTML = '';
+
+            // Trouver les catégories ayant "gani" ou "coupe" dans leur nom
+            const cupCats = data.categories.filter(c => c.name.toLowerCase().includes('gani') || c.name.toLowerCase().includes('coupe'));
+            const cupCatIds = cupCats.map(c => c.id);
+
+            let matches = data.matches.filter(m => cupCatIds.includes(m.categoryId));
+
+            // Si aucune catégorie n'est strictement trouvée (fallback pour voir des données), on affiche vide.
+            if (matches.length === 0) {
+                matchContainer.innerHTML = '<p style="text-align: center; grid-column: 1/-1; opacity: 0.5; font-size: 1.1rem; padding: 40px;">Les matchs de la Gani Cup seront programmés très prochainement !</p>';
+            } else {
+                // Trier les matchs par date
+                matches.sort((a, b) => {
+                    if (!a.date) return 1;
+                    if (!b.date) return -1;
+                    return new Date(a.date) - new Date(b.date);
+                }).forEach(m => {
+                    const displayDate = m.date ? new Date(m.date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' }) : 'À définir';
+                    const displayTime = m.time ? m.time : '';
+                    const teams = m.teams.split(' vs ');
+                    const t1Name = teams[0] || 'TBD';
+                    const t2Name = teams[1] || 'TBD';
+
+                    const t1 = data.teams.find(t => t.name === t1Name);
+                    const t2 = data.teams.find(t => t.name === t2Name);
+                    const cat = data.categories.find(c => c.id === m.categoryId);
+
+                    const div = document.createElement('div');
+                    div.className = 'portfolio_item';
+                    div.style.aspectRatio = 'auto'; 
+                    div.style.padding = '30px'; 
+                    div.style.background = 'linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%)';
+                    div.style.border = '1px solid rgba(255, 215, 0, 0.2)'; // Gold touch for the cup
+
+                    div.innerHTML = `
+                        <div class="match_card_content">
+                            <span class="portfolio_category" style="color: var(--jaune-or); border-color: rgba(255,215,0,0.3);">${displayDate} ${displayTime} <span style="opacity:0.5; margin-left:10px;">${cat ? cat.name : ''}</span></span>
+                            <div class="match_teams_wrapper" style="margin: 20px 0;">
+                                <div class="match_team_logo"><img src="${t1 ? t1.logo : 'images/logo_ligue.png'}" alt=""></div>
+                                <span class="match_team_name">${t1Name}</span>
+                                <div class="match_vs_divider" style="color: var(--jaune-or); border-color: var(--jaune-or);">${m.status === 'played' ? m.score1 + ' - ' + m.score2 : 'VS'}</div>
+                                <span class="match_team_name">${t2Name}</span>
+                                <div class="match_team_logo"><img src="${t2 ? t2.logo : 'images/logo_ligue.png'}" alt=""></div>
+                            </div>
+                            <p class="portfolio_description" style="text-align: center;"><i class='bx bx-map'></i> ${m.venue}</p>
+                        </div>
+                    `;
+                    matchContainer.appendChild(div);
+                });
+            }
+        }
+
+        // INIT CLOUD DATA
+        initData().then(() => {
+            renderCupMatches();
+        });
+    </script>
+</body>
+
+</html>

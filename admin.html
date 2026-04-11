@@ -233,8 +233,14 @@
                 <!-- FILTER BAR -->
                 <div style="margin-top: 30px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 4px solid var(--vert-principal);">
                     <h3 style="margin: 0; font-size: 1.1rem;"><i class='bx bx-filter-alt'></i> Filtrer les Matchs</h3>
-                    <div style="display: flex; gap: 10px; flex: 1; max-width: 300px;">
-                        <select id="matchFilterCatSelect" onchange="renderMatches()" style="flex: 1; padding: 8px 15px; border-radius: 5px; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--vert-principal); cursor: pointer;">
+                    <div style="display: flex; gap: 10px; flex: 1; max-width: 600px; flex-wrap: wrap;">
+                        <input type="text" id="matchFilterSearch" placeholder="Rechercher une équipe..." onkeyup="renderMatches()" style="flex: 1; min-width: 150px; padding: 8px 15px; border-radius: 5px; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--vert-principal);">
+                        <select id="matchFilterStatus" onchange="renderMatches()" style="flex: 1; min-width: 120px; padding: 8px 15px; border-radius: 5px; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--vert-principal); cursor: pointer;">
+                            <option value="all" style="color: black;">Tous les statuts</option>
+                            <option value="upcoming" style="color: black;">À venir</option>
+                            <option value="played" style="color: black;">Terminés</option>
+                        </select>
+                        <select id="matchFilterCatSelect" onchange="renderMatches()" style="flex: 1; min-width: 150px; padding: 8px 15px; border-radius: 5px; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--vert-principal); cursor: pointer;">
                             <option value="all" style="color: black;">Toutes les catégories</option>
                         </select>
                     </div>
@@ -922,7 +928,13 @@
             if(currentVal && Array.from(select.options).some(o => o.value === currentVal)) select.value = currentVal;
 
             const filterSelect = document.getElementById('matchFilterCatSelect');
+            const searchInput = document.getElementById('matchFilterSearch');
+            const statusSelect = document.getElementById('matchFilterStatus');
+
             const currentFilter = filterSelect ? filterSelect.value : 'all';
+            const currentSearch = searchInput ? searchInput.value.toLowerCase() : '';
+            const currentStatus = statusSelect ? statusSelect.value : 'all';
+
             if (filterSelect) {
                 filterSelect.innerHTML = '<option value="all" style="color: black;">Toutes les catégories</option>';
                 data.categories.forEach(c => {
@@ -939,8 +951,22 @@
             tbody.innerHTML = '';
             
             let matchesToShow = data.matches;
+            
+            // 1. Filtrer par catégorie
             if (currentFilter && currentFilter !== 'all') {
                 matchesToShow = matchesToShow.filter(m => m.categoryId === currentFilter);
+            }
+            
+            // 2. Filtrer par statut
+            if (currentStatus === 'played') {
+                matchesToShow = matchesToShow.filter(m => m.status === 'played');
+            } else if (currentStatus === 'upcoming') {
+                matchesToShow = matchesToShow.filter(m => m.status !== 'played');
+            }
+            
+            // 3. Filtrer par recherche (équipe)
+            if (currentSearch) {
+                matchesToShow = matchesToShow.filter(m => m.teams.toLowerCase().includes(currentSearch));
             }
 
             matchesToShow.sort((a, b) => {

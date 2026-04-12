@@ -207,11 +207,22 @@ function getData() {
     return data;
 }
 
+let isSyncing = false;
+let nextSyncData = null;
+
 async function saveData(data) {
+    // 1. Mise à jour synchrone et immédiate du LocalStorage (Primordial pour l'UI)
     localStorage.setItem(LIGUE_DATA_KEY, JSON.stringify(data));
 
-    // Sync to Supabase if configured
+    // 2. Si un sync est déjà en cours, on stocke la donnée pour l'envoyer juste après
+    if (isSyncing) {
+        nextSyncData = data;
+        return;
+    }
+
+    // 3. Sync Cloud Supabase
     if (supabaseClient) {
+        isSyncing = true;
         try {
             const { error } = await supabaseClient
                 .from('app_state')
@@ -219,19 +230,26 @@ async function saveData(data) {
 
             if (error) {
                 console.error("Supabase Sync Error:", error);
-                // N'afficher l'alerte que si on est dans l'interface admin, pour ne pas polluer l'accueil public
                 if (window.location.pathname.includes('admin')) {
                     if (error.message.includes("relation \"public.app_state\" does not exist")) {
-                        alert("ERREUR : La table 'app_state' n'existe pas sur Supabase. Allez sur Supabase et créez la table avec le script SQL fourni.");
+                        alert("ERREUR : La table 'app_state' n'existe pas sur Supabase.");
                     } else {
-                        alert("Erreur de synchronisation Cloud : " + error.message);
+                        console.warn("Retrying sync soon due to error:", error.message);
                     }
                 }
-                return; // On ne lance plus de 'throw' bloquant pour laisser le site public fonctionner avec les données locales
+            } else {
+                console.log("Data synced to Supabase successfully.");
             }
-            console.log("Data synced to Supabase");
         } catch (e) {
             console.error("Failed to sync to Supabase:", e);
+        } finally {
+            isSyncing = false;
+            // 4. Si une nouvelle sauvegarde a été demandée pendant qu'on travaillait, on la lance maintenant
+            if (nextSyncData) {
+                const dataToSync = nextSyncData;
+                nextSyncData = null;
+                saveData(dataToSync);
+            }
         }
     }
 }
@@ -303,8 +321,7 @@ function updateTeam(teamId, updates) {
         }
 
         data.teams[index] = { ...data.teams[index], ...updates };
-        saveData(data);
-        recalculateStandings();
+        recalculateStandings(data);
         return true;
     }
     return false;
@@ -332,10 +349,16 @@ function updateMatch(matchId, updates) {
     const data = getData();
     const index = data.matches.findIndex(m => m.id === parseInt(matchId));
     if (index !== -1) {
+        // Appliquer les changements au match
         data.matches[index] = { ...data.matches[index], ...updates };
-        saveData(data);
+        
+        // Recalculer les classements immédiatement sur l'objet local avant de sauvegarder
         if (updates.status === 'played' || updates.score1 !== undefined || updates.score2 !== undefined) {
-            recalculateStandings();
+            recalculateStandings(data); 
+            // recalculateStandings accepte maintenant l'objet 'data' pour éviter un appel getData() inutile
+        } else {
+            // Si pas de changement impactant le classement, on sauve juste le match
+            saveData(data);
         }
         return true;
     }
@@ -345,12 +368,13 @@ function updateMatch(matchId, updates) {
 function deleteMatch(matchId) {
     const data = getData();
     data.matches = data.matches.filter(m => m.id !== parseInt(matchId));
-    saveData(data);
-    recalculateStandings();
+    recalculateStandings(data);
 }
 
-function recalculateStandings() {
-    const data = getData();
+function recalculateStandings(providedData = null) {
+    const data = providedData || getData();
+    
+    // Reset points
     data.teams.forEach(t => {
         t.points = 0; t.v = 0; t.n = 0; t.d = 0; t.bp = 0; t.bc = 0; t.diff = 0;
     });

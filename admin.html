@@ -1052,6 +1052,7 @@
             const updates = {};
             updates[field] = parseInt(val) || 0;
             updateMatch(id, updates);
+            renderMatches(); // Rafraîchir l'interface pour voir le nouveau classement immédiatement
         }
 
         function handleToggleStatus(id, newStatus) {
